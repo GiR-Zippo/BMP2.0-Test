@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="BardMusicPlayer.Ui.Views.Classic_MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Background="WhiteSmoke">
+    <Grid>
+        <!-- Playlist -->
+        <Grid Margin="0,-3,0,233" HorizontalAlignment="Left" Height="225"  Width="310">
+            <Label Content="PLAYLIST" Height="25" FontSize="14" Margin="6,-1,155,201" />
+            <DataGrid x:Name="PlaylistContainer" Margin="10,24,0,23" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="230" />
+                    <DataGridTextColumn Header="Track" Binding="{Binding Track}" Width="50" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <!-- Combobox for Chat, Settings and so on -->
+        <Grid Margin="319,-3,0,228" HorizontalAlignment="Left" Height="225"  Width="481">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="278*"/>
+                <ColumnDefinition Width="275*"/>
+            </Grid.ColumnDefinitions>
+            <TabControl Margin="0,0,0,0" Grid.ColumnSpan="2">
+                <TabItem Header="[Chat] All">
+                    <TextBox x:Name="ChatBox" IsReadOnly="False"></TextBox>
+                </TabItem>
+                <TabItem Header="Settings">
+                    <Grid>
+                        <Label Content="AutoPlay via" HorizontalAlignment="Left"/>
+                        <ComboBox x:Name="Autostart_source" SelectionChanged="Autostart_source_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="83,4,0,0">
+                            <ComboBoxItem>Disabled</ComboBoxItem>
+                            <ComboBoxItem>Chat</ComboBoxItem>
+                            <ComboBoxItem>Metronome</ComboBoxItem>
+                        </ComboBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Statistics" />
+            </TabControl>
+        </Grid>
+
+        <!-- Track Row-->
+        <Grid Margin="5,230,0,195" Height="25" HorizontalAlignment="Left" Width="795">
+            <Button x:Name="Rewind" Content="⏪" Margin="0,0,775,0" Width="20" Click="Rewind_Click" />
+            <TextBox x:Name="SongName" PreviewMouseDown="SongName_PreviewMouseDown" HorizontalAlignment="Left" Height="25" Margin="25,0,0,0" TextWrapping="Wrap" Text="Songname" Width="649" FontSize="16" TextAlignment="Center"/>
+
+            <!-- Track Selection-->
+            <TextBox x:Name="track_txtNum" x:FieldModifier="private" Text="t1" TextChanged="track_txtNum_TextChanged" Margin="0,0,88,0" TextAlignment="Center" FontSize="14" HorizontalAlignment="Right" Width="28" Height="25" VerticalAlignment="Top" />
+            <Button x:Name="track_cmdUp"   x:FieldModifier="private" FontSize="10" Padding="0,-4,0,0" Content="▲" Click="track_cmdUp_Click"   Margin="0,0,75,13"   HorizontalAlignment="Right" Width="12" />
+            <Button x:Name="track_cmdDown" x:FieldModifier="private" FontSize="10" Padding="0,-4,0,0" Content="▼" Click="track_cmdDown_Click" Margin="0,13,75,0"  HorizontalAlignment="Right" Width="12" />
+            <!-- End Track Selection-->
+            <Button Content="All tracks" x:Name="all_tracks_button" Click="all_tracks_button_Click" HorizontalAlignment="Left" Margin="725,0,0,0" VerticalAlignment="Top" Width="69" Height="25" FontSize="12"/>
+        </Grid>
+        <!-- Playbar Row -->
+        <Grid Margin="5,256,0,153">
+            <Label Content="Performing" Margin="0,1,727,14"/>
+            <Label x:Name="ElapsedTime" Content="00:00" Margin="0,17,757,-1" Height="25" />
+            <Slider x:Name="Playbar_Slider" Margin="41,20,47,-4" Height="25" ValueChanged="Playbar_Slider_ValueChanged" Thumb.DragStarted="Playbar_Slider_DragStarted" Thumb.DragCompleted="Playbar_Slider_DragCompleted"/>
+            <Label x:Name="TotalTime" Content="00:00" HorizontalAlignment="Right" Width="44" Height="25" Margin="0,16,0,0" />
+        </Grid>
+
+        <!-- Playcontrol Row-->
+        <Grid Margin="715,302,10,35" Width="75">
+            <!-- Controls -->
+            <Button x:Name="Play_Button" Content="▶" FontSize="26" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="75" Margin="0,28,0,0" Click="Play_Button_Click"/>
+            <Button x:Name="Loop_Button" Content="Loop" HorizontalAlignment="Left" Margin="0,70,0,0" VerticalAlignment="Top" Width="75"/>
+            <Button x:Name="Skip_Button" Content="Skip" HorizontalAlignment="Left" Margin="0,92,0,0" VerticalAlignment="Top" Width="75"/>
+        </Grid>
+        <!-- Instrumentinfo Row -->
+        <Grid Margin="0,415,10,10" Height="25" Width="780">
+            <Label x:Name="InstrumentInfo" Content="None" Margin="0,0,649,0" />
+        </Grid>
+    </Grid>
+</UserControl>

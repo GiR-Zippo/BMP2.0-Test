@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using BardMusicPlayer.Maestro;
+using BardMusicPlayer.Transmogrify.Song;
+using BardMusicPlayer.Transmogrify.Song.Config;
+using BardMusicPlayer.Ui;
+using Microsoft.Win32;
+
+namespace BardMusicPlayer.Ui.Functions
+{
+    public static class PlaybackFunctions
+    {
+        public enum PlaybackState_Enum
+        {
+            PLAYBACK_STATE_STOPPED = 0,
+            PLAYBACK_STATE_PLAYING,
+            PLAYBACK_STATE_PAUSE
+        };
+
+        public static PlaybackState_Enum PlaybackState;
+        public static BmpSong _current_song;
+        public static string InstrumentName;
+
+
+        public static bool LoadSong()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "MIDI file|*.mid;*.midi|All files (*.*)|*.*",
+                Multiselect = true
+            };
+
+            if (openFileDialog.ShowDialog() != true)
+                return false;
+
+            PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
+            
+            _current_song = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
+            BmpMaestro.Instance.DestroySongFromLocalPerformer();
+            BmpMaestro.Instance.PlayWithLocalPerformer(_current_song, Globals.Globals.CurrentTrack - 1);
+            SetInstrumentName();
+            return true;
+        }
+
+        public static void PlaySong()
+        {
+            PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_PLAYING;
+            BmpMaestro.Instance.StartLocalPerformer();
+        }
+
+        public static void PauseSong()
+        {
+            PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_PAUSE;
+            BmpMaestro.Instance.PauseLocalPerformer();
+        }
+
+        public static void StopSong()
+        {
+            PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
+            BmpMaestro.Instance.StopLocalPerformer();
+        }
+
+        public static string GetSongName()
+        {
+            if (_current_song == null)
+                return "please load a song";
+            return _current_song.Title;
+        }
+
+        public static void SetTrackNumber(int track)
+        {
+            Globals.Globals.CurrentTrack = track;
+            BmpMaestro.Instance.ChangeTracknumber(Globals.Globals.CurrentTrack -1);
+            SetInstrumentName();
+        }
+
+        public static void SetInstrumentName()
+        {
+            if (Globals.Globals.CurrentTrack == 0)
+                InstrumentName = "None";
+            else
+            {
+                if (_current_song == null)
+                    return;
+
+
+
+                ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)_current_song.TrackContainers[Globals.Globals.CurrentTrack - 1].ConfigContainers[0].ProcessorConfig;
+                InstrumentName = classicConfig.Instrument.Name;
+            }
+        }
+    }
+}
