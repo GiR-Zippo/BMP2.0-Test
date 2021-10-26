@@ -1,0 +1,30 @@
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfoInputs.cache
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfo.cs
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.csproj.CoreCompileInputs.cache
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfoInputs.cache
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfo.cs
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.csproj.CoreCompileInputs.cache
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.csproj.AssemblyReference.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfoInputs.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfo.cs
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.csproj.CoreCompileInputs.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.csproj.AssemblyReference.cache
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfoInputs.cache
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.AssemblyInfo.cs
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.csproj.CoreCompileInputs.cache
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Quotidian\obj\Debug\net48\BardMusicPlayer.Quotidian.pdb

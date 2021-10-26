@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "SZehg1UGTLiORKSKW+nyCz1YO9bOjQFNaER35GByug5GNBocF5G3vooC0hEHqvIbmcPpXZ27xKvGlWt05RedZg==",
+  "success": true,
+  "projectFilePath": "D:\\Dev\\C#\\wpf\\BMP2.0\\BardMusicPlayer.Pigeonhole\\BardMusicPlayer.Pigeonhole.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Kalle\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
+    "C:\\Users\\Kalle\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,84 @@
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Grunt.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Grunt.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\Castle.Core.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\H.Formatters.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\H.Formatters.BinaryFormatter.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\H.Pipes.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\H.Pipes.AccessControl.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\NamedPipeServerStream.NetFrameworkVersion.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\Newtonsoft.Json.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\System.Threading.Tasks.Extensions.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\WindowsFirewallHelper.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Pigeonhole.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Seer.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\Machina.FFXIV.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\Machina.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Pigeonhole.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Seer.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.AssemblyInfoInputs.cache
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.AssemblyInfo.cs
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.CoreCompileInputs.cache
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.CopyComplete
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.dll
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.pdb
+D:\Dev\BMP2.0-ui\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.AssemblyReference.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Grunt.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Grunt.pdb
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\Castle.Core.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\H.Formatters.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\H.Formatters.BinaryFormatter.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\H.Pipes.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\H.Pipes.AccessControl.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\NamedPipeServerStream.NetFrameworkVersion.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\Newtonsoft.Json.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\System.Threading.Tasks.Extensions.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\WindowsFirewallHelper.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Pigeonhole.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Seer.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\Machina.FFXIV.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\Machina.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Pigeonhole.pdb
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Seer.pdb
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.AssemblyReference.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.AssemblyInfoInputs.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.AssemblyInfo.cs
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.CoreCompileInputs.cache
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.CopyComplete
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.dll
+D:\Dev\BMP2.0-ui - Kopie\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Grunt.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Grunt.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\Castle.Core.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\H.Formatters.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\H.Formatters.BinaryFormatter.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\H.Pipes.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\H.Pipes.AccessControl.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\NamedPipeServerStream.NetFrameworkVersion.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\Newtonsoft.Json.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\System.Runtime.CompilerServices.Unsafe.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\System.Threading.Tasks.Extensions.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\WindowsFirewallHelper.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Pigeonhole.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Quotidian.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Seer.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\Machina.FFXIV.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\Machina.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Pigeonhole.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Quotidian.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\bin\Debug\net48\BardMusicPlayer.Seer.pdb
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.AssemblyReference.cache
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.AssemblyInfoInputs.cache
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.AssemblyInfo.cs
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.CoreCompileInputs.cache
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.csproj.CopyComplete
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.dll
+D:\Dev\C#\wpf\WpfApp1\BardMusicPlayer.Grunt\obj\Debug\net48\BardMusicPlayer.Grunt.pdb
