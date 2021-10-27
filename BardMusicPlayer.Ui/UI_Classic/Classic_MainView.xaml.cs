@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Coffer;
+using BardMusicPlayer.UI.Functions;
 
 namespace BardMusicPlayer.Ui.Views
 {
@@ -22,6 +23,9 @@ namespace BardMusicPlayer.Ui.Views
             InitializeComponent();
 
             Autostart_source.SelectedIndex = (int)Globals.Settings.AutostartType;
+
+            ShowingPlaylists = true;
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
 
             this.SongName.Text = PlaybackFunctions.GetSongName();
             Maestro.BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
@@ -149,5 +153,7 @@ namespace BardMusicPlayer.Ui.Views
             Globals.Settings.AutostartType=(Globals.Settings.Autostart_Types)d;
             Globals.Settings.SaveConfig();
         }
+
+
     }
 }

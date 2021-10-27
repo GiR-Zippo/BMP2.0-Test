@@ -1,4 +1,5 @@
 ﻿using BardMusicPlayer.Coffer;
+using BardMusicPlayer.UI.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using UI.Resources;
 
 namespace BardMusicPlayer.Ui.Views
 {
@@ -15,58 +18,59 @@ namespace BardMusicPlayer.Ui.Views
     public partial class Classic_MainView : UserControl
     {
 
-        public class playlist_entry
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string Track { get; set; }
-        }
-        List<playlist_entry> playlist_entries = new List<playlist_entry>();
-
-        public void Initplaylists()
-        {
-            string nn = "default";
-            var pl = BmpCoffer.Instance.CreatePlaylist(nn);
-            BmpCoffer.Instance.SavePlaylist(pl);
-            var playlist = BmpCoffer.Instance.GetPlaylistNames();
-            if (playlist == null)
-                Console.WriteLine("");
-            //PlaylistContainer.ItemsSource = Coffer.BmpCoffer.Instance.GetPlaylist("unkown");
-        }
-        public void AddSong(string name)
-        {
-
-        }
+        private bool ShowingPlaylists = false;
 
         private void Playlist_New_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            var inputbox = new TextInputWindow("Playlistname");
+            if (inputbox.ShowDialog() == true)
+            {
+                PlaylistFunctions.CreatePlaylist(inputbox.ResponseText);
+                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+            }
         }
 
         private void Playlist_Load_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            ShowingPlaylists = true;
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
         }
 
         private void Playlist_Save_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            PlaylistFunctions.SaveCurrentPlaylist();
         }
 
         private void Playlist_Add_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            PlaylistFunctions.AddSongToCurrentPlaylist();
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
         }
 
         private void Playlist_Remove_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            PlaylistFunctions.RemoveSongFromCurrentPlaylist();
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
         }
 
         private void Playlist_Delete_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            ShowingPlaylists = true;
+            PlaylistFunctions.DeleteCurrentPlaylist();
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
         }
 
+        private void PlaylistContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (ShowingPlaylists)
+            {
+                PlaylistFunctions.SetCurrentPlaylist((string)PlaylistContainer.SelectedItem);
+                ShowingPlaylists = false;
+                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+                return;
+            }
+            PlaylistFunctions.SetCurrentCurrentSong((string)PlaylistContainer.SelectedItem);
+            return;
+        }
     }
 }

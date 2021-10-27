@@ -282,14 +282,18 @@ namespace BardMusicPlayer.Coffer
             {
                 if (song.Id == null)
                 {
-                    song.Id = ObjectId.NewObjectId();
-                    //TODO: Fix this to get a real unique idendifier
+                    //TODO: Fix this if more than one song with the name exists
                     var results = songCol.Find(x => x.Title.Equals(song.Title));
                     if (results.Count() > 0)
                     {
+                        //Get the ID from the found song and update the data
+                        song.Id = results.First().Id;
                         songCol.Update(song);
                         return;
                     }
+
+                    //TODO: Fix this to get a real unique idendifier
+                    song.Id = ObjectId.NewObjectId();
                     songCol.Insert(song);
                 }
                 else
@@ -323,7 +327,10 @@ namespace BardMusicPlayer.Coffer
                     playlists.Insert(dbList);
                 }
                 else
-                    playlists.Update(dbList);
+                {
+                    if (playlists.Update(dbList))
+                        return;
+                }
             }
             catch (LiteException e)
             {
@@ -350,6 +357,37 @@ namespace BardMusicPlayer.Coffer
                 if (dbList.Id != null)
                 {
                     playlists.Delete(dbList.Id);
+                }
+            }
+            catch (LiteException e)
+            {
+                throw new BmpCofferException(e.Message, e);
+            }
+        }
+
+        /// <summary>
+        /// This deletes a song. TODO: Make sure all data is erased
+        /// </summary>
+        /// <param name="song"></param>
+        /// <exception cref="BmpCofferException">This is thrown if a name conflict occurs on save.</exception>
+        public void DeleteSong(BmpSong song)
+        {
+
+            if (song == null) throw new ArgumentNullException();
+
+            var songCol = GetSongCollection();
+            try
+            {
+                if (song.Id == null)
+                {
+                    song.Id = ObjectId.NewObjectId();
+                    //TODO: Fix this to get a real unique idendifier
+                    var results = songCol.Find(x => x.Title.Equals(song.Title));
+                    if (results.Count() > 0)
+                    {
+                        songCol.Delete(song.Id);
+                        return;
+                    }
                 }
             }
             catch (LiteException e)

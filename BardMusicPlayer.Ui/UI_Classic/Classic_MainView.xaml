@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Background="WhiteSmoke">
+
     <Grid>
         <!-- Playlist -->
         <Grid Margin="0,-3,0,233" HorizontalAlignment="Left" Height="225"  Width="310">
@@ -17,9 +18,9 @@
             <Button x:Name="Playlist_Add_Button"    Click="Playlist_Add_Button_Click"    Content="+" Margin="258,4,36,201" />
             <Button x:Name="Playlist_Remove_Button" Click="Playlist_Remove_Button_Click" Content="-" Margin="276,4,18,201" />
             <Button x:Name="Playlist_Delete_Button" Click="Playlist_Delete_Button_Click" Content="X" Margin="294,4,0,201" />
-            <DataGrid x:Name="PlaylistContainer" Margin="10,24,0,23" AutoGenerateColumns="False">
+            <DataGrid x:Name="PlaylistContainer" Margin="10,24,0,23" AutoGenerateColumns="False" PreviewMouseDoubleClick="PlaylistContainer_PreviewMouseDoubleClick">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="230" />
+                    <DataGridTextColumn Header="Name" IsReadOnly="true" Width="*" Binding="{Binding}" ></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

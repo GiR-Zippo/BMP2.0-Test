@@ -21,7 +21,7 @@ namespace BardMusicPlayer.Ui.Functions
         };
 
         public static PlaybackState_Enum PlaybackState;
-        public static BmpSong _current_song;
+        public static BmpSong CurrentSong;
         public static string InstrumentName;
 
 
@@ -38,9 +38,9 @@ namespace BardMusicPlayer.Ui.Functions
 
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             
-            _current_song = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
+            CurrentSong = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
             BmpMaestro.Instance.DestroySongFromLocalPerformer();
-            BmpMaestro.Instance.PlayWithLocalPerformer(_current_song, Globals.Globals.CurrentTrack - 1);
+            BmpMaestro.Instance.PlayWithLocalPerformer(CurrentSong, Globals.Globals.CurrentTrack - 1);
             SetInstrumentName();
             return true;
         }
@@ -65,9 +65,9 @@ namespace BardMusicPlayer.Ui.Functions
 
         public static string GetSongName()
         {
-            if (_current_song == null)
+            if (CurrentSong == null)
                 return "please load a song";
-            return _current_song.Title;
+            return CurrentSong.Title;
         }
 
         public static void SetTrackNumber(int track)
@@ -83,13 +83,19 @@ namespace BardMusicPlayer.Ui.Functions
                 InstrumentName = "None";
             else
             {
-                if (_current_song == null)
+                if (CurrentSong == null)
                     return;
-                if (_current_song.TrackContainers.Count <= Globals.Globals.CurrentTrack - 1)
+                if (CurrentSong.TrackContainers.Count <= Globals.Globals.CurrentTrack - 1)
                     return;
-
-                ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)_current_song.TrackContainers[Globals.Globals.CurrentTrack - 1].ConfigContainers[0].ProcessorConfig;
-                InstrumentName = classicConfig.Instrument.Name;
+                try
+                {
+                    ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)CurrentSong.TrackContainers[Globals.Globals.CurrentTrack - 1].ConfigContainers[0].ProcessorConfig;
+                    InstrumentName = classicConfig.Instrument.Name;
+                }
+                catch(System.Collections.Generic.KeyNotFoundException e)
+                {
+                    InstrumentName = "Unknown";
+                }
             }
         }
     }
