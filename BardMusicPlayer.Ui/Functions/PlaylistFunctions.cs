@@ -48,7 +48,7 @@ namespace BardMusicPlayer.UI.Functions
             {
                 if (item.Title == songname)
                 {
-                    PlaybackFunctions.CurrentSong = item;
+                    PlaybackFunctions.LoadSongFromPlaylist(item);
                     return;
                 }
             }

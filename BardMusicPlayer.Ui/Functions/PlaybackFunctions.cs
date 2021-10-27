@@ -45,6 +45,15 @@ namespace BardMusicPlayer.Ui.Functions
             return true;
         }
 
+        public static void LoadSongFromPlaylist(BmpSong item)
+        {
+            PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
+            PlaybackFunctions.CurrentSong = item;
+            BmpMaestro.Instance.DestroySongFromLocalPerformer();
+            BmpMaestro.Instance.PlayWithLocalPerformer(CurrentSong, Globals.Globals.CurrentTrack - 1);
+            SetInstrumentName();
+        }
+
         public static void PlaySong()
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_PLAYING;

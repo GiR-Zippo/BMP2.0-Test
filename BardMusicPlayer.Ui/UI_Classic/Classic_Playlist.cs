@@ -1,4 +1,5 @@
 ﻿using BardMusicPlayer.Coffer;
+using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.UI.Functions;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace BardMusicPlayer.Ui.Views
             {
                 PlaylistFunctions.CreatePlaylist(inputbox.ResponseText);
                 PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+                ShowingPlaylists = false;
             }
         }
 
@@ -70,6 +72,8 @@ namespace BardMusicPlayer.Ui.Views
                 return;
             }
             PlaylistFunctions.SetCurrentCurrentSong((string)PlaylistContainer.SelectedItem);
+            this.SongName.Text = PlaybackFunctions.GetSongName();
+            
             return;
         }
     }
