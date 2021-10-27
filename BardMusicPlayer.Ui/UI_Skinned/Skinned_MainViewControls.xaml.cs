@@ -85,7 +85,10 @@ namespace BardMusicPlayer.Ui.Views
         {
             this.Load_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_EJECT_BUTTON];
             if (PlaybackFunctions.LoadSong())
+            {
                 WriteSongField(PlaybackFunctions.GetSongName());
+                WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
+            }
         }
         private void Load_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Load_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_EJECT_BUTTON_ACTIVE]; }
@@ -105,6 +108,7 @@ namespace BardMusicPlayer.Ui.Views
             PlaybackFunctions.SetTrackNumber(Globals.Globals.CurrentTrack);
             WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
             WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
+            WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
         }
         private void TrackDown_Button_Down(object sender, MouseButtonEventArgs e)
         { this.TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_PRESSED]; }
@@ -124,6 +128,7 @@ namespace BardMusicPlayer.Ui.Views
             PlaybackFunctions.SetTrackNumber(Globals.Globals.CurrentTrack);
             WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
             WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
+            WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
         }
         private void TrackUp_Button_Down(object sender, MouseButtonEventArgs e)
         { this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_PRESSED]; }

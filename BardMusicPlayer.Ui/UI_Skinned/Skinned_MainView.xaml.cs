@@ -35,9 +35,6 @@ namespace BardMusicPlayer.Ui.Views
         {
             InitializeComponent();
 
-            //LoadSkin(Globals.Globals.DataPath + @"KalaK_Amp_BLUE.wsz");
-            //LoadSkin(Globals.Globals.DataPath + @"Bento_Classified.wsz");
-            //LoadSkin(Globals.Globals.DataPath + @"Rei_Ayanami_Akarui_Skin.wsz");
             LoadSkin(Globals.Globals.DataPath + @"Winamp3_Classified_v5.5.wsz");
 
             Maestro.BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;

@@ -25,6 +25,7 @@ namespace BardMusicPlayer.Ui.Settings
         public SettingsView()
         {
             InitializeComponent();
+            Autostart_source.SelectedIndex = (int)Globals.Settings.AutostartType;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -41,5 +42,13 @@ namespace BardMusicPlayer.Ui.Settings
             
             ((Skinned_MainView)System.Windows.Application.Current.MainWindow.DataContext).LoadSkin(openFileDialog.FileName);
         }
+
+        private void Autostart_source_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int d = Autostart_source.SelectedIndex;
+            Globals.Settings.AutostartType = (Globals.Settings.Autostart_Types)d;
+            Globals.Settings.SaveConfig();
+        }
+
     }
 }

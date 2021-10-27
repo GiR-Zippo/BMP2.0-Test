@@ -27,7 +27,6 @@ namespace BardMusicPlayer.Ui
             Globals.Settings.LoadConfig();
 
             SwitchClassicStyle();
-
         }
 
         public void SwitchClassicStyle()

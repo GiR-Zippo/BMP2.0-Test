@@ -125,8 +125,8 @@
         <Button Style="{StaticResource MyButtonStyle}" x:Name="Settings_Button" HorizontalAlignment="Left" Margin="12,5,0,0"   VerticalAlignment="Top" Width="18" Height="18" Content="" Click="Settings_Button_Click" PreviewMouseUp="Settings_Button_Up" PreviewMouseDown="Settings_Button_Down"  BorderThickness="0" />
 
         <Image x:Name="SongDigit" HorizontalAlignment="Left" Margin="220,48,0,136" Height="16" Width="305" />
-        <Image x:Name="SmallTrackDigit" HorizontalAlignment="Left" Margin="220,72,0,112" Height="16" Width="35" />
-        <Image x:Name="InstrumentDigit" HorizontalAlignment="Left" Margin="52,72,0,112" Height="12" Width="146" />
+        <Image x:Name="SmallTrackDigit" HorizontalAlignment="Left" Margin="227,75,0,112" Height="13" Width="20" />
+        <Image x:Name="InstrumentDigit" HorizontalAlignment="Left" Margin="96,74,0,114" Height="12" Width="102" />
 
         <!-- Playbar -->
         <Rectangle x:Name="PlayBar_Background" HorizontalAlignment="Left" Width="498" Height="17" VerticalAlignment="Top" Margin="30,124,0,0">

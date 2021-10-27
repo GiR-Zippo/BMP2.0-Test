@@ -11,10 +11,15 @@
         <!-- Playlist -->
         <Grid Margin="0,-3,0,233" HorizontalAlignment="Left" Height="225"  Width="310">
             <Label Content="PLAYLIST" Height="25" FontSize="14" Margin="6,-1,155,201" />
+            <Button x:Name="Playlist_New_Button"    Click="Playlist_New_Button_Click"    Content="N" Margin="204,4,90,201" />
+            <Button x:Name="Playlist_Load_Button"   Click="Playlist_Load_Button_Click"   Content="L" Margin="222,4,72,201" />
+            <Button x:Name="Playlist_Save_Button"   Click="Playlist_Save_Button_Click"   Content="S" Margin="240,4,54,201" />
+            <Button x:Name="Playlist_Add_Button"    Click="Playlist_Add_Button_Click"    Content="+" Margin="258,4,36,201" />
+            <Button x:Name="Playlist_Remove_Button" Click="Playlist_Remove_Button_Click" Content="-" Margin="276,4,18,201" />
+            <Button x:Name="Playlist_Delete_Button" Click="Playlist_Delete_Button_Click" Content="X" Margin="294,4,0,201" />
             <DataGrid x:Name="PlaylistContainer" Margin="10,24,0,23" AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="230" />
-                    <DataGridTextColumn Header="Track" Binding="{Binding Track}" Width="50" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

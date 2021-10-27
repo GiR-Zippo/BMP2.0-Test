@@ -85,8 +85,8 @@ namespace BardMusicPlayer.Ui.Functions
             {
                 if (_current_song == null)
                     return;
-
-
+                if (_current_song.TrackContainers.Count <= Globals.Globals.CurrentTrack - 1)
+                    return;
 
                 ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)_current_song.TrackContainers[Globals.Globals.CurrentTrack - 1].ConfigContainers[0].ProcessorConfig;
                 InstrumentName = classicConfig.Instrument.Name;

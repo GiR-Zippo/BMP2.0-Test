@@ -21,7 +21,7 @@ namespace BardMusicPlayer.Maestro
         public EventHandler<ITimeSpan> OnSongMaxTime;
 
         public IEnumerable<Game> Bards { get; private set; }
-        public Game? SelectedBard { get; set; }
+        public Game SelectedBard { get; set; }
 
         private Sequencer _sequencer;
         /// <summary>
@@ -126,10 +126,8 @@ namespace BardMusicPlayer.Maestro
 
         public void SetPlaybackStart(double t)
         {
-            if (_sequencer == null)
-                return;
-
-            _sequencer.SetPlaybackStart(t);
+            if (_sequencer != null)
+                _sequencer.SetPlaybackStart(t);
         }
 
         ~BmpMaestro() { Dispose(); }

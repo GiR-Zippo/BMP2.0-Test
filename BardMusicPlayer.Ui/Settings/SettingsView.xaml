@@ -17,7 +17,8 @@
                 <Grid Background="#FFE5E5E5">
                     <Grid Margin="10,10,86,373" Height="50">
                         <Label Content="AutoPlay via" HorizontalAlignment="Left"/>
-                        <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="83,4,0,0">
+                        <ComboBox x:Name="Autostart_source" SelectionChanged="Autostart_source_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Margin="83,4,0,0">
+                            <ComboBoxItem>None</ComboBoxItem>
                             <ComboBoxItem>Chat</ComboBoxItem>
                             <ComboBoxItem>Metronome</ComboBoxItem>
                         </ComboBox>

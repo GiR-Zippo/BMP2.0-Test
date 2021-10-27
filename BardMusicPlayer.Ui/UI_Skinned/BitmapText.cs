@@ -32,7 +32,7 @@ namespace BardMusicPlayer.Ui.Views
         {
             data = data.Insert(0, "T");
 
-            Bitmap bitmap = new Bitmap(35, 8);
+            Bitmap bitmap = new Bitmap(30, 8);
             var graphics = Graphics.FromImage(bitmap);
             int index = 0;
             foreach (var a in data)
@@ -70,7 +70,9 @@ namespace BardMusicPlayer.Ui.Views
 
         void WriteInstrumentDigitField(string data)
         {
-            Bitmap bitmap = new Bitmap(35, 8);
+            if (data == null)
+                return;
+            Bitmap bitmap = new Bitmap(60, 8);
             var graphics = Graphics.FromImage(bitmap);
             int index = 0;
             foreach (var a in data)

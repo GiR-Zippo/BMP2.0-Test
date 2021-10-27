@@ -230,6 +230,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Functions\PlaybackFunctions.cs" />
+    <Compile Include="Functions\PlaylistFunctions.cs" />
     <Compile Include="Globals\Settings.cs" />
     <Compile Include="UI_Classic\Classic_MainViewPlaycontrols.cs" />
     <Compile Include="UI_Classic\Classic_Playlist.cs" />

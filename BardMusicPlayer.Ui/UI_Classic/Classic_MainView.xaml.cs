@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
+using BardMusicPlayer.Coffer;
 
 namespace BardMusicPlayer.Ui.Views
 {
@@ -27,7 +28,6 @@ namespace BardMusicPlayer.Ui.Views
             Maestro.BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
-
             
         }
 
