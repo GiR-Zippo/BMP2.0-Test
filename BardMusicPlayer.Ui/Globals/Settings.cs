@@ -28,8 +28,6 @@ namespace BardMusicPlayer.Ui.Globals
         {
             Globals.CurrentTrack = 1;
             AutostartType = (Autostart_Types)Convert.ToInt16(ConfigurationManager.AppSettings["AutostartType"]);
-            
-            //AutostartType = (Autostart_Types)SettingsFile.Default.AutostartType;
         }
         
         public static void SaveConfig()

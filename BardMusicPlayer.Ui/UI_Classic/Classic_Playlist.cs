@@ -73,7 +73,7 @@ namespace BardMusicPlayer.Ui.Views
             }
             PlaylistFunctions.SetCurrentCurrentSong((string)PlaylistContainer.SelectedItem);
             this.SongName.Text = PlaybackFunctions.GetSongName();
-            
+            this.InstrumentInfo.Content = PlaybackFunctions.InstrumentName;
             return;
         }
     }

@@ -15,6 +15,6 @@ namespace BardMusicPlayer.Ui.Globals
         public static string ResourcePath;
         public static string DataPath;
 
-        public static int CurrentTrack;
+        public static int CurrentTrack { get; set; }
     }
 }

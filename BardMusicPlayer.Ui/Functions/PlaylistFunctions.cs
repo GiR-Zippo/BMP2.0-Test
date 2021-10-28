@@ -1,11 +1,6 @@
 ﻿using BardMusicPlayer.Coffer;
-using BardMusicPlayer.Transmogrify.Song;
 using BardMusicPlayer.Ui.Functions;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BardMusicPlayer.UI.Functions
 {
@@ -62,11 +57,11 @@ namespace BardMusicPlayer.UI.Functions
             BmpCoffer.Instance.SavePlaylist(currentPlaylist);
         }
 
-        
         public static void AddSongToCurrentPlaylist()
         {
             if ((currentPlaylist == null) || (PlaybackFunctions.CurrentSong == null))
                 return;
+
             BmpCoffer.Instance.SaveSong(PlaybackFunctions.CurrentSong);
             currentPlaylist.Add(PlaybackFunctions.CurrentSong);
         }

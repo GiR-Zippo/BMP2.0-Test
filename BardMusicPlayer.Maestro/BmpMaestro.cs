@@ -55,7 +55,21 @@ namespace BardMusicPlayer.Maestro
         /// <returns></returns>
         public void PlayWithLocalPerformer(BmpSong bmpSong, int track)
         {
-            var midiFile = bmpSong.GetProcessedMidiFile().Result;
+            var index = 0;
+            //create a midifile   
+            var midiFile = new MidiFile();
+            //add the chunks
+            foreach (var data in bmpSong.TrackContainers)
+            {
+                //Set the channel
+                using (var manager = data.Value.SourceTrackChunk.ManageNotes())
+                    foreach (Note note in manager.Notes)
+                        note.Channel = Melanchall.DryWetMidi.Common.FourBitNumber.Parse(index.ToString());
+                midiFile.Chunks.Add(data.Value.SourceTrackChunk);
+                index++;
+            }
+            //and set the tempo map
+            midiFile.ReplaceTempoMap(bmpSong.SourceTempoMap);
             _sequencer = new Sequencer(SelectedBard, midiFile, track);
         }
 

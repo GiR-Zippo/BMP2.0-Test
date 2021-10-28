@@ -21,7 +21,7 @@ namespace BardMusicPlayer.Ui.Functions
         };
 
         public static PlaybackState_Enum PlaybackState;
-        public static BmpSong CurrentSong;
+        public static BmpSong CurrentSong { get; set; }
         public static string InstrumentName;
 
 
