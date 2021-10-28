@@ -148,7 +148,8 @@ namespace BardMusicPlayer.Coffer
         {
             using var memoryStream = new MemoryStream(bson);
             var midiFile = MidiFile.Read(memoryStream);
-            var trackChunk = midiFile.GetTrackChunks().First();
+            //In case we have more than 1 chunk per track, combine them
+            TrackChunk trackChunk = Melanchall.DryWetMidi.Core.TrackChunkUtilities.Merge(midiFile.GetTrackChunks());
             memoryStream.Dispose();
             return trackChunk;
         }
@@ -378,10 +379,8 @@ namespace BardMusicPlayer.Coffer
             var songCol = GetSongCollection();
             try
             {
-                if (song.Id == null)
+                if (song.Id != null)
                 {
-                    song.Id = ObjectId.NewObjectId();
-                    //TODO: Fix this to get a real unique idendifier
                     var results = songCol.Find(x => x.Title.Equals(song.Title));
                     if (results.Count() > 0)
                     {
@@ -498,7 +497,7 @@ namespace BardMusicPlayer.Coffer
 
             // Create the song collection and add indicies
             var songs = dbi.GetCollection<BmpSong>(Constants.SONG_COL_NAME);
-            songs.EnsureIndex(x => x.Title, true);
+            songs.EnsureIndex(x => x.Title);
             songs.EnsureIndex(x => x.Tags);
 
             // Create the custom playlist collection and add indicies
