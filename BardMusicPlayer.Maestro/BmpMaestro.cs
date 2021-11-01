@@ -17,9 +17,6 @@ namespace BardMusicPlayer.Maestro
     {
         private static readonly Lazy<BmpMaestro> LazyInstance = new(() => new BmpMaestro());
 
-        public EventHandler<ITimeSpan> OnPlaybackTimeChanged;
-        public EventHandler<ITimeSpan> OnSongMaxTime;
-
         public IEnumerable<Game> Bards { get; private set; }
         public Game SelectedBard { get; set; }
 

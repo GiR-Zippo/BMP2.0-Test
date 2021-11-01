@@ -21,13 +21,14 @@ namespace BardMusicPlayer.Maestro
             //Start the melanchall sequencer
             PlaybackCurrentTimeWatcher.Instance.AddPlayback(_playback, TimeSpanType.Metric);
             PlaybackCurrentTimeWatcher.Instance.CurrentTimeChanged += OnTick;
+            //PlaybackCurrentTimeWatcher.Instance.PollingInterval = TimeSpan.FromMilliseconds(250);  //Not sure, but seems to affect OnNoteEvent polling too
             PlaybackCurrentTimeWatcher.Instance.Start();
             
             _playback.Speed = 1;                    //Yep that's the playback speed and we'll set it
             _playback.EventPlayed += OnNoteEvent;
             _tracknumber = tracknr;
 
-            BmpMaestro.Instance.OnSongMaxTime?.Invoke(this, _playback.GetDuration(TimeSpanType.Metric));
+            BmpMaestro.Instance.PublishEvent(new MaxPlayTimeEvent(_playback.GetDuration(TimeSpanType.Metric)));
         }
 
         public void SetPlaybackStart(double f)
@@ -40,7 +41,7 @@ namespace BardMusicPlayer.Maestro
 
         public void OnTick(object sender, PlaybackCurrentTimeChangedEventArgs e)
         {
-            BmpMaestro.Instance.OnPlaybackTimeChanged?.Invoke(this, _playback.GetCurrentTime(TimeSpanType.Metric));
+            BmpMaestro.Instance.PublishEvent(new CurrentPlayPositionEvent(_playback.GetCurrentTime(TimeSpanType.Metric)));
         }
 
         public void OnNoteEvent(object sender, MidiEventPlayedEventArgs e)
