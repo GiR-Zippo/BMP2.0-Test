@@ -45,6 +45,13 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Statistics" />
+                <TabItem Header="Siren">
+                    <Grid>
+                        <Button x:Name="Siren_Load" Content="Load" Click="Siren_Load_Click" Height="20" Width="30" Margin="10,10,435,167"/>
+                        <Button x:Name="Siren_Play" Content="Play" Click="Siren_Play_Click" Height="20" Width="30" Margin="42,10,403,167"/>
+                        <Button x:Name="Siren_Stop" Content="Stop" Click="Siren_Stop_Click" Height="20" Width="30" Margin="74,10,371,167"/>
+                    </Grid>
+                </TabItem>
             </TabControl>
         </Grid>
 

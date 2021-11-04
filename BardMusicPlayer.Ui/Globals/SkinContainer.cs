@@ -136,6 +136,32 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             PLAYLIST_EXPAND_SELECTED
         };
 
+        public enum EQ_TYPES
+        {
+            EQ_WINDOW_BACKGROUND =0,
+            EQ_TITLE_BAR,
+            EQ_TITLE_BAR_SELECTED,
+            EQ_SLIDER_BACKGROUND,
+            EQ_SLIDER_THUMB,
+            EQ_SLIDER_THUMB_SELECTED,
+            EQ_CLOSE_BUTTON,
+            EQ_CLOSE_BUTTON_ACTIVE,
+            EQ_MAXIMIZE_BUTTON_ACTIVE_FALLBACK,
+            EQ_ON_BUTTON,
+            EQ_ON_BUTTON_DEPRESSED,
+            EQ_ON_BUTTON_SELECTED,
+            EQ_ON_BUTTON_SELECTED_DEPRESSED,
+            EQ_AUTO_BUTTON,
+            EQ_AUTO_BUTTON_DEPRESSED,
+            EQ_AUTO_BUTTON_SELECTED,
+            EQ_AUTO_BUTTON_SELECTED_DEPRESSED,
+            EQ_GRAPH_BACKGROUND,
+            EQ_GRAPH_LINE_COLORS,
+            EQ_PRESETS_BUTTON,
+            EQ_PRESETS_BUTTON_SELECTED,
+            EQ_PREAMP_LINE
+        }
+
         public enum GENEX_TYPES
         {
             GENEX_BUTTON_BACKGROUND_LEFT_UNPRESSED = 0,
@@ -156,11 +182,19 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             GENEX_HORIZONTAL_SCROLL_HANDLE_PRESSED
         }
 
+        public enum VISCOLOR_TYPES
+        {
+            VISCOLOR_BACKGROUND = 0,
+            VISCOLOR_PEAKS = 23
+        }
+
         public static Dictionary<CBUTTON_TYPES, ImageBrush> CBUTTONS = new Dictionary<CBUTTON_TYPES, ImageBrush> { };
         public static Dictionary<NUMBER_TYPES, ImageBrush>  NUMBERS  = new Dictionary<NUMBER_TYPES, ImageBrush> { };
         public static Dictionary<TITLEBAR_TYPES, ImageBrush> TITLEBAR = new Dictionary<TITLEBAR_TYPES, ImageBrush> { };
         public static Dictionary<PLAYLIST_TYPES, ImageBrush> PLAYLIST = new Dictionary<PLAYLIST_TYPES, ImageBrush> { };
+        public static Dictionary<EQ_TYPES, ImageBrush> EQUALIZER = new Dictionary<EQ_TYPES, ImageBrush> { };
         public static Dictionary<GENEX_TYPES, ImageBrush> GENEX = new Dictionary<GENEX_TYPES, ImageBrush> { };
+        public static Dictionary<VISCOLOR_TYPES, System.Drawing.Color> VISCOLOR = new Dictionary<VISCOLOR_TYPES, System.Drawing.Color> { };
         public static Dictionary<int, Image> FONT = new Dictionary<int, Image> { };
     }
 }

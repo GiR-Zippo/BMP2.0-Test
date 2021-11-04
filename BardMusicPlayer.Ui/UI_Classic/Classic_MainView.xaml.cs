@@ -10,6 +10,7 @@ using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Coffer;
 using BardMusicPlayer.UI.Functions;
+//using BardMusicPlayer.Siren;
 
 namespace BardMusicPlayer.Ui.Views
 {
@@ -154,6 +155,19 @@ namespace BardMusicPlayer.Ui.Views
             Globals.Settings.SaveConfig();
         }
 
+        private void Siren_Load_Click(object sender, RoutedEventArgs e)
+        {
+            //BmpSiren.Instance.Load(PlaybackFunctions.CurrentSong);
+        }
 
+        private void Siren_Play_Click(object sender, RoutedEventArgs e)
+        {
+            //BmpSiren.Instance.Play();
+        }
+
+        private void Siren_Stop_Click(object sender, RoutedEventArgs e)
+        {
+            //BmpSiren.Instance.Stop();
+        }
     }
 }

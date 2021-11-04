@@ -85,7 +85,34 @@ namespace BardMusicPlayer.Ui.Views
             {SkinContainer.TITLEBAR_TYPES.MAIN_SHADE_POSITION_THUMB_LEFT, new List<int> {17, 36, 3, 7 } },
             {SkinContainer.TITLEBAR_TYPES.MAIN_SHADE_POSITION_THUMB_RIGHT, new List<int> {23, 36, 3, 7 } },
         };
-     
+
+
+        Dictionary<SkinContainer.EQ_TYPES, List<int>> eqdata = new Dictionary<SkinContainer.EQ_TYPES, List<int>>
+        {
+            { SkinContainer.EQ_TYPES.EQ_WINDOW_BACKGROUND, new List<int> {0,0,275, 116}},
+            { SkinContainer.EQ_TYPES.EQ_TITLE_BAR, new List<int> {0,149,275, 14}},
+            { SkinContainer.EQ_TYPES.EQ_TITLE_BAR_SELECTED, new List<int> {0,134,275, 14}},
+            { SkinContainer.EQ_TYPES.EQ_SLIDER_BACKGROUND, new List<int> {13,164,209, 129}},
+            { SkinContainer.EQ_TYPES.EQ_SLIDER_THUMB, new List<int> {0,164,11, 11}},
+            { SkinContainer.EQ_TYPES.EQ_SLIDER_THUMB_SELECTED, new List<int> {0,176,11, 11}},
+            { SkinContainer.EQ_TYPES.EQ_CLOSE_BUTTON, new List<int> {0,116,9, 9}},
+            { SkinContainer.EQ_TYPES.EQ_CLOSE_BUTTON_ACTIVE, new List<int> {0,125,9, 9}},
+            { SkinContainer.EQ_TYPES.EQ_MAXIMIZE_BUTTON_ACTIVE_FALLBACK, new List<int> {254,152,9,9,}},
+            { SkinContainer.EQ_TYPES.EQ_ON_BUTTON, new List<int> {10,119,26, 12}},
+            { SkinContainer.EQ_TYPES.EQ_ON_BUTTON_DEPRESSED, new List<int> {128,119,26, 12}},
+            { SkinContainer.EQ_TYPES.EQ_ON_BUTTON_SELECTED, new List<int> {69,119,26, 12}},
+            { SkinContainer.EQ_TYPES.EQ_ON_BUTTON_SELECTED_DEPRESSED, new List<int> {187,119,26,12,}},
+            { SkinContainer.EQ_TYPES.EQ_AUTO_BUTTON, new List<int> {36,119,32, 12}},
+            { SkinContainer.EQ_TYPES.EQ_AUTO_BUTTON_DEPRESSED, new List<int> {154,119,32,12,}},
+            { SkinContainer.EQ_TYPES.EQ_AUTO_BUTTON_SELECTED, new List<int> {95,119,32, 12}},
+            { SkinContainer.EQ_TYPES.EQ_AUTO_BUTTON_SELECTED_DEPRESSED, new List<int> {213,119,32,12,}},
+            { SkinContainer.EQ_TYPES.EQ_GRAPH_BACKGROUND, new List<int> {0,294,113, 19}},
+            { SkinContainer.EQ_TYPES.EQ_GRAPH_LINE_COLORS, new List<int> {115,294,1, 19}},
+            { SkinContainer.EQ_TYPES.EQ_PRESETS_BUTTON, new List<int> {224,164,44, 12}},
+            { SkinContainer.EQ_TYPES.EQ_PRESETS_BUTTON_SELECTED, new List<int> {224,176,44,12}},
+            { SkinContainer.EQ_TYPES.EQ_PREAMP_LINE, new List<int> {0,314,113, 1}}
+        };
+
         Dictionary<SkinContainer.GENEX_TYPES, List<int>> genexdata = new Dictionary<SkinContainer.GENEX_TYPES, List<int>>
         {
             {SkinContainer.GENEX_TYPES.GENEX_BUTTON_BACKGROUND_LEFT_UNPRESSED, new List<int> {0,0,15,4 } },
@@ -181,6 +208,12 @@ namespace BardMusicPlayer.Ui.Views
             SkinContainer.GENEX.Clear();
             SkinContainer.NUMBERS.Clear();
             SkinContainer.PLAYLIST.Clear();
+            SkinContainer.EQUALIZER.Clear();
+            SkinContainer.VISCOLOR.Clear();
+
+            List<string> visdata = ExtractViscolorFromZip(filename, "viscolor.txt");
+            SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]));
+            SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS]));
 
             //Titlebar and buttons
             Image img = ExtractImageFromZip(filename, "titlebar.bmp");
@@ -233,9 +266,9 @@ namespace BardMusicPlayer.Ui.Views
             {
                 Bitmap bitmap = new Bitmap(65, 12);
                 var graphics = Graphics.FromImage(bitmap);
-                for (int i = 0; i != 10; i++)
+                using (SolidBrush brush = new SolidBrush(SkinContainer.VISCOLOR[SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]))
                 {
-                    graphics.DrawImage(img, new Rectangle(10*i, 0, 10, 12), new Rectangle(30, 0, 20, 12), GraphicsUnit.Pixel);
+                    graphics.FillRectangle(brush, 0, 0, 65, 12);
                 }
                 Application.Current.Resources["MAIN_VOLUME_BACKGROUND"] = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
             }
@@ -351,9 +384,6 @@ namespace BardMusicPlayer.Ui.Views
             TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
         }
 
-
-        
-
         Image ExtractImageFromZip(string archivename, string imagename)
         {
             var zip = ZipFile.OpenRead(@archivename);
@@ -412,6 +442,41 @@ namespace BardMusicPlayer.Ui.Views
             return null;
         }
 
+        List<string> ExtractViscolorFromZip(string archivename, string imagename)
+        {
+            var zip = ZipFile.OpenRead(@archivename);
+            var ent = zip.Entries;
+            string regex = @"\b(" + imagename + @")\b";
+            foreach (var entry in ent)
+            {
+                if (Regex.IsMatch(entry.Name, regex, RegexOptions.IgnoreCase))
+                {
+                    if (entry != null)
+                    {
+                        using (var zipStream = entry.Open())
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            zipStream.CopyTo(memoryStream);
+                            memoryStream.Position = 0;
+                            var data = new List<string>();
+                            using (var reader = new StreamReader(memoryStream, Encoding.ASCII))
+                            {
+                                string line;
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    data.Add(line);
+                                }
+                            }
+                            memoryStream.Close();
+                            zipStream.Close();
+                            return data;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
         ImageBrush ExtractImage(Image img, int x, int y, int offset_x, int offset_y)
         {
             Bitmap p = new Bitmap(x, y);
@@ -421,6 +486,25 @@ namespace BardMusicPlayer.Ui.Views
             return new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(p.GetHbitmap(), IntPtr.Zero,
                                                                                         Int32Rect.Empty,
                                                                                         BitmapSizeOptions.FromEmptyOptions()));
+        }
+
+        System.Drawing.Color GetColor(string data)
+        {
+            byte[] colval = new byte[3];
+            string[] numbers = Regex.Split(data, @"\D+");
+            int idx = 0;
+            foreach (string value in numbers)
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (idx >= 3)
+                        break;
+                    int i = int.Parse(value);
+                    colval[idx] = ((byte)int.Parse(value));
+                    idx++;
+                }
+            }
+            return System.Drawing.Color.FromArgb(colval[0], colval[1], colval[2]);
         }
     }
 }

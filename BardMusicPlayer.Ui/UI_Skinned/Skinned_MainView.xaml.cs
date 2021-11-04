@@ -35,7 +35,7 @@ namespace BardMusicPlayer.Ui.Views
         {
             InitializeComponent();
 
-            LoadSkin(Globals.Globals.DataPath + @"Winamp3_Classified_v5.5.wsz");
+            LoadSkin(Globals.Globals.DataPath + @"soundcheck1.wsz");
 
             Maestro.BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             Maestro.BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;

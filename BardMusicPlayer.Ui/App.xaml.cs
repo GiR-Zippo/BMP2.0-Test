@@ -11,6 +11,7 @@ using BardMusicPlayer.Grunt;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Maestro;
+//using BardMusicPlayer.Siren;
 
 namespace BardMusicPlayer.Ui
 {
@@ -34,11 +35,13 @@ namespace BardMusicPlayer.Ui
             BmpSeer.Instance.Start();
             BmpGrunt.Instance.Start();
             BmpMaestro.Instance.Start();
+            //BmpSiren.Instance.Setup();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             //LogManager.Shutdown();
+            //BmpSiren.Instance.ShutDown();
             BmpMaestro.Instance.Stop();
             BmpGrunt.Instance.Stop();
             BmpSeer.Instance.Stop();
