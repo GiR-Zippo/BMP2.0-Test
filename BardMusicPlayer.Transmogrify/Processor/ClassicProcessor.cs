@@ -31,16 +31,16 @@ namespace BardMusicPlayer.Transmogrify.Processor
 
             var trackChunk = TimedObjectUtilities.ToTrackChunk(await 
                 trackChunks.GetNoteDictionary(Song.SourceTempoMap, ProcessorConfig.Instrument.InstrumentTone,
-                        ProcessorConfig.OctaveRange.LowerNote,
-                        ProcessorConfig.OctaveRange.UpperNote,
-                        (int) ProcessorConfig.Instrument.InstrumentToneMenuKey,
+                        ProcessorConfig.OctaveRange.LowerNote, 
+                        ProcessorConfig.OctaveRange.UpperNote, 
+                        (int) ProcessorConfig.Instrument.InstrumentToneMenuKey, 
                         false,
                         -ProcessorConfig.OctaveRange.LowerNote)
                 .MoveNoteDictionaryToDefaultOctave(ProcessorConfig.OctaveRange)
                 .ConcatNoteDictionaryToList());
 
             var playerNotesDictionary = await trackChunk.GetPlayerNoteDictionary(ProcessorConfig.PlayerCount, OctaveRange.C3toC6.LowerNote, OctaveRange.C3toC6.UpperNote);
-            //var playerProgsDictionary = await trackChunk.GetPlayerProgDictionary(ProcessorConfig.PlayerCount);
+
             var concurrentPlayerTrackDictionary = new ConcurrentDictionary<long, TrackChunk>(ProcessorConfig.PlayerCount, ProcessorConfig.PlayerCount);
 
             Parallel.ForEach(playerNotesDictionary.Values, async (notesDictionary, _, iteration) =>
@@ -49,14 +49,6 @@ namespace BardMusicPlayer.Transmogrify.Processor
                     concurrentPlayerTrackDictionary[iteration].AddObjects(new List<ITimedObject>{new TimedEvent(new SequenceTrackNameEvent("tone:" + ProcessorConfig.Instrument.InstrumentTone.Name))});
                 }
             );
-
-            /*var progsDictionary = new Dictionary<long, Melanchall.DryWetMidi.Common.SevenBitNumber>();
-            Parallel.ForEach(playerNotesDictionary.Values, async (progsDictionary, _, iteration) =>
-            {
-                concurrentPlayerTrackDictionary[iteration] = TimedObjectUtilities.ToTrackChunk(await progsDictionary.ConcatProgDictionaryToList());
-                concurrentPlayerTrackDictionary[iteration].AddObjects(new List<ITimedObject> { new TimedEvent(new SequenceTrackNameEvent("tone:" + ProcessorConfig.Instrument.InstrumentTone.Name)) });
-            }
-            );*/
 
             trackChunks = concurrentPlayerTrackDictionary.Values.ToList();
 

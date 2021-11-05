@@ -32,8 +32,6 @@ namespace BardMusicPlayer.Maestro
         public Sequencer(Game game, MidiFile container, int tracknr = -1)
         {
             _game = game;
-
-
             _playback = container.GetPlayback();
             //Start the melanchall sequencer
             PlaybackCurrentTimeWatcher.Instance.AddPlayback(_playback, TimeSpanType.Metric);
@@ -43,7 +41,7 @@ namespace BardMusicPlayer.Maestro
             
             _playback.Speed = 1;                    //Yep that's the playback speed and we'll set it
             _playback.EventPlayed += OnNoteEvent;
-            _playback.Stopped += OnPlaybackStopped;
+            _playback.Stopped     += OnPlaybackStopped;
             _tracknumber = tracknr;
 
             BmpMaestro.Instance.PublishEvent(new MaxPlayTimeEvent(_playback.GetDuration(TimeSpanType.Metric)));
@@ -71,6 +69,9 @@ namespace BardMusicPlayer.Maestro
         {
             switch (e.Event.EventType)
             {
+                case MidiEventType.SetTempo:
+                    var tempo = e.Event as SetTempoEvent;
+                    return;
                 case MidiEventType.NoteOn:
                     NoteOnEvent non = e.Event as NoteOnEvent;
                     if ((non.Channel == _tracknumber) || (_tracknumber == -1))

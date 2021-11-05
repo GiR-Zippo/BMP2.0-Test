@@ -57,7 +57,6 @@ namespace BardMusicPlayer.Transmogrify.Song
             var midiFile = new MidiFile();
             if (sourceMidiData.GetNotes().Count < 1) return Task.FromResult(midiFile);
             var delta = sourceMidiData.GetNotes().First().Time;
-            var index = 0;
             foreach (var trackChunk in sourceMidiData.GetTrackChunks())
             {
                 var trackName = trackChunk.Events.OfType<SequenceTrackNameEvent>().First().Text;
@@ -69,7 +68,6 @@ namespace BardMusicPlayer.Transmogrify.Song
                     {
                         if (note.Time - delta < 0) continue; // TODO: log this error, though this shouldn't be possible.
                         note.Time -= delta;
-                        note.Channel = Melanchall.DryWetMidi.Common.FourBitNumber.Parse(index.ToString());
                         newNotes.Add(note);
                     }
                     newTrackChunk.AddObjects(newNotes);
@@ -88,7 +86,6 @@ namespace BardMusicPlayer.Transmogrify.Song
                     newTrackChunk.AddObjects(newLyrics);
                     midiFile.Chunks.Add(newTrackChunk);
                 }
-                index++;
             }
             midiFile.ReplaceTempoMap(Tools.GetMsTempoMap());
             return Task.FromResult(midiFile);

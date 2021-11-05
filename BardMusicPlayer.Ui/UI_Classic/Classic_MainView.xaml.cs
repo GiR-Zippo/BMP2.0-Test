@@ -31,9 +31,10 @@ namespace BardMusicPlayer.Ui.Views
             this.SongName.Text = PlaybackFunctions.GetSongName();
             Maestro.BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             Maestro.BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
+            Maestro.BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
-            
+           
         }
 
         private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
@@ -50,6 +51,12 @@ namespace BardMusicPlayer.Ui.Views
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackTimeChanged(e)));
         }
+
+        private void Instance_PlaybackStopped(object sender, bool e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackStopped()));
+        }
+
 
         private void Instance_EnsembleStarted(Seer.Events.EnsembleStarted seerEvent)
         {
@@ -113,6 +120,12 @@ namespace BardMusicPlayer.Ui.Views
             if (!_Playbar_dragStarted)
                 Playbar_Slider.Value = d.TotalMicroseconds;
         }
+
+        public void PlaybackStopped()
+        {
+            Play_Button.Content = @"▶";
+        }
+
 
         /* Track UP/Down */
         private int _numValue = 1;

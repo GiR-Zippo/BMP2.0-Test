@@ -218,52 +218,6 @@ namespace BardMusicPlayer.Transmogrify.Processor.Utilities
         /// </summary>
         /// <param name="trackChunk"></param>
         /// <param name="playerCount"></param>
-        /// <param name="low"></param>
-        /// <param name="high"></param>
-        /// <returns></returns>
-/*        
-internal static Task<Dictionary<int, Dictionary<long, SevenBitNumber>>> GetPlayerProgDictionary(this TrackChunk trackChunk, int playerCount, int low = 27, int high = 31)
-        {
-            var notes = trackChunk.GetNotes();
-            var playerProgDictionary = new Dictionary<int, Dictionary<long, SevenBitNumber>>();
-
-            var index = 0;
-            foreach (var note in notes)
-            {
-                note.Velocity = (SevenBitNumber)index;
-                note.OffVelocity = (SevenBitNumber)index;
-                index++;
-                if (index > 127) index = 0;
-            }
-
-            trackChunk = TimedObjectUtilities.ToTrackChunk(notes);
-
-            using var timedEventsManager = trackChunk.ManageTimedEvents();
-
-            foreach (var trackEvent in timedEventsManager.Events)
-            {
-                switch (trackEvent.Event.EventType)
-                {
-                    case MidiEventType.ProgramChange:
-                        {
-                            var prog = (ProgramChangeEvent)trackEvent.Event;
-                            if (prog.ProgramNumber >= 27 && prog.ProgramNumber <= 31)
-                            {
-                                playerProgDictionary[playerCount][trackEvent.Time] = prog.ProgramNumber;
-                            }
-                            break;
-                        }
-                }
-            }
-            return Task.FromResult(playerProgDictionary);
-        }
-*/
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="trackChunk"></param>
-        /// <param name="playerCount"></param>
         /// <param name="lowClamp"></param>
         /// <param name="highClamp"></param>
         /// <returns></returns>
