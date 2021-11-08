@@ -28,7 +28,7 @@ namespace BardMusicPlayer.Ui.Globals
         public static void LoadConfig()
         {
             Globals.CurrentTrack = 1;
-            BmpPigeonhole.Instance.NoteKeyDelay = 1;
+            BmpPigeonhole.Instance.NoteKeyDelay = 25;
             AutostartType = (Autostart_Types)Convert.ToInt16(BmpPigeonhole.Instance.AutostartMethod);
         }
         

@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Transmogrify.Song;
 using Melanchall.DryWetMidi.Core;
@@ -91,7 +92,10 @@ namespace BardMusicPlayer.Maestro
         public void StartLocalPerformer()
         {
             if (_sequencer != null)
+            {
+                BmpPigeonhole.Instance.NoteKeyDelay = 1;
                 _sequencer.Start();
+            }
         }
 
         /// <summary>
@@ -101,7 +105,10 @@ namespace BardMusicPlayer.Maestro
         public void PauseLocalPerformer()
         {
             if (_sequencer != null)
+            {
+                BmpPigeonhole.Instance.NoteKeyDelay = 25;
                 _sequencer.Pause();
+            }
         }
 
         /// <summary>
@@ -111,7 +118,10 @@ namespace BardMusicPlayer.Maestro
         public void StopLocalPerformer()
         {
             if (_sequencer != null)
+            {
+                BmpPigeonhole.Instance.NoteKeyDelay = 25;
                 _sequencer.Stop();
+            }
         }
 
         /// <summary>
