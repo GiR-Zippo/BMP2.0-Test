@@ -20,6 +20,7 @@ namespace BardMusicPlayer.Maestro
 
         public IEnumerable<Game> Bards { get; private set; }
         public Game SelectedBard { get; set; }
+        private int _NoteKeyDelay;
 
         private Sequencer _sequencer;
         /// <summary>
@@ -93,6 +94,7 @@ namespace BardMusicPlayer.Maestro
         {
             if (_sequencer != null)
             {
+                _NoteKeyDelay = BmpPigeonhole.Instance.NoteKeyDelay;
                 BmpPigeonhole.Instance.NoteKeyDelay = 1;
                 _sequencer.Start();
             }
@@ -106,7 +108,7 @@ namespace BardMusicPlayer.Maestro
         {
             if (_sequencer != null)
             {
-                BmpPigeonhole.Instance.NoteKeyDelay = 25;
+                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
                 _sequencer.Pause();
             }
         }
@@ -119,7 +121,7 @@ namespace BardMusicPlayer.Maestro
         {
             if (_sequencer != null)
             {
-                BmpPigeonhole.Instance.NoteKeyDelay = 25;
+                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
                 _sequencer.Stop();
             }
         }
