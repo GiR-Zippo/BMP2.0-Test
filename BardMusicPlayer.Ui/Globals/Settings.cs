@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using BardMusicPlayer.Ui.Functions;
+using BardMusicPlayer.Pigeonhole;
 
 namespace BardMusicPlayer.Ui.Globals
 {
@@ -27,35 +28,13 @@ namespace BardMusicPlayer.Ui.Globals
         public static void LoadConfig()
         {
             Globals.CurrentTrack = 1;
-            AutostartType = (Autostart_Types)Convert.ToInt16(ConfigurationManager.AppSettings["AutostartType"]);
+            BmpPigeonhole.Instance.NoteKeyDelay = 1;
+            AutostartType = (Autostart_Types)Convert.ToInt16(BmpPigeonhole.Instance.AutostartMethod);
         }
         
         public static void SaveConfig()
         {
-            saveConfig("AutostartType", Convert.ToInt32(AutostartType).ToString());
-        }
-
-        private static void saveConfig(string key, string value)
-        {
-            try
-            {
-                var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                var settings = configFile.AppSettings.Settings;
-                if (settings[key] == null)
-                {
-                    settings.Add(key, value);
-                }
-                else
-                {
-                    settings[key].Value = value;
-                }
-                configFile.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection(configFile.AppSettings.SectionInformation.Name);
-            }
-            catch (ConfigurationErrorsException)
-            {
-                Console.WriteLine("Error writing app settings");
-            }
+            BmpPigeonhole.Instance.AutostartMethod = (int)AutostartType;
         }
     }
 }

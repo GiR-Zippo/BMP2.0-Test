@@ -115,8 +115,9 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
-        /// Change the tracknumber
+        /// Change the tracknumber (-1 all tracks)
         /// </summary>
+        /// <param name="track"></param>
         /// <returns></returns>
         public void ChangeTracknumber(int track)
         {
@@ -134,6 +135,10 @@ namespace BardMusicPlayer.Maestro
                 _sequencer.Destroy();
         }
 
+        /// <summary>
+        /// Start the eventhandler
+        /// </summary>
+        /// <returns></returns>
         public void Start()
         {
             if (Started) return;
@@ -141,6 +146,10 @@ namespace BardMusicPlayer.Maestro
             Started = true;
         }
 
+        /// <summary>
+        /// Stop the eventhandler
+        /// </summary>
+        /// <returns></returns>
         public void Stop()
         {
             if (!Started) return;
@@ -148,11 +157,15 @@ namespace BardMusicPlayer.Maestro
             Started = false;
         }
 
-
-        public void SetPlaybackStart(double t)
+        /// <summary>
+        /// Sets the playback at position (timeindex in microseconds)
+        /// </summary>
+        /// <param name="timeindex"></param>
+        /// <returns></returns>
+        public void SetPlaybackStart(double timeindex)
         {
             if (_sequencer != null)
-                _sequencer.SetPlaybackStart(t);
+                _sequencer.SetPlaybackStart(timeindex);
         }
 
         ~BmpMaestro() { Dispose(); }

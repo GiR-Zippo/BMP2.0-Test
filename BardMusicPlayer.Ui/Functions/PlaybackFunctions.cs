@@ -48,7 +48,7 @@ namespace BardMusicPlayer.Ui.Functions
         public static void LoadSongFromPlaylist(BmpSong item)
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
-            PlaybackFunctions.CurrentSong = item;
+            CurrentSong = item;
             BmpMaestro.Instance.DestroySongFromLocalPerformer();
             BmpMaestro.Instance.PlayWithLocalPerformer(CurrentSong, Globals.Globals.CurrentTrack - 1);
             SetInstrumentName();
@@ -101,7 +101,7 @@ namespace BardMusicPlayer.Ui.Functions
                     ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)CurrentSong.TrackContainers[Globals.Globals.CurrentTrack - 1].ConfigContainers[0].ProcessorConfig;
                     InstrumentName = classicConfig.Instrument.Name;
                 }
-                catch(System.Collections.Generic.KeyNotFoundException e)
+                catch(System.Collections.Generic.KeyNotFoundException)
                 {
                     InstrumentName = "Unknown";
                 }
