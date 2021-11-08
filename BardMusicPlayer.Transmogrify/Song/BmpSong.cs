@@ -209,7 +209,7 @@ namespace BardMusicPlayer.Transmogrify.Song
                     index++;
                 }
             }
-            for (var i = 0; i < song.TrackContainers.Count(); i++) //midiFile.GetTrackChunks().Count(); i++)
+            for (var i = 0; i < song.TrackContainers.Count(); i++)
             {
                 song.TrackContainers[i].ConfigContainers = song.TrackContainers[i].SourceTrackChunk.ReadConfigs(i, song);
             }
