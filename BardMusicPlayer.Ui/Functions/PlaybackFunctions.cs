@@ -39,8 +39,8 @@ namespace BardMusicPlayer.Ui.Functions
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             
             CurrentSong = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
-            BmpMaestro.Instance.DestroySongFromLocalPerformer();
-            BmpMaestro.Instance.PlayWithLocalPerformer(CurrentSong, Globals.Globals.CurrentTrack - 1);
+            BmpMaestro.Instance.PlayWithLocalPerformer(openFileDialog.FileName);
+            BmpMaestro.Instance.ChangeTracknumber(Globals.Globals.CurrentTrack);
             SetInstrumentName();
             return true;
         }
@@ -49,8 +49,9 @@ namespace BardMusicPlayer.Ui.Functions
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             CurrentSong = item;
-            BmpMaestro.Instance.DestroySongFromLocalPerformer();
-            BmpMaestro.Instance.PlayWithLocalPerformer(CurrentSong, Globals.Globals.CurrentTrack - 1);
+            //BmpMaestro.Instance.DestroySongFromLocalPerformer();
+            BmpMaestro.Instance.PlayWithLocalPerformer(CurrentSong, Globals.Globals.CurrentTrack);
+            BmpMaestro.Instance.ChangeTracknumber(Globals.Globals.CurrentTrack);
             SetInstrumentName();
         }
 
@@ -82,7 +83,7 @@ namespace BardMusicPlayer.Ui.Functions
         public static void SetTrackNumber(int track)
         {
             Globals.Globals.CurrentTrack = track;
-            BmpMaestro.Instance.ChangeTracknumber(Globals.Globals.CurrentTrack -1);
+            BmpMaestro.Instance.ChangeTracknumber(Globals.Globals.CurrentTrack);
             SetInstrumentName();
         }
 
@@ -94,7 +95,7 @@ namespace BardMusicPlayer.Ui.Functions
             {
                 if (CurrentSong == null)
                     return;
-                if (CurrentSong.TrackContainers.Count <= Globals.Globals.CurrentTrack - 1)
+                if (CurrentSong.TrackContainers.Count <= Globals.Globals.CurrentTrack -1)
                     return;
                 try
                 {

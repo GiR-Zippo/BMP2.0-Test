@@ -1,0 +1,543 @@
+﻿using Melanchall.DryWetMidi.Common;
+using Melanchall.DryWetMidi.Core;
+using Melanchall.DryWetMidi.Interaction;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using BardMusicPlayer.Quotidian.Structs;
+
+namespace BardMusicPlayer.Maestro.Utils
+{
+    class DryWetUtil
+    {
+        private static string lastMD5 = "invalid";
+        private static MidiFile lastFile;
+
+        public static MemoryStream ScrubFile(string filePath)
+        {
+            MidiFile midiFile;
+            try
+            {
+                
+                string md5 = CalculateMD5(filePath);
+
+                if (lastMD5.Equals(md5) && lastFile != null)
+                {
+                    var oldfile = new MemoryStream();
+                    lastFile.Write(oldfile, MidiFileFormat.MultiTrack, new WritingSettings { TextEncoding = Encoding.UTF8 });
+                    oldfile.Flush();
+                    oldfile.Position = 0;
+                    return oldfile;
+                }
+
+                midiFile = MidiFile.Read(filePath, new ReadingSettings
+                {
+                    ReaderSettings = new ReaderSettings { BufferingPolicy = BufferingPolicy.BufferAllData },
+                    InvalidChunkSizePolicy = InvalidChunkSizePolicy.Ignore,
+                    InvalidMetaEventParameterValuePolicy = InvalidMetaEventParameterValuePolicy.SnapToLimits,
+                    InvalidChannelEventParameterValuePolicy = InvalidChannelEventParameterValuePolicy.SnapToLimits,
+                    InvalidSystemCommonEventParameterValuePolicy = InvalidSystemCommonEventParameterValuePolicy.SnapToLimits,
+                    MissedEndOfTrackPolicy = MissedEndOfTrackPolicy.Ignore,
+                    NotEnoughBytesPolicy = NotEnoughBytesPolicy.Ignore,
+                    UnexpectedTrackChunksCountPolicy = UnexpectedTrackChunksCountPolicy.Ignore,
+                    UnknownChannelEventPolicy = UnknownChannelEventPolicy.SkipStatusByteAndOneDataByte,
+                    UnknownChunkIdPolicy = UnknownChunkIdPolicy.Skip
+                });
+
+                #region Require
+
+                if (midiFile == null) throw new ArgumentNullException();
+
+                try
+                {
+                    if (midiFile.Chunks.Count < 1) throw new NotSupportedException();
+
+                    MidiFileFormat fileFormat = midiFile.OriginalFormat;
+
+                    if (fileFormat == MidiFileFormat.MultiSequence)
+                    {
+                        throw new NotSupportedException();
+                    }
+                }
+                catch (Exception exception) when (exception is UnknownFileFormatException || exception is InvalidOperationException)
+                {
+                    throw exception;
+                }
+
+                #endregion
+
+                Console.WriteLine("Scrubbing " + filePath);
+
+                var stream = ScrubMidi(midiFile);
+
+                lastMD5 = md5;
+
+                return stream;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw ex;
+            }
+        }
+
+        public static MemoryStream ScrubMidi(MidiFile midiFile)
+        {
+            try
+            {
+                #region Require
+
+                if (midiFile == null) throw new ArgumentNullException();
+
+                #endregion
+
+                Console.WriteLine("Scrubbing ");
+                var loaderWatch = Stopwatch.StartNew();
+                var newTrackChunks = new ConcurrentDictionary<int, TrackChunk>();
+                var tempoMap = midiFile.GetTempoMap().Clone();
+                long firstNote = midiFile.GetTrackChunks().GetNotes().First().GetTimedNoteOnEvent().TimeAs<MetricTimeSpan>(tempoMap).TotalMicroseconds / 1000;
+
+                var originalTrackChunks = new List<TrackChunk>();
+
+                TrackChunk allTracks = new TrackChunk();
+                allTracks.AddObjects(originalTrackChunks.GetNotes());
+
+                foreach (var trackChunk in midiFile.GetTrackChunks())
+                {
+                    allTracks.AddObjects(trackChunk.GetNotes());
+                    allTracks.AddObjects(trackChunk.GetTimedEvents());
+                    var thisTrack = new TrackChunk(new SequenceTrackNameEvent(trackChunk.Events.OfType<SequenceTrackNameEvent>().FirstOrDefault()?.Text));
+                    thisTrack.AddObjects(trackChunk.GetNotes());
+                    thisTrack.AddObjects(trackChunk.GetTimedEvents());
+                    originalTrackChunks.Add(thisTrack);
+                }
+                originalTrackChunks.Add(allTracks);
+
+                Parallel.ForEach(originalTrackChunks.Where(x => x.GetNotes().Any()), (originalChunk, loopState, index) =>
+                {
+                    var watch = Stopwatch.StartNew();
+                    var tempoMap = midiFile.GetTempoMap().Clone();
+                    int noteVelocity = int.Parse(index.ToString()) + 1;
+
+                    Dictionary<int, Dictionary<long, Note>> allNoteEvents = new Dictionary<int, Dictionary<long, Note>>();
+                    for (int i = 0; i < 127; i++) allNoteEvents.Add(i, new Dictionary<long, Note>());
+
+                    foreach (Note note in originalChunk.GetNotes())
+                    {
+                        long noteOnMS;
+
+                        long noteOffMS;
+
+                        try
+                        {
+                            noteOnMS = 5000 + (note.GetTimedNoteOnEvent().TimeAs<MetricTimeSpan>(tempoMap).TotalMicroseconds / 1000) - firstNote;
+                            noteOffMS = 5000 + (note.GetTimedNoteOffEvent().TimeAs<MetricTimeSpan>(tempoMap).TotalMicroseconds / 1000) - firstNote;
+                        }
+                        catch (Exception) { continue; }
+                        int noteNumber = note.NoteNumber;
+
+                        Note newNote = new Note((SevenBitNumber)noteNumber,
+                                                time: noteOnMS,
+                                                length: noteOffMS - noteOnMS
+                                                )
+                        {
+                            Channel = (FourBitNumber)0,
+                            Velocity = (SevenBitNumber)noteVelocity,
+                            OffVelocity = (SevenBitNumber)noteVelocity
+                        };
+
+                        if (allNoteEvents[noteNumber].ContainsKey(noteOnMS))
+                        {
+                            Note previousNote = allNoteEvents[noteNumber][noteOnMS];
+                            if (previousNote.Length < note.Length) allNoteEvents[noteNumber][noteOnMS] = newNote;
+                        }
+                        else allNoteEvents[noteNumber].Add(noteOnMS, newNote);
+                    }
+                    watch.Stop();
+                    Debug.WriteLine("step 1: " + noteVelocity + ": " + watch.ElapsedMilliseconds);
+                    watch = Stopwatch.StartNew();
+
+                    TrackChunk newChunk = new TrackChunk();
+                    for (int i = 0; i < 127; i++)
+                    {
+                        long lastNoteTimeStamp = -1;
+                        foreach (var noteEvent in allNoteEvents[i])
+                        {
+                            if (lastNoteTimeStamp >= 0 && allNoteEvents[i][lastNoteTimeStamp].Length + lastNoteTimeStamp >= noteEvent.Key)
+                            {
+                                allNoteEvents[i][lastNoteTimeStamp].Length = allNoteEvents[i][lastNoteTimeStamp].Length - (allNoteEvents[i][lastNoteTimeStamp].Length + lastNoteTimeStamp + 1 - noteEvent.Key);
+                            }
+
+                            lastNoteTimeStamp = noteEvent.Key;
+                        }
+                    }
+                    newChunk.AddObjects(allNoteEvents.SelectMany(s => s.Value).Select(s => s.Value).ToArray());
+                    allNoteEvents = null;
+                    watch.Stop();
+                    Debug.WriteLine("step 2: " + noteVelocity + ": " + watch.ElapsedMilliseconds);
+                    watch = Stopwatch.StartNew();
+
+                    Note[] notesToFix = newChunk.GetNotes().Reverse().ToArray();
+                    for (int i = 1; i < notesToFix.Count(); i++)
+                    {
+                        int noteNum = notesToFix[i].NoteNumber;
+                        long time = (notesToFix[i].GetTimedNoteOnEvent().Time);
+                        long dur = notesToFix[i].Length;
+                        int velocity = notesToFix[i].Velocity;
+
+                        long lowestParent = notesToFix[0].GetTimedNoteOnEvent().Time;
+                        for (int k = i - 1; k >= 0; k--)
+                        {
+                            long lastOn = notesToFix[k].GetTimedNoteOnEvent().Time;
+                            if (lastOn < lowestParent) lowestParent = lastOn;
+                        }
+                        if (lowestParent <= time + 50)
+                        {
+                            time = lowestParent - 50;
+                            if (time < 0) continue;
+                            notesToFix[i].Time = time;
+                            dur = 25;
+                            notesToFix[i].Length = dur;
+                        }
+                    }
+
+                    watch.Stop();
+                    Debug.WriteLine("step 3: " + noteVelocity + ": " + watch.ElapsedMilliseconds);
+                    watch = Stopwatch.StartNew();
+
+                    notesToFix = notesToFix.Reverse().ToArray();
+                    List<Note> fixedNotes = new List<Note>();
+                    for (int j = 0; j < notesToFix.Count(); j++)
+                    {
+                        var noteNum = notesToFix[j].NoteNumber;
+                        var time = notesToFix[j].Time;
+                        var dur = notesToFix[j].Length;
+                        var channel = notesToFix[j].Channel;
+                        var velocity = notesToFix[j].Velocity;
+
+                        if (j + 1 < notesToFix.Count())
+                        {
+                            if (notesToFix[j + 1].Time <= notesToFix[j].Time + notesToFix[j].Length + 25)
+                            {
+                                dur = notesToFix[j + 1].Time - notesToFix[j].Time - 25;
+                                dur = dur < 25 ? 1 : dur;
+                            }
+                        }
+                        fixedNotes.Add(new Note(noteNum, dur, time)
+                        {
+                            Channel = channel,
+                            Velocity = velocity,
+                            OffVelocity = velocity
+                        });
+                    }
+                    notesToFix = null;
+
+                    watch.Stop();
+                    Debug.WriteLine("step 4: " + noteVelocity + ": " + watch.ElapsedMilliseconds);
+                    watch = Stopwatch.StartNew();
+
+                    int octaveShift = 0;
+                    string trackName = originalChunk.Events.OfType<SequenceTrackNameEvent>().FirstOrDefault()?.Text;
+                    if (trackName == null) trackName = "";
+                    trackName = trackName.ToLower().Trim().Replace(" ", String.Empty);
+                    string o_trackName = trackName;
+                    Regex rex = new Regex(@"^([A-Za-z]+)([-+]\d)?");
+                    if (rex.Match(trackName) is Match match)
+                    {
+                        if (!string.IsNullOrEmpty(match.Groups[1].Value))
+                        {
+                            trackName = Instrument.Parse(match.Groups[1].Value).Name;
+                            if (!string.IsNullOrEmpty(match.Groups[2].Value))
+                                if (int.TryParse(match.Groups[2].Value, out int os))
+                                    octaveShift = os;
+
+                            if (octaveShift > 0)
+                                trackName = trackName + "+" + octaveShift;
+                            else if (octaveShift < 0)
+                                trackName = trackName + octaveShift;
+                            Debug.WriteLine(trackName);
+                            if (trackName.Equals("Unknown") || trackName.Equals("None"))
+                            {
+                                bool success;
+                                string parsedTrackName;
+                                (success, parsedTrackName) = TrackNameToStringInstrumentName(o_trackName);
+                                if (success)
+                                    trackName = parsedTrackName;
+
+                            }
+                        }
+                    }
+                    newChunk = new TrackChunk(new SequenceTrackNameEvent(trackName));
+
+                    //Create Progchange Event
+                    foreach (var timedEvent in originalChunk.GetTimedEvents())
+                    {
+                        var programChangeEvent = timedEvent.Event as ProgramChangeEvent;
+                        if (programChangeEvent == null)
+                            continue;
+                        //Skip all except guitar | implement if we need this again
+                        if ((programChangeEvent.ProgramNumber < 27) || (programChangeEvent.ProgramNumber > 31))
+                            continue;
+
+                        var channel = programChangeEvent.Channel;
+                        using (var manager = new TimedEventsManager(newChunk.Events))
+                        {
+                            TimedEventsCollection timedEvents = manager.Events;
+                            timedEvents.Add(new TimedEvent(new ProgramChangeEvent(programChangeEvent.ProgramNumber), 5000 + (timedEvent.TimeAs<MetricTimeSpan>(tempoMap).TotalMicroseconds / 1000) - firstNote/* Absolute time too */));
+                        }
+                    }
+                    newChunk.AddObjects(fixedNotes);
+
+                    watch.Stop();
+                    Debug.WriteLine("step 5: " + noteVelocity + ": " + watch.ElapsedMilliseconds);
+                    watch = Stopwatch.StartNew();
+
+                    newTrackChunks.TryAdd(noteVelocity, newChunk);
+
+                    watch.Stop();
+                    Debug.WriteLine("step 6: " + noteVelocity + ": " + watch.ElapsedMilliseconds);
+
+                });
+
+                var newMidiFile = new MidiFile();
+                newTrackChunks.TryRemove(newTrackChunks.Count, out TrackChunk trackZero);
+                newMidiFile.Chunks.Add(trackZero);
+                newMidiFile.TimeDivision = new TicksPerQuarterNoteTimeDivision(600);
+                using (TempoMapManager tempoManager = newMidiFile.ManageTempoMap()) tempoManager.SetTempo(0, Tempo.FromBeatsPerMinute(100));
+                newMidiFile.Chunks.AddRange(newTrackChunks.Values);
+
+                tempoMap = newMidiFile.GetTempoMap();
+                long delta = newMidiFile.GetTrackChunks().GetNotes().First().GetTimedNoteOnEvent().TimeAs<MetricTimeSpan>(tempoMap).TotalMicroseconds / 1000;
+                foreach (TrackChunk chunk in newMidiFile.GetTrackChunks())
+                {
+                    using (var notesManager = chunk.ManageNotes())
+                    {
+                        foreach (Note note in notesManager.Notes)
+                        {
+                            long newStart = note.Time - delta;
+                            note.Time = newStart;
+                        }
+                    }
+                    using (var manager = chunk.ManageTimedEvents())
+                    {
+                        foreach (TimedEvent _event in manager.Events)
+                        {
+                            var programChangeEvent = _event.Event as ProgramChangeEvent;
+                            if (programChangeEvent == null)
+                                continue;
+
+                            long newStart = _event.Time - delta;
+                            if (newStart < -1)
+                                manager.Events.Remove(_event);
+                            else
+                                _event.Time = newStart;
+                        }
+                    }
+                }
+
+                var stream = new MemoryStream();
+
+                using (var manager = new TimedEventsManager(newMidiFile.GetTrackChunks().First().Events))
+                    manager.Events.Add(new TimedEvent(new MarkerEvent(), (newMidiFile.GetDuration<MetricTimeSpan>().TotalMicroseconds / 1000)));
+
+                newMidiFile.Write(stream, MidiFileFormat.MultiTrack, new WritingSettings { });
+                stream.Flush();
+                stream.Position = 0;
+
+                loaderWatch.Stop();
+                Console.WriteLine("Scrubbing MS: " + loaderWatch.ElapsedMilliseconds);
+
+                lastFile = newMidiFile;
+
+                return stream;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw ex;
+            }
+        }
+
+        private static string CalculateMD5(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", String.Empty).ToLowerInvariant();
+                }
+            }
+        }
+
+        private static (bool, string) TrackNameToStringInstrumentName(string trackName)
+        {
+            if (string.IsNullOrEmpty(trackName)) return (false, trackName);
+            switch (trackName)
+            {
+                case "harp":
+                case "orchestralharp":
+                case "orchestralharps":
+                case "harps": return (true, "Harp");
+                case "piano":
+                case "acousticgrandpiano":
+                case "acousticgrandpianos":
+                case "pianos": return (true, "Piano");
+                case "lute":
+                case "guitar":
+                case "guitars":
+                case "lutes": return (true, "Lute");
+                case "fiddle":
+                case "pizzicatostrings":
+                case "pizzicatostring":
+                case "fiddles": return (true, "Fiddle");
+                case "flute":
+                case "flutes": return (true, "Flute");
+                case "oboe":
+                case "oboes": return (true, "Oboe");
+                case "clarinet":
+                case "clarinets": return (true, "Clarinet");
+                case "fife":
+                case "piccolo":
+                case "piccolos":
+                case "fifes":
+                case "ocarina":
+                case "ocarinas": return (true, "Fife");
+                case "panpipes":
+                case "panflute":
+                case "panflutes":
+                case "panpipe": return (true, "Panpipes");
+                case "timpani":
+                case "timpanis": return (true, "Timpani");
+                case "bongos":
+                case "bongo": return (true, "Bongo");
+                case "bass_drum":
+                case "bass_drums":
+                case "bassdrum":
+                case "bassdrums": return (true, "BassDrum");
+                case "snaredrum":
+                case "snare_drum":
+                case "snare_drums":
+                case "snare":
+                case "snares": return (true, "SnareDrum");
+                case "cymbal":
+                case "cymbals": return (true, "Cymbal");
+                case "trumpet":
+                case "trumpets": return (true, "Trumpet");
+                case "trombone":
+                case "trombones": return (true, "Trombone");
+                case "tuba":
+                case "tubas": return (true, "Tuba");
+                case "horn":
+                case "frenchhorn":
+                case "frenchhorns":
+                case "horns": return (true, "Horn");
+                case "saxophone":
+                case "sax":
+                case "altosax":
+                case "altosaxophone":
+                case "saxophones": return (true, "Saxophone");
+                case "violin":
+                case "violins": return (true, "Violin");
+                case "viola":
+                case "violas": return (true, "Viola");
+                case "cello":
+                case "cellos": return (true, "Cello");
+                case "bass":
+                case "doublebass":
+                case "double_bass":
+                case "contrabass": return (true, "DoubleBass");
+                case "guitaroverdriven":
+                case "overdrivenguitar":
+                case "electricguitaroverdriven": return (true, "ElectricGuitarOverdriven");
+                case "guitarclean":
+                case "cleanguitar":
+                case "electricguitarclean": return (true, "ElectricGuitarClean");
+                case "guitarmuted":
+                case "mutedguitar":
+                case "electricguitarmuted": return (true, "ElectricGuitarMuted");
+                case "guitarpowerchords":
+                case "electricguitarpowerchords": return (true, "ElectricGuitarPowerChords");
+                case "guitarspecial":
+                case "electricguitarspecial": return (true, "ElectricGuitarSpecial");
+
+                default: return (false, trackName);
+            }
+        }
+
+        private static (bool, string) ProgramToStringInstrumentName(SevenBitNumber prog)
+        {
+            if (prog.Equals(null)) return (false, null);
+            switch (prog)
+            {
+                case 46: return (true, "Harp");
+
+                case 0:
+                case 1: return (true, "Piano");
+
+                case 24: return (true, "Lute");
+
+                case 6:
+                case 35:
+                case 45: return (true, "Fiddle");
+
+                case 73: return (true, "Flute");
+
+                case 68: return (true, "Oboe");
+
+                case 71: return (true, "Clarinet");
+
+                case 72:
+                case 79: return (true, "Fife");
+
+                case 75: return (true, "Panpipes");
+
+                case 47: return (true, "Timpani");
+
+                //
+                //
+                //
+                //
+
+                case 56:
+                case 59: return (true, "Trumpet");
+
+                case 57: return (true, "Trombone");
+
+                case 58: return (true, "Tuba");
+
+                case 60:
+                case 61:
+                case 62:
+                case 63: return (true, "Horn");
+
+                case 64:
+                case 65:
+                case 66:
+                case 67: return (true, "Saxophone");
+
+                case 40: return (true, "Violin");
+
+                case 41: return (true, "Viola");
+
+                case 42: return (true, "Cello");
+
+                case 43: return (true, "DoubleBass");
+
+                case 27: return (true, "ElectricGuitarClean");
+                case 28: return (true, "ElectricGuitarMuted");
+                case 29: return (true, "ElectricGuitarOverdriven");
+                case 30: return (true, "ElectricGuitarPowerChords");
+                case 31: return (true, "ElectricGuitarSpecial");
+            }
+            return (true, null);
+        }
+    }
+}

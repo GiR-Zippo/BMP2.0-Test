@@ -1,5 +1,7 @@
 ﻿using BardMusicPlayer.Coffer;
+using BardMusicPlayer.Transmogrify.Song;
 using BardMusicPlayer.Ui.Functions;
+using System;
 using System.Collections.Generic;
 
 namespace BardMusicPlayer.UI.Functions
@@ -66,6 +68,15 @@ namespace BardMusicPlayer.UI.Functions
             currentPlaylist.Add(PlaybackFunctions.CurrentSong);
         }
 
+        public static void AddSongToCurrentPlaylist(BmpSong song)
+        {
+            if ((currentPlaylist == null) || (song == null))
+                return;
+
+            BmpCoffer.Instance.SaveSong(song);
+            currentPlaylist.Add(song);
+        }
+
         public static void RemoveSongFromCurrentPlaylist()
         {
             if ((currentPlaylist == null) || (PlaybackFunctions.CurrentSong == null))
@@ -74,6 +85,36 @@ namespace BardMusicPlayer.UI.Functions
             var index = 0;
             foreach (var item in currentPlaylist)
                 if (item == PlaybackFunctions.CurrentSong)
+                    break;
+                else index++;
+
+            currentPlaylist.Remove(index);
+            //BmpCoffer.Instance.DeleteSong(PlaybackFunctions.CurrentSong);
+        }
+
+        public static void RemoveSongFromCurrentPlaylist(BmpSong song)
+        {
+            if ((currentPlaylist == null) || (song == null))
+                return;
+
+            var index = 0;
+            foreach (var item in currentPlaylist)
+                if (item == song)
+                    break;
+                else index++;
+
+            currentPlaylist.Remove(index);
+            //BmpCoffer.Instance.DeleteSong(PlaybackFunctions.CurrentSong);
+        }
+
+        public static void RemoveSongFromCurrentPlaylist(string song)
+        {
+            if ((currentPlaylist == null) || (song == null))
+                return;
+
+            var index = 0;
+            foreach (var item in currentPlaylist)
+                if (item.Title == song)
                     break;
                 else index++;
 

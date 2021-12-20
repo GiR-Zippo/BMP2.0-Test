@@ -1,16 +1,21 @@
-﻿using Melanchall.DryWetMidi.Interaction;
+﻿
+
+using System;
 
 namespace BardMusicPlayer.Maestro.Events
 {
     public sealed class CurrentPlayPositionEvent : MaestroEvent
     {
-        internal CurrentPlayPositionEvent(ITimeSpan inTimeSpan) : base(0, false)
+        internal CurrentPlayPositionEvent(TimeSpan inTimeSpan, int inTick) : base(0, false)
         {
             EventType = GetType();
             timeSpan = inTimeSpan;
+            tick = inTick;
         }
 
-        public ITimeSpan timeSpan { get; }
+        public TimeSpan timeSpan { get; }
+
+        public int tick { get; }
 
         public override bool IsValid() => true;
     }

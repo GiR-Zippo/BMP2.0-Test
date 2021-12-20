@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 using System.Drawing;
@@ -16,13 +15,12 @@ using System.IO.Compression;
 using System.IO;
 using System.Text.RegularExpressions;
 using BardMusicPlayer.Ui.Globals.SkinContainer;
-using System.Drawing.Text;
+using System.Reflection;
 
-namespace BardMusicPlayer.Ui.Views
+namespace BardMusicPlayer.Ui.Skinned
 {
     public partial class Skinned_MainView : UserControl
     {
-
         Dictionary<SkinContainer.CBUTTON_TYPES, List<int>> cbuttonsdata = new Dictionary<SkinContainer.CBUTTON_TYPES, List<int>>
         {
             {SkinContainer.CBUTTON_TYPES.MAIN_PREVIOUS_BUTTON, new List<int> {0,0,23,18}},
@@ -197,10 +195,23 @@ namespace BardMusicPlayer.Ui.Views
             { SkinContainer.PLAYLIST_TYPES.PLAYLIST_EXPAND_SELECTED, new List<int> {150,42,9,9}}
         };
 
+        Dictionary<SkinContainer.SWINDOW_TYPES, List<int>> swindowdata = new Dictionary<SkinContainer.SWINDOW_TYPES, List<int>>
+        {
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_TOP_LEFT_CORNER, new List<int> {15,0,50,15 } },
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_TOP_TILE, new List<int> {66,0,14,15 } },
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_TOP_RIGHT_CORNER, new List<int> {81,0, 16,15 } },
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_LEFT_TILE, new List<int> {0,16,7,172}},
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_RIGHT_TILE, new List<int> {8,16,6,172}},
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_BOTTOM_LEFT_CORNER, new List<int> {15,16,50,5}},
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_BOTTOM_TILE, new List<int> {66,16,14,5}},
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_BOTTOM_RIGHT_CORNER, new List<int> {81,16,16,5}},
+            { SkinContainer.SWINDOW_TYPES.SWINDOW_CLOSE_SELECTED, new List<int> {0,0,9,9}}
+        };
+
         public void LoadSkin(string filename)
         {
             //Load the background image
-            this.Background = new ImageBrush(ExtractBitmapFromZip(filename, "main.bmp"));
+            loadBackgroundMain(filename);
 
             SkinContainer.TITLEBAR.Clear();
             SkinContainer.CBUTTONS.Clear();
@@ -208,156 +219,24 @@ namespace BardMusicPlayer.Ui.Views
             SkinContainer.GENEX.Clear();
             SkinContainer.NUMBERS.Clear();
             SkinContainer.PLAYLIST.Clear();
+            SkinContainer.SWINDOW.Clear();
             SkinContainer.EQUALIZER.Clear();
             SkinContainer.VISCOLOR.Clear();
+            SkinContainer.PLAYLISTCOLOR.Clear();
 
             List<string> visdata = ExtractViscolorFromZip(filename, "viscolor.txt");
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]));
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS]));
 
-            //Titlebar and buttons
-            Image img = ExtractImageFromZip(filename, "titlebar.bmp");
-            foreach (KeyValuePair<SkinContainer.TITLEBAR_TYPES, List<int>> data in titlebardata)
-            {
-                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
-                var graphics = Graphics.FromImage(bitmap);
-                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
-                SkinContainer.TITLEBAR.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                            Int32Rect.Empty,
-                                                                            BitmapSizeOptions.FromEmptyOptions())));
-                bitmap.Dispose();
-            }
+            loadTitlebarAndButtons(filename);
+            loadControlButtons(filename);
+            loadNumbersAndFont(filename);
+            loadTransportbarAndClutter(filename);
+            loadPlaylistDesign(filename);
+            loadPlaylistColor(filename);
+            loadAVSWindow(filename);
+            loadGenEx(filename);
 
-            //CBUTTONS
-            img = ExtractImageFromZip(filename, "CBUTTONS.BMP");
-            foreach (KeyValuePair<SkinContainer.CBUTTON_TYPES, List<int>> data in cbuttonsdata)
-            {
-                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
-                var graphics = Graphics.FromImage(bitmap);
-                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
-                SkinContainer.CBUTTONS.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                            Int32Rect.Empty,
-                                                                            BitmapSizeOptions.FromEmptyOptions())));
-                bitmap.Dispose();
-            }
-
-            //Numbers
-            img = ExtractImageFromZip(filename, "numbers.bmp");
-            if(img == null)
-                img = ExtractImageFromZip(filename, "nums_ex.bmp");
-            foreach (KeyValuePair<SkinContainer.NUMBER_TYPES, List<int>> data in numbersdata)
-            {
-                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
-                var graphics = Graphics.FromImage(bitmap);
-                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
-                SkinContainer.NUMBERS.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                            Int32Rect.Empty,
-                                                                            BitmapSizeOptions.FromEmptyOptions())));
-                bitmap.Dispose();
-            }
-
-            //Transportbar
-            img = ExtractImageFromZip(filename, "posbar.bmp");
-            this.PlayBar_Background.Fill = ExtractImage(img, 248, 9, 0, 0);
-            Application.Current.Resources["MAIN_POSITION_SLIDER_THUMB"] = ExtractImage(img, 27, 9, 249, 0);
-            Application.Current.Resources["MAIN_POSITION_SLIDER_THUMB_SELECTED"] = ExtractImage(img, 28, 9, 278, 0);
-
-            img = ExtractImageFromZip(filename, "volume.bmp");
-            {
-                Bitmap bitmap = new Bitmap(65, 12);
-                var graphics = Graphics.FromImage(bitmap);
-                using (SolidBrush brush = new SolidBrush(SkinContainer.VISCOLOR[SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]))
-                {
-                    graphics.FillRectangle(brush, 0, 0, 65, 12);
-                }
-                Application.Current.Resources["MAIN_VOLUME_BACKGROUND"] = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
-            }
-
-            //pledit
-            img = ExtractImageFromZip(filename, "pledit.bmp");
-            foreach (KeyValuePair<SkinContainer.PLAYLIST_TYPES, List<int>> data in playlistdata)
-            {
-                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
-                var graphics = Graphics.FromImage(bitmap);
-                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
-                SkinContainer.PLAYLIST.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                            Int32Rect.Empty,
-                                                                            BitmapSizeOptions.FromEmptyOptions())));
-                bitmap.Dispose();
-            }
-
-            //The "Font"
-            img = ExtractImageFromZip(filename, "text.bmp");
-            {
-                Bitmap bitmap = new Bitmap(5,6);
-                var graphics = Graphics.FromImage(bitmap);
-                //Top Row
-                for (int i = 0; i < 29; i++)
-                {
-                    graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(i*5, 0, 5, 6), GraphicsUnit.Pixel);
-                    if (65+i <= 90)
-                    {
-                        SkinContainer.FONT.Add(65 + i, new Bitmap(bitmap));
-                        SkinContainer.FONT.Add(97 + i, new Bitmap(bitmap));
-                    }
-                    else if(i==26 || i== 27)
-                    {
-                        SkinContainer.FONT.Add(((i == 26)? 34:64), new Bitmap(bitmap));
-                    }
-                    else
-                    {
-                        SkinContainer.FONT.Add(32, new Bitmap(bitmap));
-                    }
-                }
-                //Numbers
-                for (int i = 0; i < 10; i++)
-                {
-                    graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(i * 5, 6, 5, 6), GraphicsUnit.Pixel);
-                    SkinContainer.FONT.Add(48 + i, new Bitmap(bitmap));
-                }
-                bitmap.Dispose();
-            }
-
-            //Buttons / or similar
-            img = ExtractImageFromZip(filename, "genex.bmp");
-            if (img != null)
-            {
-                foreach (KeyValuePair<SkinContainer.GENEX_TYPES, List<int>> data in genexdata)
-                {
-                    Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
-                    var graphics = Graphics.FromImage(bitmap);
-                    graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
-                    SkinContainer.GENEX.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                                    Int32Rect.Empty,
-                                                                                    BitmapSizeOptions.FromEmptyOptions())));
-                    bitmap.Dispose();
-                }
-            }
-            else
-            {
-                List<int> data = genexdata[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
-                Bitmap bitmap = new Bitmap(data.ElementAt(2)-2, data.ElementAt(3)-2);
-                var graphics = Graphics.FromImage(bitmap);
-                graphics.DrawImage(SkinContainer.FONT[68], 0, 0);
-                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                                Int32Rect.Empty,
-                                                                                BitmapSizeOptions.FromEmptyOptions())));
-                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_PRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                                Int32Rect.Empty,
-                                                                                BitmapSizeOptions.FromEmptyOptions())));
-                graphics = Graphics.FromImage(bitmap);
-                graphics.DrawImage(SkinContainer.FONT[85], 0, 0);
-                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                                Int32Rect.Empty,
-                                                                                BitmapSizeOptions.FromEmptyOptions())));
-                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_PRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
-                                                                                Int32Rect.Empty,
-                                                                                BitmapSizeOptions.FromEmptyOptions())));
-
-                SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED].Stretch = Stretch.UniformToFill;
-                SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED].Stretch = Stretch.UniformToFill;
-                bitmap.Dispose();
-            }
             ApplySkin();
         }
 
@@ -382,11 +261,269 @@ namespace BardMusicPlayer.Ui.Views
 
             TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
             TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
+
+
+            this._PlaylistView.ApplySkin();
+            this._BardListView.ApplySkin();
+        }
+
+        /// <summary>
+        /// load the main background
+        /// </summary>
+        /// <param name="filename"></param>
+        private void loadBackgroundMain(string filename)
+        {
+            BitmapImage image = ExtractBitmapFromZip(filename, "main.bmp");
+            if (image == null)
+                image = loadDefaultSkinBitmap("main.bmp");
+            this.Background = new ImageBrush(image);
+        }
+
+
+        /// <summary>
+        /// load titlebar and buttons
+        /// </summary>
+        /// <param name="filename"></param>
+        private void loadTitlebarAndButtons(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "titlebar.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("titlebar.bmp");
+            foreach (KeyValuePair<SkinContainer.TITLEBAR_TYPES, List<int>> data in titlebardata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.TITLEBAR.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+        }
+
+        private void loadControlButtons(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "CBUTTONS.BMP");
+            if (img == null)
+                img = loadDefaultSkinData("cbuttons.bmp");
+            foreach (KeyValuePair<SkinContainer.CBUTTON_TYPES, List<int>> data in cbuttonsdata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.CBUTTONS.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+        }
+
+        private void loadTransportbarAndClutter(string filename)
+        {
+            //Transportbar
+            Image img = ExtractImageFromZip(filename, "posbar.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("posbar.bmp");
+            this.PlayBar_Background.Fill = ExtractImage(img, 248, 9, 0, 0);
+            Application.Current.Resources["MAIN_POSITION_SLIDER_THUMB"] = ExtractImage(img, 27, 9, 249, 0);
+            Application.Current.Resources["MAIN_POSITION_SLIDER_THUMB_SELECTED"] = ExtractImage(img, 28, 9, 278, 0);
+
+            img = ExtractImageFromZip(filename, "volume.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("volume.bmp");
+            {
+                Bitmap bitmap = new Bitmap(65, 12);
+                var graphics = Graphics.FromImage(bitmap);
+                using (SolidBrush brush = new SolidBrush(SkinContainer.VISCOLOR[SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]))
+                {
+                    graphics.FillRectangle(brush, 0, 0, 65, 12);
+                }
+                Application.Current.Resources["MAIN_VOLUME_BACKGROUND"] = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
+            }
+        }
+
+        /// <summary>
+        /// load the playlist design
+        /// </summary>
+        /// <param name="filename"></param>
+        private void loadPlaylistDesign(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "pledit.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("pledit.bmp");
+            foreach (KeyValuePair<SkinContainer.PLAYLIST_TYPES, List<int>> data in playlistdata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.PLAYLIST.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+            Application.Current.Resources["PLAYLIST_SLIDER_THUMB"] = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_SCROLL_HANDLE];
+            Application.Current.Resources["PLAYLIST_SLIDER_THUMB_SELECTED"] = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_SCROLL_HANDLE_SELECTED];
+
+        }
+
+        /// <summary>
+        /// Load the avs window/small window decoration
+        /// </summary>
+        /// <param name="filename"></param>
+        private void loadAVSWindow(string filename)
+        {
+            //avs window (small window decoration)
+            Image img = ExtractImageFromZip(filename, "avs.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("avs.bmp");
+
+            foreach (KeyValuePair<SkinContainer.SWINDOW_TYPES, List<int>> data in swindowdata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.SWINDOW.Add((SkinContainer.SWINDOW_TYPES)data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                           Int32Rect.Empty,
+                                           BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// load the font and the numbers
+        /// </summary>
+        /// <param name="filename"></param>
+        private void loadNumbersAndFont(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "numbers.bmp");
+            if (img == null)
+                img = ExtractImageFromZip(filename, "nums_ex.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("nums_ex.bmp");
+            foreach (KeyValuePair<SkinContainer.NUMBER_TYPES, List<int>> data in numbersdata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.NUMBERS.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+
+            //The "Font"
+            img = ExtractImageFromZip(filename, "text.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("text.bmp");
+            {
+                Bitmap bitmap = new Bitmap(5, 6);
+                var graphics = Graphics.FromImage(bitmap);
+                //Top Row
+                for (int i = 0; i < 29; i++)
+                {
+                    graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(i * 5, 0, 5, 6), GraphicsUnit.Pixel);
+                    if (65 + i <= 90)
+                    {
+                        SkinContainer.FONT.Add(65 + i, new Bitmap(bitmap));
+                        SkinContainer.FONT.Add(97 + i, new Bitmap(bitmap));
+                    }
+                    else if (i == 26 || i == 27)
+                    {
+                        SkinContainer.FONT.Add(((i == 26) ? 34 : 64), new Bitmap(bitmap));
+                    }
+                    else
+                    {
+                        SkinContainer.FONT.Add(32, new Bitmap(bitmap));
+                    }
+                }
+                //Numbers
+                for (int i = 0; i < 10; i++)
+                {
+                    graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(i * 5, 6, 5, 6), GraphicsUnit.Pixel);
+                    SkinContainer.FONT.Add(48 + i, new Bitmap(bitmap));
+                }
+                bitmap.Dispose();
+            }
+
+        }
+
+        private void loadGenEx(string filename)
+        {
+            //Buttons / or similar
+            Image img = ExtractImageFromZip(filename, "genex.bmp");
+            if (img != null)
+            {
+                foreach (KeyValuePair<SkinContainer.GENEX_TYPES, List<int>> data in genexdata)
+                {
+                    Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                    var graphics = Graphics.FromImage(bitmap);
+                    graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                    SkinContainer.GENEX.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                                    Int32Rect.Empty,
+                                                                                    BitmapSizeOptions.FromEmptyOptions())));
+                    bitmap.Dispose();
+                }
+            }
+            else
+            {
+                List<int> data = genexdata[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
+                Bitmap bitmap = new Bitmap(data.ElementAt(2) - 2, data.ElementAt(3) - 2);
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(SkinContainer.FONT[68], 0, 0);
+                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                                Int32Rect.Empty,
+                                                                                BitmapSizeOptions.FromEmptyOptions())));
+                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_PRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                                Int32Rect.Empty,
+                                                                                BitmapSizeOptions.FromEmptyOptions())));
+                graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(SkinContainer.FONT[85], 0, 0);
+                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                                Int32Rect.Empty,
+                                                                                BitmapSizeOptions.FromEmptyOptions())));
+                SkinContainer.GENEX.Add(SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_PRESSED, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                                Int32Rect.Empty,
+                                                                                BitmapSizeOptions.FromEmptyOptions())));
+
+                SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED].Stretch = Stretch.UniformToFill;
+                SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED].Stretch = Stretch.UniformToFill;
+                bitmap.Dispose();
+            }
+        }
+
+        private Image loadDefaultSkinData(string name)
+        {
+            var bitmapImage = new BitmapImage(new Uri(@"pack://application:,,,/"
+                                + Assembly.GetExecutingAssembly().GetName().Name
+                                + ";component/"
+                                + "Resources/Skin/"
+                                + name, UriKind.Absolute));
+
+            var encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create((BitmapImage)bitmapImage));
+            var stream = new MemoryStream();
+            encoder.Save(stream);
+            stream.Flush();
+            return new Bitmap(stream);
+        }
+
+        private BitmapImage loadDefaultSkinBitmap(string name)
+        {
+            var bitmapImage = new BitmapImage(new Uri(@"pack://application:,,,/"
+                                + Assembly.GetExecutingAssembly().GetName().Name
+                                + ";component/"
+                                + "Resources/Skin/"
+                                + name, UriKind.Absolute));
+            return bitmapImage;
         }
 
         Image ExtractImageFromZip(string archivename, string imagename)
         {
-            var zip = ZipFile.OpenRead(@archivename);
+            ZipArchive zip;
+            try { zip = ZipFile.OpenRead(@archivename); }
+            catch { return null; }
+
             var ent = zip.Entries;
             string regex = @"\b(" + imagename + @")\b";
             foreach (var entry in ent)
@@ -413,7 +550,10 @@ namespace BardMusicPlayer.Ui.Views
 
         BitmapImage ExtractBitmapFromZip(string archivename, string imagename)
         {
-            var zip = ZipFile.OpenRead(@archivename);
+            ZipArchive zip;
+            try { zip = ZipFile.OpenRead(@archivename); }
+            catch { return null; }
+            
             var ent = zip.Entries;
             string regex = @"\b(" + imagename + @")\b";
             foreach (var entry in ent)
@@ -442,9 +582,97 @@ namespace BardMusicPlayer.Ui.Views
             return null;
         }
 
+        private void loadPlaylistColor(string archivename)
+        {
+            SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL, GetColorFromHex("Normal=#C4FFC4"));
+            SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_CURRENT, GetColorFromHex("Normal=#FFFFFF"));
+            SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG, GetColorFromHex("Normal=#000000"));
+            SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_SELECTBG, GetColorFromHex("Normal=#6B6B6F"));
+            SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_MBBG, GetColorFromHex("Normal=#000000"));
+            SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_MBFG, GetColorFromHex("Normal=#FFFFFF"));
+            ZipArchive zip;
+            try { zip = ZipFile.OpenRead(@archivename); }
+            catch
+            {
+                return;
+            }
+            var ent = zip.Entries;
+            string regex = @"\b(" + "pledit.txt" + @")\b";
+            foreach (var entry in ent)
+            {
+                if (Regex.IsMatch(entry.Name, regex, RegexOptions.IgnoreCase))
+                {
+                    if (entry != null)
+                    {
+                        using (var zipStream = entry.Open())
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            zipStream.CopyTo(memoryStream);
+                            memoryStream.Position = 0;
+                            var data = new List<string>();
+                            using (var reader = new StreamReader(memoryStream, Encoding.ASCII))
+                            {
+                                string line;
+                                while ((line = reader.ReadLine()) != null)
+                                {
+                                    if (line.IndexOf("NormalBG", StringComparison.OrdinalIgnoreCase) >= 0)
+                                        SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG] = GetColorFromHex(line);
+                                    else if (line.IndexOf("Normal", StringComparison.OrdinalIgnoreCase) >= 0)
+                                        SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL] = GetColorFromHex(line);
+                                    else if (line.IndexOf("Current", StringComparison.OrdinalIgnoreCase) >= 0)
+                                        SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_CURRENT] = GetColorFromHex(line);
+                                    else if (line.IndexOf("SelectedBG", StringComparison.OrdinalIgnoreCase) >= 0)
+                                        SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_SELECTBG] = GetColorFromHex(line);
+                                    else if (line.IndexOf("mbBG", StringComparison.OrdinalIgnoreCase) >= 0)
+                                        SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_MBBG] = GetColorFromHex(line);
+                                    else if (line.IndexOf("mbFG", StringComparison.OrdinalIgnoreCase) >= 0)
+                                        SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_MBFG] = GetColorFromHex(line);
+                                }
+                            }
+                            memoryStream.Close();
+                            zipStream.Close();
+                            return;
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
         List<string> ExtractViscolorFromZip(string archivename, string imagename)
         {
-            var zip = ZipFile.OpenRead(@archivename);
+            ZipArchive zip;
+            try { zip = ZipFile.OpenRead(@archivename); }
+            catch
+            {
+                var data = new List<string>();
+                data.Add("0,0,0");
+                data.Add("0,0,0");
+                data.Add("239,49,16");
+                data.Add("206,41,16");
+                data.Add("214,90,0");
+                data.Add("214,102,0");
+                data.Add("214,115,0");      // 6
+                data.Add("198,123,8");      // 7
+                data.Add("222,165,24");     // 8
+                data.Add("214,181,33");     // 9
+                data.Add("189,222,41");     // 10 = mid of spec
+                data.Add("148,222,33");     // 11
+                data.Add("41,206,16");      // 12
+                data.Add("50,190,16");      // 13
+                data.Add("57,181,16");      // 14
+                data.Add("49,156,8");       // 15
+                data.Add("41,148,0");       // 16
+                data.Add("24,132,8");       // 17 = bottom of spec
+                data.Add("255,255,255");    // 18 = osc 1 (brightest)
+                data.Add("214,214,222");    // 19 = osc 2 (slightly dimmer)
+                data.Add("181,189,189");    // 20 = osc 3
+                data.Add("160,170,175");    // 21 = osc 4
+                data.Add("148,156,165");    // 22 = osc 5 (dimmest)
+                data.Add("150,150,150");
+                return data;
+            }
+
             var ent = zip.Entries;
             string regex = @"\b(" + imagename + @")\b";
             foreach (var entry in ent)
@@ -506,5 +734,12 @@ namespace BardMusicPlayer.Ui.Views
             }
             return System.Drawing.Color.FromArgb(colval[0], colval[1], colval[2]);
         }
+
+        System.Drawing.Color GetColorFromHex(string data)
+        {
+            string x = data.Split('#')[1];
+            return ColorTranslator.FromHtml("#"+x);
+        }
+
     }
 }

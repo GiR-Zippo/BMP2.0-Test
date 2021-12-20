@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -7,11 +8,16 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using BardMusicPlayer.Coffer;
-using BardMusicPlayer.Grunt;
+//using BardMusicPlayer.Grunt;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Maestro;
-//using BardMusicPlayer.Siren;
+using System.Diagnostics;
+
+
+#if SIREN
+using BardMusicPlayer.Siren;
+#endif
 
 namespace BardMusicPlayer.Ui
 {
@@ -33,21 +39,26 @@ namespace BardMusicPlayer.Ui
             BmpCoffer.Initialize(Globals.Globals.DataPath + @"\MusicCatalog.db");
             BmpSeer.Instance.SetupFirewall("BardMusicPlayer");
             BmpSeer.Instance.Start();
-            BmpGrunt.Instance.Start();
+            //BmpGrunt.Instance.Start();
             BmpMaestro.Instance.Start();
-            //BmpSiren.Instance.Setup();
+#if SIREN
+            BmpSiren.Instance.Setup();
+#endif
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             //LogManager.Shutdown();
-            //BmpSiren.Instance.ShutDown();
+#if SIREN
+            BmpSiren.Instance.ShutDown();
+#endif
             BmpMaestro.Instance.Stop();
-            BmpGrunt.Instance.Stop();
+            //BmpGrunt.Instance.Stop();
             BmpSeer.Instance.Stop();
             BmpSeer.Instance.DestroyFirewall("BardMusicPlayer");
             BmpCoffer.Instance.Dispose();
             BmpPigeonhole.Instance.Dispose();
+            //Process.GetCurrentProcess().Kill();
         }
     }
 }

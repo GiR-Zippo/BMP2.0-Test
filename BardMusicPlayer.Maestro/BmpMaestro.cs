@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Transmogrify.Song;
@@ -22,7 +23,7 @@ namespace BardMusicPlayer.Maestro
         public Game SelectedBard { get; set; }
         private int _NoteKeyDelay;
 
-        private Sequencer _sequencer;
+        private Orchestrator _orchestrator;
         /// <summary>
         /// 
         /// </summary>
@@ -32,6 +33,7 @@ namespace BardMusicPlayer.Maestro
         {
             Bards = BmpSeer.Instance.Games.Values;
             BmpSeer.Instance.GameStarted += e => EnsureGameExists(e.Game);
+            _orchestrator = new Orchestrator();
         }
 
         private void EnsureGameExists(Game game)
@@ -45,45 +47,27 @@ namespace BardMusicPlayer.Maestro
 
         public static BmpMaestro Instance => LazyInstance.Value;
 
+        public IEnumerable<Game> GetPerformer()
+        {
+            return _orchestrator.GetPerformer();
+        }
 
         /// <summary>
         /// Sets a new song for the sequencer
         /// </summary>
         /// <param name="bmpSong"></param>
-        /// <param name="track">the tracknumber which should be played; -1 all tracks</param>
+        /// <param name="track">the tracknumber which should be played; 0 all tracks</param>
         /// <returns></returns>
         public void PlayWithLocalPerformer(BmpSong bmpSong, int track)
         {
-            var index = 0;
-            //create a midifile   
-            var midiFile = new MidiFile();
-            //add the chunks
-            foreach (var data in bmpSong.TrackContainers)
-            {
-                //Set the channel for notes and progchanges
-                using (var manager = data.Value.SourceTrackChunk.ManageNotes())
-                {
-                    foreach (Note note in manager.Notes)
-                        note.Channel = Melanchall.DryWetMidi.Common.FourBitNumber.Parse(index.ToString());
-                }
-                using (var manager = data.Value.SourceTrackChunk.ManageTimedEvents())
-                {
-                    foreach (var e in manager.Events)
-                    {
-                        var programChangeEvent = e.Event as ProgramChangeEvent;
-                        if (programChangeEvent == null)
-                            continue;
-                        programChangeEvent.Channel = Melanchall.DryWetMidi.Common.FourBitNumber.Parse(index.ToString());
-                    }
-                }
-                midiFile.Chunks.Add(data.Value.SourceTrackChunk);
+            _orchestrator.Stop();
+            _orchestrator.LoadBMPSong(bmpSong);
+        }
 
-                if (data.Value.SourceTrackChunk.ManageNotes().Notes.Count() > 0)
-                    index++;
-            }
-            //and set the tempo map
-            midiFile.ReplaceTempoMap(bmpSong.SourceTempoMap);
-            _sequencer = new Sequencer(SelectedBard, midiFile, track);
+        public void PlayWithLocalPerformer(string filename)
+        {
+           _orchestrator.Stop();
+           _orchestrator.LoadMidiFile(filename);
         }
 
         /// <summary>
@@ -92,11 +76,11 @@ namespace BardMusicPlayer.Maestro
         /// <returns></returns>
         public void StartLocalPerformer()
         {
-            if (_sequencer != null)
+            if (_orchestrator != null)
             {
                 _NoteKeyDelay = BmpPigeonhole.Instance.NoteKeyDelay;
                 BmpPigeonhole.Instance.NoteKeyDelay = 1;
-                _sequencer.Start();
+                _orchestrator.Start();
             }
         }
 
@@ -106,10 +90,10 @@ namespace BardMusicPlayer.Maestro
         /// <returns></returns>
         public void PauseLocalPerformer()
         {
-            if (_sequencer != null)
+            if (_orchestrator != null)
             {
                 BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
-                _sequencer.Pause();
+                _orchestrator.Pause();
             }
         }
 
@@ -119,10 +103,10 @@ namespace BardMusicPlayer.Maestro
         /// <returns></returns>
         public void StopLocalPerformer()
         {
-            if (_sequencer != null)
+            if (_orchestrator != null)
             {
                 BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
-                _sequencer.Stop();
+                _orchestrator.Stop();
             }
         }
 
@@ -133,8 +117,8 @@ namespace BardMusicPlayer.Maestro
         /// <returns></returns>
         public void ChangeTracknumber(int track)
         {
-            if (_sequencer != null)
-                _sequencer.ChangeTracknumer(track);
+            if (_orchestrator != null)
+                _orchestrator.ChangeTracknumber(track);
         }
 
         /// <summary>
@@ -143,8 +127,8 @@ namespace BardMusicPlayer.Maestro
         /// <returns></returns>
         public void DestroySongFromLocalPerformer()
         {
-            if (_sequencer != null)
-                _sequencer.Destroy();
+            if (_orchestrator != null)
+                _orchestrator.Dispose();
         }
 
         /// <summary>
@@ -167,24 +151,58 @@ namespace BardMusicPlayer.Maestro
             if (!Started) return;
             StopEventsHandler();
             Started = false;
+            Dispose();
         }
 
         /// <summary>
-        /// Sets the playback at position (timeindex in microseconds)
+        /// Sets the playback at position (timeindex in ticks)
         /// </summary>
         /// <param name="timeindex"></param>
         /// <returns></returns>
-        public void SetPlaybackStart(double timeindex)
+        public void SetPlaybackStart(int ticks)
         {
-            if (_sequencer != null)
-                _sequencer.SetPlaybackStart(timeindex);
+            if (_orchestrator != null)
+                _orchestrator.Seek(ticks);
         }
+
+        /// <summary>
+        /// Sets the playback at position (timeindex in miliseconds)
+        /// </summary>
+        /// <param double="miliseconds"></param>
+        /// <returns></returns>
+        public void SetPlaybackStart(double miliseconds)
+        {
+            if (_orchestrator != null)
+                _orchestrator.Seek(miliseconds);
+        }
+
+        /// <summary>
+        /// Opens a MidiInput device
+        /// </summary>
+        /// <param int="device"></param>
+        /// <returns></returns>
+        public void OpenInputDevice(int device)
+        {
+            if (_orchestrator == null)
+                _orchestrator = new Orchestrator();
+            _orchestrator.OpenInputDevice(device);
+        }
+
+
+        public void ForceAddPerformer()
+        {
+            if (_orchestrator == null)
+                _orchestrator = new Orchestrator();
+            _orchestrator.ForceAddPerformer();
+        }
+
 
         ~BmpMaestro() { Dispose(); }
 
         public void Dispose()
         {
             Stop();
+            _orchestrator.Dispose();
             GC.SuppressFinalize(this);
         }
     }

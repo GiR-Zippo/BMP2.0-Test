@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 
-namespace BardMusicPlayer.Ui.Views
+namespace BardMusicPlayer.Ui.Classic
 {
     /// <summary>
     /// Interaktionslogik für Classic_MainView.xaml
@@ -82,8 +82,8 @@ namespace BardMusicPlayer.Ui.Views
 
         private void Playbar_Slider_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            Console.Write("" + ((Slider)sender).Value.ToString());
-            Maestro.BmpMaestro.Instance.SetPlaybackStart(((Slider)sender).Value);
+            Console.WriteLine("" + ((Slider)sender).Value.ToString());
+            Maestro.BmpMaestro.Instance.SetPlaybackStart((int)((Slider)sender).Value);
             this._Playbar_dragStarted = false;
         }
 

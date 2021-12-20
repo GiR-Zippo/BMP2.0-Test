@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using UI.Resources;
 
-namespace BardMusicPlayer.Ui.Views
+namespace BardMusicPlayer.Ui.Classic
 {
     /// <summary>
     /// Interaktionslogik für Classic_MainView.xaml

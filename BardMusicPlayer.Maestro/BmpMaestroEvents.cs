@@ -9,9 +9,11 @@ namespace BardMusicPlayer.Maestro
 {
     public partial class BmpMaestro
     {
-        public EventHandler<ITimeSpan> OnPlaybackTimeChanged;
-        public EventHandler<ITimeSpan> OnSongMaxTime;
+        public EventHandler<CurrentPlayPositionEvent> OnPlaybackTimeChanged;
+        public EventHandler<MaxPlayTimeEvent> OnSongMaxTime;
         public EventHandler<bool> OnPlaybackStopped;
+        public EventHandler<bool> OnPerformerChanged;
+        public EventHandler<TrackNumberChangedEvent> OnTrackNumberChanged;
 
         private ConcurrentQueue<MaestroEvent> _eventQueue;
         private bool _eventQueueOpen;
@@ -25,20 +27,36 @@ namespace BardMusicPlayer.Maestro
                     if (token.IsCancellationRequested)
                         break;
 
-                    switch (meastroEvent)
+                    try
                     {
-                        case CurrentPlayPositionEvent currentPlayPosition:
-                            OnPlaybackTimeChanged(this, currentPlayPosition.timeSpan);
-                            break;
-                        case MaxPlayTimeEvent maxPlayTime:
-                            OnSongMaxTime(this, maxPlayTime.timeSpan);
-                            break;
-                        case PlaybackStoppedEvent playbackStopped:
-                            if (OnPlaybackStopped == null)
+                        switch (meastroEvent)
+                        {
+                            case CurrentPlayPositionEvent currentPlayPosition:
+                                OnPlaybackTimeChanged(this, currentPlayPosition);
                                 break;
-                            OnPlaybackStopped(this, playbackStopped.Stopped);
-                            break;
-                    };
+                            case MaxPlayTimeEvent maxPlayTime:
+                                OnSongMaxTime(this, maxPlayTime);
+                                break;
+                            case PlaybackStoppedEvent playbackStopped:
+                                if (OnPlaybackStopped == null)
+                                    break;
+                                OnPlaybackStopped(this, playbackStopped.Stopped);
+                                break;
+                            case PerformersChangedEvent performerChanged:
+                                if (OnPerformerChanged == null)
+                                    break;
+                                OnPerformerChanged(this, performerChanged.Changed);
+                                break;
+                            case TrackNumberChangedEvent trackNumberChanged:
+                                if (OnTrackNumberChanged == null)
+                                    break;
+                                OnTrackNumberChanged(this, trackNumberChanged);
+                                break;
+
+                        };
+                    }
+                    catch
+                    { }
                 }
                 await Task.Delay(25, token);
             }

@@ -1,4 +1,5 @@
-﻿using BardMusicPlayer.Seer;
+﻿
+using BardMusicPlayer.Seer;
 using Melanchall.DryWetMidi.Interaction;
 using System;
 using System.Threading;
@@ -10,31 +11,42 @@ using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Coffer;
 using BardMusicPlayer.UI.Functions;
-//using BardMusicPlayer.Siren;
+using BardMusicPlayer.Maestro;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
-namespace BardMusicPlayer.Ui.Views
+#if SIREN
+using BardMusicPlayer.Siren;
+#endif
+
+namespace BardMusicPlayer.Ui.Classic
 {
     /// <summary>
     /// Interaktionslogik für Classic_MainView.xaml
     /// </summary>
     public partial class Classic_MainView : UserControl
     {
+        public class MidiInputDevice
+        {
+            public int Key;
+            public string Value;
+        }
+
+
         public Classic_MainView()
         {
             InitializeComponent();
-
-            Autostart_source.SelectedIndex = (int)Globals.Settings.AutostartType;
 
             ShowingPlaylists = true;
             PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
 
             this.SongName.Text = PlaybackFunctions.GetSongName();
-            Maestro.BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
-            Maestro.BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
-            Maestro.BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
+            BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
+            BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
+            BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
-           
+            LoadConfig();
         }
 
         private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
@@ -42,12 +54,12 @@ namespace BardMusicPlayer.Ui.Views
             this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent.ChatLogCode, seerEvent.ChatLogLine)));
         }
 
-        private void Instance_PlaybackMaxTime(object sender, ITimeSpan e)
+        private void Instance_PlaybackMaxTime(object sender, Maestro.Events.MaxPlayTimeEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackMaxTime(e)));
         }
 
-        private void Instance_PlaybackTimeChanged(object sender, ITimeSpan e)
+        private void Instance_PlaybackTimeChanged(object sender, Maestro.Events.CurrentPlayPositionEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackTimeChanged(e)));
         }
@@ -56,7 +68,6 @@ namespace BardMusicPlayer.Ui.Views
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackStopped()));
         }
-
 
         private void Instance_EnsembleStarted(Seer.Events.EnsembleStarted seerEvent)
         {
@@ -89,36 +100,33 @@ namespace BardMusicPlayer.Ui.Views
                 return;
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                 return;
+            Thread.Sleep(2475);
             PlaybackFunctions.PlaySong();
             Play_Button.Content = @"⏸";
         }
 
-        private void PlaybackMaxTime(ITimeSpan e)
+        private void PlaybackMaxTime(Maestro.Events.MaxPlayTimeEvent e)
         {
             string time;
-            string Seconds = e.ToString().Split(':')[2];
-            string Minutes = e.ToString().Split(':')[1];
+            string Seconds = e.timeSpan.Seconds.ToString();
+            string Minutes = e.timeSpan.Minutes.ToString();
             time = ((Minutes.Length == 1) ? "0" + Minutes : Minutes) + ":" + ((Seconds.Length == 1) ? "0" + Seconds : Seconds);
             TotalTime.Content = time;
 
-            MetricTimeSpan d;
-            MetricTimeSpan.TryParse(e.ToString(), out d);
-            Playbar_Slider.Maximum = d.TotalMicroseconds;
+            Playbar_Slider.Maximum = e.tick;
 
         }
 
-        private void PlaybackTimeChanged(ITimeSpan e)
+        private void PlaybackTimeChanged(Maestro.Events.CurrentPlayPositionEvent e)
         {
             string time;
-            string Seconds = e.ToString().Split(':')[2];
-            string Minutes = e.ToString().Split(':')[1];
+            string Seconds = e.timeSpan.Seconds.ToString();
+            string Minutes = e.timeSpan.Minutes.ToString();
             time = ((Minutes.Length == 1) ? "0" + Minutes : Minutes) + ":" + ((Seconds.Length == 1) ? "0" + Seconds : Seconds);
             ElapsedTime.Content = time;
-            
-            MetricTimeSpan d;
-            MetricTimeSpan.TryParse(e.ToString(), out d);
+
             if (!_Playbar_dragStarted)
-                Playbar_Slider.Value = d.TotalMicroseconds;
+                Playbar_Slider.Value = e.tick;
         }
 
         public void PlaybackStopped()
@@ -161,26 +169,31 @@ namespace BardMusicPlayer.Ui.Views
                 track_txtNum.Text = _numValue.ToString();
         }
 
-        private void Autostart_source_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            int d = Autostart_source.SelectedIndex;
-            Globals.Settings.AutostartType=(Globals.Settings.Autostart_Types)d;
-            Globals.Settings.SaveConfig();
-        }
-
         private void Siren_Load_Click(object sender, RoutedEventArgs e)
         {
-            //BmpSiren.Instance.Load(PlaybackFunctions.CurrentSong);
+#if SIREN
+            BmpSiren.Instance.Load(PlaybackFunctions.CurrentSong);
+#endif
         }
 
         private void Siren_Play_Click(object sender, RoutedEventArgs e)
         {
-            //BmpSiren.Instance.Play();
+#if SIREN
+            BmpSiren.Instance.Play();
+#endif
         }
 
         private void Siren_Stop_Click(object sender, RoutedEventArgs e)
         {
-            //BmpSiren.Instance.Stop();
+#if SIREN
+            BmpSiren.Instance.Stop();
+#endif
+        }
+
+        private void Siren_Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            /*Slider slider = e.OriginalSource as Slider;
+            BmpSiren.Instance.Setup((float)slider.Value, 2, 100);*/
         }
     }
 }

@@ -1,18 +1,6 @@
-﻿
-using BardMusicPlayer.Ui.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using BardMusicPlayer.Ui.Skinned;
+using BardMusicPlayer.Ui.Classic;
 using System.Windows;
-
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-
 
 namespace BardMusicPlayer.Ui
 {
@@ -25,8 +13,8 @@ namespace BardMusicPlayer.Ui
         {
             InitializeComponent();
             Globals.Settings.LoadConfig();
-
-            SwitchClassicStyle();
+            //SwitchClassicStyle();
+            SwitchSkinnedStyle();
         }
 
         public void SwitchClassicStyle()
@@ -36,15 +24,15 @@ namespace BardMusicPlayer.Ui
             this.WindowStyle = WindowStyle.SingleBorderWindow;
             this.Height = 500;
             this.Width = 830;
-            this.ResizeMode = ResizeMode.NoResize;
+            this.ResizeMode = ResizeMode.CanResizeWithGrip;
         }
 
         public void SwitchSkinnedStyle()
         {
             this.DataContext = new Skinned_MainView();
             this.AllowsTransparency = true;
-            this.Height = 200;
-            this.Width = 550;
+            this.Height = 174;
+            this.Width = 412;
             this.ResizeMode = ResizeMode.NoResize;
         }
     }

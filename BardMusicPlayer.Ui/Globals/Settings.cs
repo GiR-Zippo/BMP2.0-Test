@@ -18,23 +18,17 @@ namespace BardMusicPlayer.Ui.Globals
             VIA_METRONOME,
             UNUSED
         }
-        public static Autostart_Types AutostartType;
 
-        public static void DefaultConfigs()
+        public static Autostart_Types AutostartType
         {
-            AutostartType = Autostart_Types.NONE;
+            get { return (Autostart_Types)Convert.ToInt16(BmpPigeonhole.Instance.AutostartMethod); }
+            set { BmpPigeonhole.Instance.AutostartMethod = (int)value; }
         }
 
         public static void LoadConfig()
         {
             Globals.CurrentTrack = 1;
             BmpPigeonhole.Instance.NoteKeyDelay = 25;
-            AutostartType = (Autostart_Types)Convert.ToInt16(BmpPigeonhole.Instance.AutostartMethod);
-        }
-        
-        public static void SaveConfig()
-        {
-            BmpPigeonhole.Instance.AutostartMethod = (int)AutostartType;
         }
     }
 }

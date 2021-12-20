@@ -1,0 +1,307 @@
+﻿<UserControl x:Class="BardMusicPlayer.Ui.Skinned.Skinned_MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:BardMusicPlayer.Ui.Skinned"
+             mc:Ignorable="d"
+             MinWidth="412"
+             Width="412"
+             MaxWidth="412"
+             d:DesignHeight="200" d:DesignWidth="412">
+    <UserControl.Background>
+        <ImageBrush />
+    </UserControl.Background>
+
+    <UserControl.Resources>
+        <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
+        <Style x:Key="MyButtonStyle" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" 
+                        Background="{TemplateBinding Background}">
+
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="Black" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- Playbar Slider -->
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border  BorderThickness="1" BorderBrush="Transparent" Background="Transparent" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="Transparent" BorderThickness="1" BorderBrush="Transparent" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Rectangle x:Name="Rectangle" Height="18" Width="52" Fill="{DynamicResource MAIN_POSITION_SLIDER_THUMB}"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDragging" Value="true">
+                                <Setter TargetName="Rectangle" Property="Fill" Value="{DynamicResource MAIN_POSITION_SLIDER_THUMB_SELECTED}"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" x:Name="PART_Track"   >
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Playbar_Slider" TargetType="Slider">
+            <Setter Property="Focusable" Value="true"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="1" />
+                    <Setter Property="MinWidth" Value="1" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- 0 Titlebar height-->
+            <RowDefinition Height="26"/>
+            <!-- 1 Spacer -->
+            <RowDefinition Height="13"/>
+            <!-- 2 Time Digit and Song Title -->
+            <RowDefinition Height="20"/>
+            <!-- 3 Spacer -->
+            <RowDefinition Height="7"/>
+            <!-- 4 Instrument and Track -->
+            <RowDefinition Height="13"/>
+            <!-- 5 Spacer -->
+            <RowDefinition Height="11"/>
+            <!-- 6 TrackSelector -->
+            <RowDefinition Height="11"/>
+            <!-- 7 Spacer -->
+            <RowDefinition Height="8"/>
+            <!-- 8 Positionbar -->
+            <RowDefinition Height="18"/>
+            <!-- 9 Spacer -->
+            <RowDefinition Height="5"/>
+            <!-- 10 PlayControlbuttons -->
+            <RowDefinition Height="27"/>
+            <!-- 11 Spacer -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Titlebar -->
+        <Rectangle Grid.Row="0" x:Name="TitleBar" HorizontalAlignment="Stretch" Width="412" Height="21" VerticalAlignment="Top" PreviewMouseDown="TitleBar_MouseDown">
+            <Rectangle.Fill>
+                <ImageBrush />
+            </Rectangle.Fill>
+        </Rectangle>
+        <!-- Titlebar Buttons -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="18"/>
+                <ColumnDefinition Width="16"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource MyButtonStyle}" x:Name="Settings_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="13" Height="13" Margin="9,5,0,0" Content="" Click="Settings_Button_Click" PreviewMouseUp="Settings_Button_Up" PreviewMouseDown="Settings_Button_Down"  BorderThickness="0">
+                <Button.ContextMenu>
+                    <ContextMenu >
+                        <MenuItem Header="Show Bards Window" Click="ShowBardsWindow_Click"/>
+                        <MenuItem Header="Show Playlist Window" Click="ShowPlaylistWindow_Click"/>
+                        <MenuItem Header="Third file"/>
+                        <MenuItem Header="Fourth file"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button Grid.Column="4" Style="{StaticResource MyButtonStyle}" x:Name="Close_Button" HorizontalAlignment="Left" Margin="0,4.5,0,0"   VerticalAlignment="Top" Width="13" Height="13" Content="" Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down"  BorderThickness="0" />
+
+        </Grid>
+
+        <!-- Time Digit and Song Title -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="95"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- The Time -->
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="18"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="19"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="3" x:Name="Second_First" HorizontalAlignment="Left" Width="13.5" Height="19.5" VerticalAlignment="Top">
+                    <Rectangle.Fill>
+                        <ImageBrush/>
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <Rectangle Grid.Column="4" x:Name="Second_Last" HorizontalAlignment="Left" Width="13.5" Height="19.5" VerticalAlignment="Top">
+                    <Rectangle.Fill>
+                        <ImageBrush />
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <Rectangle Grid.Column="0" x:Name="Minutes_First" HorizontalAlignment="Left" Width="13.5" Height="19.5" VerticalAlignment="Top">
+                    <Rectangle.Fill>
+                        <ImageBrush />
+                    </Rectangle.Fill>
+                </Rectangle>
+
+                <Rectangle Grid.Column="1" x:Name="Minutes_Last" HorizontalAlignment="Left" Width="13.5" Height="19.5" VerticalAlignment="Top">
+                    <Rectangle.Fill>
+                        <ImageBrush/>
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+
+            <Image Grid.Column="2" x:Name="SongDigit" HorizontalAlignment="Left" Height="16" Width="230" />
+        </Grid>
+
+        <!-- Instrument and Track -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="96"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="1" x:Name="InstrumentDigit" HorizontalAlignment="Left" Height="9" Width="102" />
+            <Image Grid.Column="2" x:Name="SmallTrackDigit" Margin="0,-5,0,0" HorizontalAlignment="Left" Height="11" Width="18" />
+
+        </Grid>
+
+        <!-- TrackSelector-->
+        <Grid Grid.Row="6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="161"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="75"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="1" x:Name="MAIN_VOLUME_BACKGROUND" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="100"
+                Height="12" PreviewMouseDown="TitleBar_MouseDown"
+                Fill="{DynamicResource MAIN_VOLUME_BACKGROUND}" />
+            <Button Grid.Column="1" Style="{StaticResource MyButtonStyle}" x:Name="TrackDown_Button"
+                HorizontalAlignment="Left" Click="TrackDown_Button_Click"  PreviewMouseUp="TrackDown_Button_Up"  PreviewMouseDown="TrackDown_Button_Down" 
+                BorderThickness="0" 
+                Width="14"
+                Height="12"
+                VerticalAlignment="Top" />
+            <Image Grid.Column="2" x:Name="TrackDigit" Height="8" Width="65"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"/>
+            <Button Grid.Column="3" Style="{StaticResource MyButtonStyle}" x:Name="TrackUp_Button" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="16"
+                Height="12" Click="TrackUp_Button_Click"  PreviewMouseUp="TrackUp_Button_Up"  PreviewMouseDown="TrackUp_Button_Down"   BorderThickness="0"/>
+        </Grid>
+
+        <!-- Playbar -->
+        <Grid Grid.Row="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Rectangle Grid.Column="1" x:Name="PlayBar_Background" HorizontalAlignment="Left" Width="370" Height="16" VerticalAlignment="Top">
+                <Rectangle.Fill>
+                    <ImageBrush  />
+                </Rectangle.Fill>
+            </Rectangle>
+            <Slider Grid.Column="1" Style="{StaticResource Playbar_Slider}" x:Name="Playbar_Slider"  HorizontalAlignment="left" 
+                VerticalAlignment="Stretch" Width="370" Height="16" Maximum="200" Margin="0,-5,0,0" ValueChanged="Playbar_Slider_ValueChanged" Thumb.DragStarted="Playbar_Slider_DragStarted" 
+                Thumb.DragCompleted="Playbar_Slider_DragCompleted"/>
+        </Grid>
+
+        <!-- PlayControlbuttons -->
+        <Grid Grid.Row="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="24"/>
+                <ColumnDefinition Width="34.5"/>
+                <ColumnDefinition Width="34.5"/>
+                <ColumnDefinition Width="34.5"/>
+                <ColumnDefinition Width="34.5"/>
+                <ColumnDefinition Width="34.5"/>
+                <ColumnDefinition Width="7"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Style="{StaticResource MyButtonStyle}" x:Name="Prev_Button"  HorizontalAlignment="Left" Click="Prev_Button_Click"  PreviewMouseUp="Prev_Button_Up"  PreviewMouseDown="Prev_Button_Down"   BorderThickness="0" Width="34.5" Height="27" />
+            <Button Grid.Column="2" Style="{StaticResource MyButtonStyle}" x:Name="Play_Button"  HorizontalAlignment="Left" Click="Play_Button_Click"  PreviewMouseUp="Play_Button_Up"  PreviewMouseDown="Play_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="3" Style="{StaticResource MyButtonStyle}" x:Name="Pause_Button" HorizontalAlignment="Left" Click="Pause_Button_Click" PreviewMouseUp="Pause_Button_Up" PreviewMouseDown="Pause_Button_Down"  BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="4" Style="{StaticResource MyButtonStyle}" x:Name="Stop_Button"  HorizontalAlignment="Left" Click="Stop_Button_Click"  PreviewMouseUp="Stop_Button_Up"  PreviewMouseDown="Stop_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="5" Style="{StaticResource MyButtonStyle}" x:Name="Next_Button"  HorizontalAlignment="Left" Click="Next_Button_Click"  PreviewMouseUp="Next_Button_Up"  PreviewMouseDown="Next_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
+
+            <Button Grid.Column="7" Style="{StaticResource MyButtonStyle}" x:Name="Load_Button"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,1.5,0,0" Width="33" Height="24" Content="" Click="Load_Button_Click"  PreviewMouseUp="Load_Button_Up"  PreviewMouseDown="Load_Button_Down"   BorderThickness="0" />
+
+            <!-- TODO 
+        <Button x:Name="Loop_Button" HorizontalAlignment="Left" Margin="290,13,0,0" VerticalAlignment="Top" Width="75" Content="Loop" Click="Loop_Button_Click"/>
+        <Button x:Name="Skip_Button" HorizontalAlignment="Left" Margin="289,38,0,0" VerticalAlignment="Top" Width="76" Content="Skip" Click="Skip_Button_Click"/>
+        -->
+        </Grid>
+    </Grid>
+</UserControl>

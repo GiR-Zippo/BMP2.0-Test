@@ -11,7 +11,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace BardMusicPlayer.Ui.Views
+namespace BardMusicPlayer.Ui.Skinned
 {
     public partial class Skinned_MainView : UserControl
     {
@@ -86,9 +86,7 @@ namespace BardMusicPlayer.Ui.Views
                 index++;
             }
             InstrumentDigit.Source = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions())).ImageSource;
-            
         }
-
     }
 }
 
