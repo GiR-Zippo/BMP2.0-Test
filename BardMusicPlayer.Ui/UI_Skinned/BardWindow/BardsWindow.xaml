@@ -12,27 +12,11 @@
 
 
     <Window.Resources>
-        <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
-        <Style x:Key="MyButtonStyle" TargetType="Button">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="border" 
-                        Background="{TemplateBinding Background}">
-
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="Black" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/ImageButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
 
     </Window.Resources>
 
@@ -69,7 +53,7 @@
                     <ColumnDefinition Width="7"/>
                     <ColumnDefinition Width="13"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" Style="{StaticResource MyButtonStyle}" x:Name="Close_Button" 
+                <Button Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="Close_Button" 
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="13" Height="13" Content="" 
                                         Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down"  BorderThickness="0" />
 

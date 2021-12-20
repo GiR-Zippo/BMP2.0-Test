@@ -14,107 +14,12 @@
     </UserControl.Background>
 
     <UserControl.Resources>
-        <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
-        <Style x:Key="MyButtonStyle" TargetType="Button">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="border" 
-                        Background="{TemplateBinding Background}">
-
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="Black" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-
-        <!-- Playbar Slider -->
-        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="IsTabStop" Value="false" />
-            <Setter Property="Focusable" Value="false" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RepeatButton">
-                        <Border  BorderThickness="1" BorderBrush="Transparent" Background="Transparent" Height="3"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RepeatButton">
-                        <Border SnapsToDevicePixels="True" Background="Transparent" BorderThickness="1" BorderBrush="Transparent" Height="3"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="SliderThumb" TargetType="Thumb">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Thumb">
-                        <Rectangle x:Name="Rectangle" Height="18" Width="52" Fill="{DynamicResource MAIN_POSITION_SLIDER_THUMB}"/>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsDragging" Value="true">
-                                <Setter TargetName="Rectangle" Property="Fill" Value="{DynamicResource MAIN_POSITION_SLIDER_THUMB_SELECTED}"></Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <ControlTemplate x:Key="Slider"  TargetType="Slider">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Track Grid.Row="1" x:Name="PART_Track"   >
-                    <Track.DecreaseRepeatButton>
-                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
-                    </Track.DecreaseRepeatButton>
-                    <Track.Thumb>
-                        <Thumb Style="{StaticResource SliderThumb}"  />
-                    </Track.Thumb>
-                    <Track.IncreaseRepeatButton>
-                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
-                    </Track.IncreaseRepeatButton>
-                </Track>
-            </Grid>
-        </ControlTemplate>
-
-        <Style x:Key="Playbar_Slider" TargetType="Slider">
-            <Setter Property="Focusable" Value="true"/>
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Style.Triggers>
-                <Trigger Property="Orientation" Value="Horizontal">
-                    <Setter Property="MinHeight" Value="1" />
-                    <Setter Property="MinWidth" Value="1" />
-                    <Setter Property="Template" Value="{StaticResource Slider}" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/PlayBarStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/ImageButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid>
@@ -160,7 +65,7 @@
                 <ColumnDefinition Width="18"/>
                 <ColumnDefinition Width="16"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Style="{StaticResource MyButtonStyle}" x:Name="Settings_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="13" Height="13" Margin="9,5,0,0" Content="" Click="Settings_Button_Click" PreviewMouseUp="Settings_Button_Up" PreviewMouseDown="Settings_Button_Down"  BorderThickness="0">
+            <Button Grid.Column="0" Style="{StaticResource ImageButton}" x:Name="Settings_Button" HorizontalAlignment="Left" VerticalAlignment="Top" Width="13" Height="13" Margin="9,5,0,0" Content="" Click="Settings_Button_Click" PreviewMouseUp="Settings_Button_Up" PreviewMouseDown="Settings_Button_Down"  BorderThickness="0">
                 <Button.ContextMenu>
                     <ContextMenu >
                         <MenuItem Header="Show Bards Window" Click="ShowBardsWindow_Click"/>
@@ -170,7 +75,7 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <Button Grid.Column="4" Style="{StaticResource MyButtonStyle}" x:Name="Close_Button" HorizontalAlignment="Left" Margin="0,4.5,0,0"   VerticalAlignment="Top" Width="13" Height="13" Content="" Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down"  BorderThickness="0" />
+            <Button Grid.Column="4" Style="{StaticResource ImageButton}" x:Name="Close_Button" HorizontalAlignment="Left" Margin="0,4.5,0,0"   VerticalAlignment="Top" Width="13" Height="13" Content="" Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down"  BorderThickness="0" />
 
         </Grid>
 
@@ -246,7 +151,7 @@
                 Width="100"
                 Height="12" PreviewMouseDown="TitleBar_MouseDown"
                 Fill="{DynamicResource MAIN_VOLUME_BACKGROUND}" />
-            <Button Grid.Column="1" Style="{StaticResource MyButtonStyle}" x:Name="TrackDown_Button"
+            <Button Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="TrackDown_Button"
                 HorizontalAlignment="Left" Click="TrackDown_Button_Click"  PreviewMouseUp="TrackDown_Button_Up"  PreviewMouseDown="TrackDown_Button_Down" 
                 BorderThickness="0" 
                 Width="14"
@@ -255,7 +160,7 @@
             <Image Grid.Column="2" x:Name="TrackDigit" Height="8" Width="65"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"/>
-            <Button Grid.Column="3" Style="{StaticResource MyButtonStyle}" x:Name="TrackUp_Button" 
+            <Button Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="TrackUp_Button" 
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Width="16"
@@ -290,13 +195,13 @@
                 <ColumnDefinition Width="7"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Style="{StaticResource MyButtonStyle}" x:Name="Prev_Button"  HorizontalAlignment="Left" Click="Prev_Button_Click"  PreviewMouseUp="Prev_Button_Up"  PreviewMouseDown="Prev_Button_Down"   BorderThickness="0" Width="34.5" Height="27" />
-            <Button Grid.Column="2" Style="{StaticResource MyButtonStyle}" x:Name="Play_Button"  HorizontalAlignment="Left" Click="Play_Button_Click"  PreviewMouseUp="Play_Button_Up"  PreviewMouseDown="Play_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
-            <Button Grid.Column="3" Style="{StaticResource MyButtonStyle}" x:Name="Pause_Button" HorizontalAlignment="Left" Click="Pause_Button_Click" PreviewMouseUp="Pause_Button_Up" PreviewMouseDown="Pause_Button_Down"  BorderThickness="0" Width="34.5" Height="27"/>
-            <Button Grid.Column="4" Style="{StaticResource MyButtonStyle}" x:Name="Stop_Button"  HorizontalAlignment="Left" Click="Stop_Button_Click"  PreviewMouseUp="Stop_Button_Up"  PreviewMouseDown="Stop_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
-            <Button Grid.Column="5" Style="{StaticResource MyButtonStyle}" x:Name="Next_Button"  HorizontalAlignment="Left" Click="Next_Button_Click"  PreviewMouseUp="Next_Button_Up"  PreviewMouseDown="Next_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="Prev_Button"  HorizontalAlignment="Left" Click="Prev_Button_Click"  PreviewMouseUp="Prev_Button_Up"  PreviewMouseDown="Prev_Button_Down"   BorderThickness="0" Width="34.5" Height="27" />
+            <Button Grid.Column="2" Style="{StaticResource ImageButton}" x:Name="Play_Button"  HorizontalAlignment="Left" Click="Play_Button_Click"  PreviewMouseUp="Play_Button_Up"  PreviewMouseDown="Play_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="Pause_Button" HorizontalAlignment="Left" Click="Pause_Button_Click" PreviewMouseUp="Pause_Button_Up" PreviewMouseDown="Pause_Button_Down"  BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="4" Style="{StaticResource ImageButton}" x:Name="Stop_Button"  HorizontalAlignment="Left" Click="Stop_Button_Click"  PreviewMouseUp="Stop_Button_Up"  PreviewMouseDown="Stop_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
+            <Button Grid.Column="5" Style="{StaticResource ImageButton}" x:Name="Next_Button"  HorizontalAlignment="Left" Click="Next_Button_Click"  PreviewMouseUp="Next_Button_Up"  PreviewMouseDown="Next_Button_Down"   BorderThickness="0" Width="34.5" Height="27"/>
 
-            <Button Grid.Column="7" Style="{StaticResource MyButtonStyle}" x:Name="Load_Button"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,1.5,0,0" Width="33" Height="24" Content="" Click="Load_Button_Click"  PreviewMouseUp="Load_Button_Up"  PreviewMouseDown="Load_Button_Down"   BorderThickness="0" />
+            <Button Grid.Column="7" Style="{StaticResource ImageButton}" x:Name="Load_Button"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,1.5,0,0" Width="33" Height="24" Content="" Click="Load_Button_Click"  PreviewMouseUp="Load_Button_Up"  PreviewMouseDown="Load_Button_Down"   BorderThickness="0" />
 
             <!-- TODO 
         <Button x:Name="Loop_Button" HorizontalAlignment="Left" Margin="290,13,0,0" VerticalAlignment="Top" Width="75" Content="Loop" Click="Loop_Button_Click"/>
