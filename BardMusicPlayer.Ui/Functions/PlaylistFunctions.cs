@@ -51,6 +51,19 @@ namespace BardMusicPlayer.UI.Functions
             }
         }
 
+        public static BmpSong GetSong(string songname)
+        {
+            if (currentPlaylist == null)
+                return null;
+
+            foreach (var item in currentPlaylist)
+            {
+                if (item.Title == songname)
+                    return item;
+            }
+            return null;
+        }
+
         public static void SaveCurrentPlaylist()
         {
             if (currentPlaylist == null)

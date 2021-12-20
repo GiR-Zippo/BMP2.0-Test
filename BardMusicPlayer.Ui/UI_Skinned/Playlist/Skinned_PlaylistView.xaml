@@ -17,84 +17,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/ImageButtonStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/PlayListViewStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-
-        <!--<Style x:Key="PlaylistViewHeadles" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Visibility" Value="Collapsed" />
-        </Style>
-
-        Scrollbar Thumbs
-        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
-            <Setter Property="SnapsToDevicePixels" Value="true" />
-            <Setter Property="OverridesDefaultStyle" Value="true" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Thumb">
-                        <Rectangle x:Name="Rectangle" Height="18" Width="52" Fill="{DynamicResource PLAYLIST_SLIDER_THUMB}"/>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsDragging" Value="true">
-                                <Setter TargetName="Rectangle" Property="Fill" Value="{DynamicResource PLAYLIST_SLIDER_THUMB_SELECTED}"></Setter>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        ScrollBars
-        <Style x:Key="ScrollBarStyle" TargetType="{x:Type ScrollBar}">
-            <Setter Property="Foreground" Value="#8C8C8C"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Width" Value="8"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
-                        <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="0.00001*"/>
-                            </Grid.RowDefinitions>
-
-                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="false">
-                                <Track.Thumb>
-                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{StaticResource ScrollThumbs}"/>
-                                </Track.Thumb>
-                                <Track.IncreaseRepeatButton>
-                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false"/>
-                                </Track.IncreaseRepeatButton>
-                                <Track.DecreaseRepeatButton>
-                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false"/>
-                                </Track.DecreaseRepeatButton>
-                            </Track>
-                        </Grid>
-
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="false">
-                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
-                            </Trigger>
-                            <Trigger Property="Orientation" Value="Horizontal">
-                                <Setter TargetName="GridRoot" Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter TargetName="PART_Track" Property="LayoutTransform">
-                                    <Setter.Value>
-                                        <RotateTransform Angle="-90"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="Width" Value="Auto"/>
-                                <Setter Property="Height" Value="8"/>
-                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
-                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
-                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
-
     </Window.Resources>
 
     <Grid >
@@ -154,53 +79,27 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="18"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="30"/>
+                <!-- <ColumnDefinition Width="30"/> -->
             </Grid.ColumnDefinitions>
             <Rectangle Grid.Column="0" x:Name="PLAYLIST_LEFT_TILE"  VerticalAlignment="Stretch" HorizontalAlignment="Left"  Width="18" Margin="0,0,0,0">
                 <Rectangle.Fill>
                     <ImageBrush/>
                 </Rectangle.Fill>
             </Rectangle>
-            <ListView Grid.Column="1" x:Name="PlaylistContainer" Width="370" Height="315" VerticalAlignment="Top" HorizontalAlignment="Center" BorderThickness="0" ItemsSource="{Binding}"
-                    PreviewMouseDoubleClick="PlaylistContainer_PreviewMouseDoubleClick" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                    SelectionChanged="PlaylistContainer_SelectionChanged">
-
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="BorderBrush" Value="{x:Null}" />
-                                <Setter Property="BorderThickness" Value="0" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <!-- <ListView.View>
-                    <GridView ColumnHeaderContainerStyle="{StaticResource PlaylistViewHeadles}">
-                        <GridViewColumn Width="300" DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Width="50" DisplayMemberBinding="{Binding Time}" /> 
-                    </GridView>
-
-                </ListView.View>-->
-            </ListView>
-
-            <Rectangle Grid.Column="2" x:Name="PLAYLIST_RIGHT_TILE" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="30" Margin="0,0,0,0">
+            <Rectangle Grid.Column="1" x:Name="PLAYLIST_RIGHT_TILE" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="30" Margin="0,0,0,0">
                 <Rectangle.Fill>
                     <ImageBrush/>
                 </Rectangle.Fill>
             </Rectangle>
 
-            <!-- <ScrollBar Grid.Column="2"
-            x:Name="PART_VerticalScrollBar"
-            Minimum="0.0"
-            Maximum="300"
-            ViewportSize="100"
-            Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=VerticalOffset, Mode=OneWay}"
-            Style="{StaticResource ScrollBarStyle}"
-            Cursor="Arrow"
-            AutomationProperties.AutomationId="VerticalScrollBar">
-                
-            </ScrollBar> -->
+            <ListView Grid.Column="1" x:Name="PlaylistContainer" Width="385" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left" BorderThickness="0" ItemsSource="{Binding}"
+                    PreviewMouseDoubleClick="PlaylistContainer_PreviewMouseDoubleClick"
+                    ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                    SelectionChanged="PlaylistContainer_SelectionChanged"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                         ScrollViewer.CanContentScroll="True">
+
+            </ListView>
 
 
         </Grid>
@@ -258,6 +157,42 @@
                     <ImageBrush/>
                 </Rectangle.Fill>
             </Rectangle>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height= "34"/>
+                    <RowDefinition Height= "*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="9"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="9"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!--  Style="{StaticResource ImageButton}" Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down" -->
+                <Rectangle Grid.Row="1" Grid.Column="1" x:Name="PrevButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent"/>
+                <Rectangle Grid.Row="1" Grid.Column="3" x:Name="Playbutton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="Playbutton_PreviewMouseDown" />
+                <Rectangle Grid.Row="1" Grid.Column="5" x:Name="PauseButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="10" Height="10" Fill="Transparent" PreviewMouseDown="PauseButton_PreviewMouseDown"/>
+                <Rectangle Grid.Row="1" Grid.Column="7" x:Name="StopButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="9" Height="10" Fill="Transparent" PreviewMouseDown="StopButton_PreviewMouseDown" />
+                <Rectangle Grid.Row="1" Grid.Column="9" x:Name="RevButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" />
+                <Rectangle Grid.Row="1" Grid.Column="11" x:Name="LoadButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="LoadButton_PreviewMouseDown" />
+            </Grid>
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height= "16"/>
+                    <RowDefinition Height= "16"/>
+                    <RowDefinition Height= "*"/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="1" x:Name="SongDigit" HorizontalAlignment="Left" Height="16" Width="135" Margin="12,0,0,0"/>
+                <Image Grid.Row="2" x:Name="SongTime" HorizontalAlignment="Left" Height="16" Width="135" Margin="105,-4,0,0"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

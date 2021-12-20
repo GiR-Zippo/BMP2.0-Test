@@ -1,23 +1,13 @@
 ﻿using BardMusicPlayer.Transmogrify.Song;
-using BardMusicPlayer.Transmogrify.Song.Config;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Ui.Globals.SkinContainer;
 using BardMusicPlayer.UI.Functions;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Markup;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace BardMusicPlayer.Ui.Skinned
@@ -29,8 +19,6 @@ namespace BardMusicPlayer.Ui.Skinned
     {
         public EventHandler<bool> OnLoadSongFromPlaylist;
 
-        public SolidColorBrush ColorClicked = new SolidColorBrush(Color.FromArgb(1, 0,1,1));
-
         public Skinned_PlaylistView()
         {
             InitializeComponent();
@@ -40,6 +28,9 @@ namespace BardMusicPlayer.Ui.Skinned
 
         public void ApplySkin()
         {
+            var col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
+            this.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
+
             this.Playlist_Top_Left.Fill = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_TOP_LEFT_CORNER];
             this.PLAYLIST_TITLE_BAR.Fill = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_TITLE_BAR];
             this.PLAYLIST_TOP_TILE.Fill = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_TOP_TILE];
@@ -55,11 +46,15 @@ namespace BardMusicPlayer.Ui.Skinned
 
             this.Close_Button.Background = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_CLOSE_SELECTED];
 
-            var col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
+            col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
             this.PlaylistContainer.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL];
             this.PlaylistContainer.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
-            
+
+            PlaylistContainer_SelectionChanged(null, null);
+#if SIREN
+            Siren.BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
+#endif
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -174,5 +169,7 @@ namespace BardMusicPlayer.Ui.Skinned
                 contextMenu.IsOpen = true;
             }
         }
+
+
     }
 }

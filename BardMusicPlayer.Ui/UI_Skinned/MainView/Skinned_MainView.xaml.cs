@@ -26,7 +26,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private bool _Playbar_dragStarted = false;
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
-
+        private CancellationTokenSource Scroller = new CancellationTokenSource();
         public Skinned_MainView()
         {
             InitializeComponent();
@@ -54,7 +54,9 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void OnLoadSongFromPlaylist(object sender, bool e)
         {
-            WriteSongField(PlaybackFunctions.GetSongName());
+            Scroller.Cancel();
+            Scroller = new CancellationTokenSource();
+            UpdateScroller(Scroller.Token, PlaybackFunctions.GetSongName()).ConfigureAwait(false);
             WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
         }
 

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using BardMusicPlayer.Ui.Functions;
+using System.Threading;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -86,7 +87,9 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Load_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_EJECT_BUTTON];
             if (PlaybackFunctions.LoadSong())
             {
-                WriteSongField(PlaybackFunctions.GetSongName());
+                Scroller.Cancel();
+                Scroller = new CancellationTokenSource();
+                UpdateScroller(Scroller.Token, PlaybackFunctions.GetSongName()).ConfigureAwait(false);
                 WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
             }
         }
@@ -151,6 +154,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Close_Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close_Button.Background = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_CLOSE_BUTTON];
+            Scroller.Cancel();
             Application.Current.Shutdown();
         }
         private void Close_Button_Down(object sender, MouseButtonEventArgs e)

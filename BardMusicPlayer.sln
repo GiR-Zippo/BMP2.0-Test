@@ -22,6 +22,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BardMusicPlayer.Transmogrify", "BardMusicPlayer.Transmogrify\BardMusicPlayer.Transmogrify.csproj", "{AFB55E52-C439-481E-99F4-0B56C42A6D4B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BardMusicPlayer.Ui", "BardMusicPlayer.Ui\BardMusicPlayer.Ui.csproj", "{E8DAFE06-97DF-4B94-BE4A-EE29033495F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{03D848F1-F319-43DA-B0F8-E83A19EF3108} = {03D848F1-F319-43DA-B0F8-E83A19EF3108}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanford.Multimedia.Midi", "Sanford.Multimedia.Midi\Source\Sanford.Multimedia.Midi.csproj", "{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}"
 EndProject
