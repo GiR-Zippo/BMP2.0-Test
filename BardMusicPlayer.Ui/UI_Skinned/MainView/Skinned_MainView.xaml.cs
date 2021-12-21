@@ -26,21 +26,25 @@ namespace BardMusicPlayer.Ui.Skinned
         private bool _Playbar_dragStarted = false;
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
+
         private CancellationTokenSource Scroller = new CancellationTokenSource();
         public Skinned_MainView()
         {
             InitializeComponent();
+            LoadSkin(BmpPigeonhole.Instance.LastSkin);
+
             _PlaylistView = new Skinned_PlaylistView();
             _BardListView = new BardsWindow();
 
             var mw = ((MainWindow)System.Windows.Application.Current.MainWindow);
             _PlaylistView.Show();
             _BardListView.Show();
-
+            
             _PlaylistView.Top = ((MainWindow)Application.Current.MainWindow).Top + ((MainWindow)Application.Current.MainWindow).ActualHeight;
             _PlaylistView.Left = ((MainWindow)Application.Current.MainWindow).Left;
             _PlaylistView.OnLoadSongFromPlaylist += OnLoadSongFromPlaylist;
-            LoadSkin(BmpPigeonhole.Instance.LastSkin);
+
+            
 
             BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;

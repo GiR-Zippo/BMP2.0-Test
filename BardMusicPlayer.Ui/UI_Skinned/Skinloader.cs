@@ -21,6 +21,7 @@ namespace BardMusicPlayer.Ui.Skinned
 {
     public partial class Skinned_MainView : UserControl
     {
+        #region Tile definitions and offset
         Dictionary<SkinContainer.CBUTTON_TYPES, List<int>> cbuttonsdata = new Dictionary<SkinContainer.CBUTTON_TYPES, List<int>>
         {
             {SkinContainer.CBUTTON_TYPES.MAIN_PREVIOUS_BUTTON, new List<int> {0,0,23,18}},
@@ -109,6 +110,31 @@ namespace BardMusicPlayer.Ui.Skinned
             { SkinContainer.EQ_TYPES.EQ_PRESETS_BUTTON, new List<int> {224,164,44, 12}},
             { SkinContainer.EQ_TYPES.EQ_PRESETS_BUTTON_SELECTED, new List<int> {224,176,44,12}},
             { SkinContainer.EQ_TYPES.EQ_PREAMP_LINE, new List<int> {0,314,113, 1}}
+        };
+
+        Dictionary<SkinContainer.MEDIABROWSER_TYPES, List<int>> mediabrowserdata = new Dictionary<SkinContainer.MEDIABROWSER_TYPES, List<int>>
+        {
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_LEFT, new List<int> {0,0,25, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_TITLE, new List<int> {26,0,100, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_TILE, new List<int> {127,0,25, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_RIGHT, new List<int> {153,0,25, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_LEFT_UNSELECTED, new List<int> {0,21,25, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_TITLE_UNSELECTED, new List<int> {26,21,100, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_TILE_UNSELECTED, new List<int> {127,21,25, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_TOP_RIGHT_UNSELECTED, new List<int> {153,21,25, 20}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_MID_LEFT, new List<int> {127,42, 11, 29}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_MID_RIGHT, new List<int> {139,42, 8, 29}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_BOTTOM_LEFT, new List<int> {0,42, 125, 38}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_BOTTOM_TILE, new List<int> {127,81, 25, 38}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_BOTTOM_RIGHT, new List<int> {0,81, 125, 38}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_CLOSE, new List<int> {148, 42, 9, 9}},
+
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_PREV, new List<int> {158, 42, 14, 14}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_NEXT, new List<int> {173, 42, 14, 14}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_NEW, new List<int> {188, 42, 14, 14}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_RELOAD, new List<int> {203, 42, 14, 14}},
+            { SkinContainer.MEDIABROWSER_TYPES.MEDIABROWSER_REMOVE, new List<int> {218, 42, 14, 14}}
+
         };
 
         Dictionary<SkinContainer.GENEX_TYPES, List<int>> genexdata = new Dictionary<SkinContainer.GENEX_TYPES, List<int>>
@@ -207,7 +233,12 @@ namespace BardMusicPlayer.Ui.Skinned
             { SkinContainer.SWINDOW_TYPES.SWINDOW_BOTTOM_RIGHT_CORNER, new List<int> {81,16,16,5}},
             { SkinContainer.SWINDOW_TYPES.SWINDOW_CLOSE_SELECTED, new List<int> {0,0,9,9}}
         };
+        #endregion
 
+        /// <summary>
+        /// Load the selected skin
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
         public void LoadSkin(string filename)
         {
             //Load the background image
@@ -219,10 +250,12 @@ namespace BardMusicPlayer.Ui.Skinned
             SkinContainer.GENEX.Clear();
             SkinContainer.NUMBERS.Clear();
             SkinContainer.PLAYLIST.Clear();
+            SkinContainer.PLAYLISTCOLOR.Clear();
+            SkinContainer.MEDIABROWSER.Clear();
             SkinContainer.SWINDOW.Clear();
             SkinContainer.EQUALIZER.Clear();
             SkinContainer.VISCOLOR.Clear();
-            SkinContainer.PLAYLISTCOLOR.Clear();
+            
 
             List<string> visdata = ExtractViscolorFromZip(filename, "viscolor.txt");
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]));
@@ -234,13 +267,16 @@ namespace BardMusicPlayer.Ui.Skinned
             loadTransportbarAndClutter(filename);
             loadPlaylistDesign(filename);
             loadPlaylistColor(filename);
+            loadMediaBrowserWindow(filename);
             loadAVSWindow(filename);
             loadGenEx(filename);
 
             ApplySkin();
         }
 
-
+        /// <summary>
+        /// Apply the skin
+        /// </summary>
         private void ApplySkin()
         {
             this.TitleBar.Fill = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_TITLE_BAR];
@@ -263,14 +299,16 @@ namespace BardMusicPlayer.Ui.Skinned
             TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
 
 
-            this._PlaylistView.ApplySkin();
-            this._BardListView.ApplySkin();
+            //this._PlaylistView.ApplySkin();
+            //this._BardListView.ApplySkin();
+            //this._mediaBrowser.ApplySkin();
         }
 
+        #region loaders
         /// <summary>
         /// load the main background
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadBackgroundMain(string filename)
         {
             BitmapImage image = ExtractBitmapFromZip(filename, "main.bmp");
@@ -283,7 +321,7 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <summary>
         /// load titlebar and buttons
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadTitlebarAndButtons(string filename)
         {
             Image img = ExtractImageFromZip(filename, "titlebar.bmp");
@@ -301,6 +339,10 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
+        /// <summary>
+        /// load the playcontrol button for the main window
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadControlButtons(string filename)
         {
             Image img = ExtractImageFromZip(filename, "CBUTTONS.BMP");
@@ -318,6 +360,10 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
+        /// <summary>
+        /// loads the transportbar
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadTransportbarAndClutter(string filename)
         {
             //Transportbar
@@ -345,7 +391,7 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <summary>
         /// load the playlist design
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadPlaylistDesign(string filename)
         {
             Image img = ExtractImageFromZip(filename, "pledit.bmp");
@@ -368,9 +414,32 @@ namespace BardMusicPlayer.Ui.Skinned
         }
 
         /// <summary>
+        /// Load the mediabrowser window/small window decoration
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
+        private void loadMediaBrowserWindow(string filename)
+        {
+            //avs window (small window decoration)
+            Image img = ExtractImageFromZip(filename, "mb.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("mb.bmp");
+
+            foreach (KeyValuePair<SkinContainer.MEDIABROWSER_TYPES, List<int>> data in mediabrowserdata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.MEDIABROWSER.Add((SkinContainer.MEDIABROWSER_TYPES)data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                           Int32Rect.Empty,
+                                           BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+        }
+
+        /// <summary>
         /// Load the avs window/small window decoration
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadAVSWindow(string filename)
         {
             //avs window (small window decoration)
@@ -393,7 +462,7 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <summary>
         /// load the font and the numbers
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadNumbersAndFont(string filename)
         {
             Image img = ExtractImageFromZip(filename, "numbers.bmp");
@@ -448,6 +517,10 @@ namespace BardMusicPlayer.Ui.Skinned
 
         }
 
+        /// <summary>
+        /// load the generix extends
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
         private void loadGenEx(string filename)
         {
             //Buttons / or similar
@@ -491,7 +564,14 @@ namespace BardMusicPlayer.Ui.Skinned
                 bitmap.Dispose();
             }
         }
+        #endregion
 
+        #region extractors and helpers
+        /// <summary>
+        /// load the default skin data
+        /// </summary>
+        /// <param name="name">name of the bitmap</param>
+        /// <returns>Bitmap</returns>
         private Image loadDefaultSkinData(string name)
         {
             var bitmapImage = new BitmapImage(new Uri(@"pack://application:,,,/"
@@ -508,6 +588,11 @@ namespace BardMusicPlayer.Ui.Skinned
             return new Bitmap(stream);
         }
 
+        /// <summary>
+        /// load the default bimapimage
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>BitmapImage</returns>
         private BitmapImage loadDefaultSkinBitmap(string name)
         {
             var bitmapImage = new BitmapImage(new Uri(@"pack://application:,,,/"
@@ -518,6 +603,12 @@ namespace BardMusicPlayer.Ui.Skinned
             return bitmapImage;
         }
 
+        /// <summary>
+        /// extracts an image from the wsz archive
+        /// </summary>
+        /// <param name="archivename">wsz fullpath and filename</param>
+        /// <param name="imagename">image name</param>
+        /// <returns>Image</returns>
         Image ExtractImageFromZip(string archivename, string imagename)
         {
             ZipArchive zip;
@@ -548,6 +639,12 @@ namespace BardMusicPlayer.Ui.Skinned
             return null;
         }
 
+        /// <summary>
+        /// extracts a bitmap from the wsz archive
+        /// </summary>
+        /// <param name="archivename">wsz fullpath and filename</param>
+        /// <param name="imagename">name of the image</param>
+        /// <returns>BitmapImage</returns>
         BitmapImage ExtractBitmapFromZip(string archivename, string imagename)
         {
             ZipArchive zip;
@@ -582,6 +679,10 @@ namespace BardMusicPlayer.Ui.Skinned
             return null;
         }
 
+        /// <summary>
+        /// extracts the color palette for the playlist
+        /// </summary>
+        /// <param name="archivename">wsz fullpath and filename</param>
         private void loadPlaylistColor(string archivename)
         {
             SkinContainer.PLAYLISTCOLOR.Add(SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL, GetColorFromHex("Normal=#C4FFC4"));
@@ -639,6 +740,12 @@ namespace BardMusicPlayer.Ui.Skinned
             return;
         }
 
+        /// <summary>
+        /// extracts the viscolor palette
+        /// </summary>
+        /// <param name="archivename">wsz fullpath and filename</param>
+        /// <param name="imagename"></param>
+        /// <returns>List</returns>
         List<string> ExtractViscolorFromZip(string archivename, string imagename)
         {
             ZipArchive zip;
@@ -705,6 +812,15 @@ namespace BardMusicPlayer.Ui.Skinned
             return null;
         }
 
+        /// <summary>
+        /// extracts an image tile from a image
+        /// </summary>
+        /// <param name="img">Image</param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="offset_x"></param>
+        /// <param name="offset_y"></param>
+        /// <returns>ImageBrush</returns>
         ImageBrush ExtractImage(Image img, int x, int y, int offset_x, int offset_y)
         {
             Bitmap p = new Bitmap(x, y);
@@ -740,6 +856,6 @@ namespace BardMusicPlayer.Ui.Skinned
             string x = data.Split('#')[1];
             return ColorTranslator.FromHtml("#"+x);
         }
-
+        #endregion
     }
 }

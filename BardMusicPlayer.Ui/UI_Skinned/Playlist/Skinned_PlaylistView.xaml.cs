@@ -22,9 +22,14 @@ namespace BardMusicPlayer.Ui.Skinned
         public Skinned_PlaylistView()
         {
             InitializeComponent();
-            PlaylistFunctions.CreatePlaylist("Temp");
-            PlaylistFunctions.SaveCurrentPlaylist();
-            PlaylistFunctions.SetCurrentPlaylist("Temp");
+            ApplySkin();
+#if SIREN
+            Siren.BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
+#endif
+
+            //PlaylistFunctions.CreatePlaylist("Temp");
+            //PlaylistFunctions.SaveCurrentPlaylist();
+            //PlaylistFunctions.SetCurrentPlaylist("Temp");
             RefreshPlaylist();
         }
 
@@ -47,6 +52,7 @@ namespace BardMusicPlayer.Ui.Skinned
             this.PLAYLIST_BOTTOM_RIGHT_CORNER.Fill = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_BOTTOM_RIGHT_CORNER];
 
             this.Close_Button.Background = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_CLOSE_SELECTED];
+            this.Close_Button.Background.Opacity = 0;
 
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
             this.PlaylistContainer.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
@@ -54,28 +60,6 @@ namespace BardMusicPlayer.Ui.Skinned
             this.PlaylistContainer.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
 
             PlaylistContainer_SelectionChanged(null, null);
-#if SIREN
-            Siren.BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
-#endif
-        }
-
-        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
-        }
-
-        private void Close_Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.Visibility = Visibility.Hidden;
-        }
-        private void Close_Button_Down(object sender, MouseButtonEventArgs e)
-        {
-            this.Close_Button.Background.Opacity = 1;
-        }
-        private void Close_Button_Up(object sender, MouseButtonEventArgs e)
-        {
-            this.Close_Button.Background.Opacity = 0;
         }
 
         private void RefreshPlaylist()
@@ -161,7 +145,7 @@ namespace BardMusicPlayer.Ui.Skinned
             RefreshPlaylist();
         }
 
-        private void AddMenuButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MenuButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {
@@ -173,6 +157,39 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MediaBrowser mb = new MediaBrowser();
+            mb.Show();
+            mb.OnPlaylistChanged += OnPlaylistChanged;
+        }
+
+        private void OnPlaylistChanged(object sender, string e)
+        {
+            PlaylistFunctions.SetCurrentPlaylist(e);
+            RefreshPlaylist();
+        }
+
+        #region Titlebar functions and buttons
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
+
+        private void Close_Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Hidden;
+        }
+        private void Close_Button_Down(object sender, MouseButtonEventArgs e)
+        {
+            this.Close_Button.Background.Opacity = 1;
+        }
+        private void Close_Button_Up(object sender, MouseButtonEventArgs e)
+        {
+            this.Close_Button.Background.Opacity = 0;
+        }
+        #endregion
 
     }
 }

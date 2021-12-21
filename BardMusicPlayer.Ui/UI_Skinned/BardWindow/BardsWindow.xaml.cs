@@ -20,6 +20,7 @@ namespace BardMusicPlayer.Ui.Skinned
         public BardsWindow()
         {
             InitializeComponent();
+            ApplySkin();
         }
 
         public void ApplySkin()

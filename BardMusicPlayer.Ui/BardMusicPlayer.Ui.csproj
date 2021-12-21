@@ -63,7 +63,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>BardMusicPlayer.Ui.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_WithSiren|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -271,6 +271,9 @@
     <Compile Include="UI_Skinned\BardWindow\BardsWindow.xaml.cs">
       <DependentUpon>BardsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_Skinned\Playlist\MediaBrowser.xaml.cs">
+      <DependentUpon>MediaBrowser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_Skinned\Playlist\SkinnedPlaylist_Siren.cs" />
     <Compile Include="UI_Skinned\Playlist\Skinned_PlaylistView.xaml.cs" />
     <Page Include="MainWindow.xaml">
@@ -339,6 +342,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI_Skinned\Playlist\MediaBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI_Skinned\Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -376,7 +383,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Skin\mb.bmp" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BardMusicPlayer.Coffer\BardMusicPlayer.Coffer.csproj">
       <Project>{82a7597f-9957-4a47-a14e-504d3e0ecaf7}</Project>

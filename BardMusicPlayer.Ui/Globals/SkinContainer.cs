@@ -10,6 +10,7 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
 {
     public static class SkinContainer
     {
+        #region ENUMS
         public enum CBUTTON_TYPES
         {
             MAIN_PREVIOUS_BUTTON =0,
@@ -175,6 +176,32 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             EQ_PREAMP_LINE
         }
 
+        public enum MEDIABROWSER_TYPES
+        {
+            MEDIABROWSER_TOP_LEFT =0,
+            MEDIABROWSER_TOP_TITLE,
+            MEDIABROWSER_TOP_TILE,
+            MEDIABROWSER_TOP_RIGHT,
+
+            MEDIABROWSER_TOP_LEFT_UNSELECTED,
+            MEDIABROWSER_TOP_TITLE_UNSELECTED,
+            MEDIABROWSER_TOP_TILE_UNSELECTED,
+            MEDIABROWSER_TOP_RIGHT_UNSELECTED,
+            MEDIABROWSER_MID_LEFT,
+            MEDIABROWSER_MID_RIGHT,
+
+            MEDIABROWSER_BOTTOM_LEFT,
+            MEDIABROWSER_BOTTOM_TILE,
+            MEDIABROWSER_BOTTOM_RIGHT,
+
+            MEDIABROWSER_CLOSE,
+            MEDIABROWSER_PREV,
+            MEDIABROWSER_NEXT,
+            MEDIABROWSER_NEW,
+            MEDIABROWSER_RELOAD,
+            MEDIABROWSER_REMOVE
+        }
+
         public enum GENEX_TYPES
         {
             GENEX_BUTTON_BACKGROUND_LEFT_UNPRESSED = 0,
@@ -210,6 +237,7 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             PLAYLISTCOLOR_MBBG,
             PLAYLISTCOLOR_MBFG
         }
+        #endregion
 
         public static Dictionary<CBUTTON_TYPES, ImageBrush> CBUTTONS = new Dictionary<CBUTTON_TYPES, ImageBrush> { };
         public static Dictionary<NUMBER_TYPES, ImageBrush>  NUMBERS  = new Dictionary<NUMBER_TYPES, ImageBrush> { };
@@ -217,6 +245,7 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
         public static Dictionary<PLAYLIST_TYPES, ImageBrush> PLAYLIST = new Dictionary<PLAYLIST_TYPES, ImageBrush> { };
         public static Dictionary<SWINDOW_TYPES, ImageBrush> SWINDOW = new Dictionary<SWINDOW_TYPES, ImageBrush> { };
         public static Dictionary<EQ_TYPES, ImageBrush> EQUALIZER = new Dictionary<EQ_TYPES, ImageBrush> { };
+        public static Dictionary<MEDIABROWSER_TYPES, ImageBrush> MEDIABROWSER = new Dictionary<MEDIABROWSER_TYPES, ImageBrush> { };
         public static Dictionary<GENEX_TYPES, ImageBrush> GENEX = new Dictionary<GENEX_TYPES, ImageBrush> { };
         public static Dictionary<VISCOLOR_TYPES, System.Drawing.Color> VISCOLOR = new Dictionary<VISCOLOR_TYPES, System.Drawing.Color> { };
         public static Dictionary<PLAYLISTCOLOR_TYPES, System.Drawing.Color> PLAYLISTCOLOR = new Dictionary<PLAYLISTCOLOR_TYPES, System.Drawing.Color> { };

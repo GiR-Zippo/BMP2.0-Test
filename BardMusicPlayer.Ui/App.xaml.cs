@@ -49,7 +49,8 @@ namespace BardMusicPlayer.Ui
         {
             //LogManager.Shutdown();
 #if SIREN
-            BmpSiren.Instance.Stop();
+            if (BmpSiren.Instance.IsReadyForPlayback)
+                BmpSiren.Instance.Stop();
             BmpSiren.Instance.ShutDown();
 #endif
             BmpMaestro.Instance.Stop();
