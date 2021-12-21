@@ -22,6 +22,8 @@ namespace BardMusicPlayer.Ui.Skinned
         public Skinned_PlaylistView()
         {
             InitializeComponent();
+            //PlaylistFunctions.CreatePlaylist("Temp");
+            //PlaylistFunctions.SaveCurrentPlaylist();
             PlaylistFunctions.SetCurrentPlaylist("Temp");
             RefreshPlaylist();
         }
@@ -90,6 +92,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void PlaylistContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            CurrentsongIndex = PlaylistContainer.SelectedIndex;
             var col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL];
             var fcol = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];

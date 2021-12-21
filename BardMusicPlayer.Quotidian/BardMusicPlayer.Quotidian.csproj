@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/BardMusicPlayer/BardMusicPlayer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Platforms>AnyCPU;x64</Platforms>
+    <Configurations>Debug;Release;Debug_WithSiren;Release_WithSiren</Configurations>
   </PropertyGroup>
 
 </Project>

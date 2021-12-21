@@ -19,12 +19,35 @@ using BardMusicPlayer.Siren;
 namespace BardMusicPlayer.Ui.Skinned
 {
     /// <summary>
-    /// Interaktionslogik für Skinned_PlaylistView.xaml
+    /// logic for the siren controls
     /// </summary>
     public partial class Skinned_PlaylistView : Window
     {
-        int scrollpos = 0;
-        double lasttime = 0;
+        int scrollpos = 0;          //position of the title scroller
+        double lasttime = 0;        //last poll time of Instance_SynthTimePositionChanged
+        public int CurrentsongIndex { get; set; } = 0;   //index of the currentSong for siren
+        /// <summary>
+        /// Triggered from Siren
+        /// </summary>
+        /// <param name="songTitle"></param>
+        /// <param name="currentTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="activeVoices"></param>
+        private void Instance_SynthTimePositionChanged(string songTitle, double currentTime, double endTime, int activeVoices)
+        {
+            //Scrolling
+            if (lasttime + 500 < currentTime)
+            {
+                this.Dispatcher.BeginInvoke(new Action(() => this.WriteSongTitle(songTitle)));
+                this.Dispatcher.BeginInvoke(new Action(() => this.WriteSongTime(currentTime)));
+                lasttime = currentTime;
+            }
+        }
+
+        /// <summary>
+        /// Writes the song title in the lower right corner
+        /// </summary>
+        /// <param name="data"></param>
         private void WriteSongTitle(string data)
         {
             Bitmap bitmap = new Bitmap(305, 12);
@@ -55,6 +78,10 @@ namespace BardMusicPlayer.Ui.Skinned
             SongDigit.Stretch = Stretch.UniformToFill;
         }
 
+        /// <summary>
+        /// write the current playtime from siren in the lower right corner
+        /// </summary>
+        /// <param name="data">time in ms</param>
         private void WriteSongTime(double data)
         {
             Bitmap bitmap = new Bitmap(305, 12);
@@ -81,18 +108,34 @@ namespace BardMusicPlayer.Ui.Skinned
             SongTime.Stretch = Stretch.UniformToFill;
         }
 
-        private void Instance_SynthTimePositionChanged(string songTitle, double currentTime, double endTime, int activeVoices)
+        /// <summary>
+        /// selects the previous song and load it into siren
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PrevButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (lasttime +500 < currentTime)
-            {
-                this.Dispatcher.BeginInvoke(new Action(() => this.WriteSongTitle(songTitle)));
-                lasttime = currentTime;
+#if SIREN
+            if (CurrentsongIndex <= 0)
+                return;
 
-                this.Dispatcher.BeginInvoke(new Action(() => this.WriteSongTime(currentTime)));
-                
-            }
+            CurrentsongIndex--;
+            string t = PlaylistContainer.Items[CurrentsongIndex] as string;
+            var song = PlaylistFunctions.GetSong(t);
+            if (song == null)
+                return;
+            scrollpos = 0;
+            lasttime = 0;
+            this.WriteSongTitle(song.Title);
+            _ = BmpSiren.Instance.Load(song);
+#endif
         }
 
+        /// <summary>
+        /// plays the loaded siren song
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Playbutton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
 #if SIREN
@@ -101,6 +144,11 @@ namespace BardMusicPlayer.Ui.Skinned
 #endif
         }
 
+        /// <summary>
+        /// pause the loaded siren song
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PauseButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
 #if SIREN
@@ -108,6 +156,11 @@ namespace BardMusicPlayer.Ui.Skinned
 #endif
         }
 
+        /// <summary>
+        /// stops the siren playback
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StopButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
 #if SIREN
@@ -115,6 +168,11 @@ namespace BardMusicPlayer.Ui.Skinned
 #endif
         }
 
+        /// <summary>
+        /// load the selected song into siren
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
 #if SIREN
@@ -127,5 +185,29 @@ namespace BardMusicPlayer.Ui.Skinned
             _ = BmpSiren.Instance.Load(song);
 #endif
         }
+
+        /// <summary>
+        /// load next song in siren
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NextButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+#if SIREN
+            if (CurrentsongIndex == PlaylistContainer.Items.Count)
+                return;
+
+            CurrentsongIndex++;
+            string t = PlaylistContainer.Items[CurrentsongIndex] as string;
+            var song = PlaylistFunctions.GetSong(t);
+            if (song == null)
+                return;
+            scrollpos = 0;
+            lasttime = 0;
+            this.WriteSongTitle(song.Title);
+            _ = BmpSiren.Instance.Load(song);
+#endif
+        }
+
     }
 }
