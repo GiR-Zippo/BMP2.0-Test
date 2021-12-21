@@ -15,6 +15,7 @@ using System.Windows.Input;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Maestro;
 using BardMusicPlayer.Pigeonhole;
+using BardMusicPlayer.Transmogrify.Song;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -56,7 +57,7 @@ namespace BardMusicPlayer.Ui.Skinned
             WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
         }
 
-        private void OnLoadSongFromPlaylist(object sender, bool e)
+        private void OnLoadSongFromPlaylist(object sender, BmpSong e)
         {
             Scroller.Cancel();
             Scroller = new CancellationTokenSource();

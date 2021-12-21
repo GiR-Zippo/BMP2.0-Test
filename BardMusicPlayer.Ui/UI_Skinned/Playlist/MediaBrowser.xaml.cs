@@ -16,7 +16,7 @@ namespace BardMusicPlayer.Ui.Skinned
     {
         public EventHandler<string> OnPlaylistChanged;
 
-        private IPlaylist _currentPlaylist = null;
+        private IPlaylist _currentPlaylist = null;  //The current selected playlist at the browser
         private int _currentPlaylistIndex = 0;
 
         public MediaBrowser()
@@ -64,8 +64,10 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
             this.PlaylistsContainer.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
+            this.PlaylistContainer.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL];
             this.PlaylistsContainer.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
+            this.PlaylistContainer.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
         }
 
         private void PlaylistsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -97,6 +99,9 @@ namespace BardMusicPlayer.Ui.Skinned
             //functional things
             _currentPlaylistIndex = PlaylistsContainer.SelectedIndex;
             _currentPlaylist = BmpCoffer.Instance.GetPlaylist(PlaylistsContainer.SelectedItem as string);
+            PlaylistContainer.Items.Clear();
+            foreach (var item in _currentPlaylist)
+                PlaylistContainer.Items.Add(item.Title);
         }
 
         private void PlaylistsContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
