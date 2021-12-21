@@ -22,8 +22,8 @@ namespace BardMusicPlayer.Ui.Skinned
         public Skinned_PlaylistView()
         {
             InitializeComponent();
-            //PlaylistFunctions.CreatePlaylist("Temp");
-            //PlaylistFunctions.SaveCurrentPlaylist();
+            PlaylistFunctions.CreatePlaylist("Temp");
+            PlaylistFunctions.SaveCurrentPlaylist();
             PlaylistFunctions.SetCurrentPlaylist("Temp");
             RefreshPlaylist();
         }

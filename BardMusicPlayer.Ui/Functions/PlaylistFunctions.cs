@@ -12,6 +12,8 @@ namespace BardMusicPlayer.UI.Functions
 
         public static void CreatePlaylist(string playlistname)
         {
+            if (BmpCoffer.Instance.GetPlaylistNames().Contains(playlistname))
+                return;
             currentPlaylist = BmpCoffer.Instance.CreatePlaylist(playlistname);
         }
 
