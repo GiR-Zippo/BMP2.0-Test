@@ -26,10 +26,6 @@ namespace BardMusicPlayer.Ui.Skinned
 #if SIREN
             Siren.BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
 #endif
-
-            //PlaylistFunctions.CreatePlaylist("Temp");
-            //PlaylistFunctions.SaveCurrentPlaylist();
-            //PlaylistFunctions.SetCurrentPlaylist("Temp");
             RefreshPlaylist();
         }
 

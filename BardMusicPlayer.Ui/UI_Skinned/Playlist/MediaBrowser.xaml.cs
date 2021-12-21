@@ -1,18 +1,10 @@
-﻿using BardMusicPlayer.Ui.Globals.SkinContainer;
-using BardMusicPlayer.UI.Functions;
+﻿using BardMusicPlayer.Coffer;
+using BardMusicPlayer.Ui.Globals.SkinContainer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using UI.Resources;
 
 namespace BardMusicPlayer.Ui.Skinned
@@ -23,11 +15,15 @@ namespace BardMusicPlayer.Ui.Skinned
     public partial class MediaBrowser : Window
     {
         public EventHandler<string> OnPlaylistChanged;
+
+        private IPlaylist _currentPlaylist = null;
+        private int _currentPlaylistIndex = 0;
+
         public MediaBrowser()
         {
             InitializeComponent();
             ApplySkin();
-            PlaylistsContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
+            PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
 
         public void ApplySkin()
@@ -69,6 +65,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void PlaylistsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            //Ui things
             var col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL];
             var fcol = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
@@ -91,6 +88,10 @@ namespace BardMusicPlayer.Ui.Skinned
                 return;
             lvtem.Foreground = fcol;
             lvtem.Background = bcol;
+
+            //functional things
+            _currentPlaylistIndex = PlaylistsContainer.SelectedIndex;
+            _currentPlaylist = BmpCoffer.Instance.GetPlaylist(PlaylistsContainer.SelectedItem as string);
         }
 
         private void PlaylistsContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -107,24 +108,24 @@ namespace BardMusicPlayer.Ui.Skinned
         }
 
         private void Close_Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        { this.Close(); }
         private void Close_Button_Down(object sender, MouseButtonEventArgs e)
-        {
-            this.Close_Button.Background.Opacity = 1;
-        }
+        { this.Close_Button.Background.Opacity = 1; }
         private void Close_Button_Up(object sender, MouseButtonEventArgs e)
-        {
-            this.Close_Button.Background.Opacity = 0;
-        }
+        { this.Close_Button.Background.Opacity = 0; }
         #endregion
 
 
         #region minibar functions and buttons
         private void Prev_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            if (_currentPlaylistIndex <= 0)
+                return;
+
+            _currentPlaylistIndex--;
+            string t = PlaylistsContainer.Items[_currentPlaylistIndex] as string;
+            _currentPlaylist = BmpCoffer.Instance.GetPlaylist(t);
+            PlaylistsContainer.SelectedIndex = _currentPlaylistIndex;
         }
         private void Prev_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Prev_Button.Background.Opacity = 1; }
@@ -133,7 +134,13 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Next_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (_currentPlaylistIndex == PlaylistsContainer.Items.Count)
+                return;
 
+            _currentPlaylistIndex++;
+            string t = PlaylistsContainer.Items[_currentPlaylistIndex] as string;
+            _currentPlaylist = BmpCoffer.Instance.GetPlaylist(t);
+            PlaylistsContainer.SelectedIndex = _currentPlaylistIndex;
         }
         private void Next_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Next_Button.Background.Opacity = 1; }
@@ -145,9 +152,11 @@ namespace BardMusicPlayer.Ui.Skinned
             var inputbox = new TextInputWindow("Playlistname");
             if (inputbox.ShowDialog() == true)
             {
-                PlaylistFunctions.CreatePlaylist(inputbox.ResponseText);
-                PlaylistFunctions.SaveCurrentPlaylist();
-                PlaylistsContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
+                if (BmpCoffer.Instance.GetPlaylistNames().Contains(inputbox.ResponseText))
+                    return;
+                _currentPlaylist = BmpCoffer.Instance.CreatePlaylist(inputbox.ResponseText);
+                BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
+                PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
             }
         }
         private void New_Button_Down(object sender, MouseButtonEventArgs e)
@@ -157,7 +166,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Reload_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
         private void Reload_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Reload_Button.Background.Opacity = 1; }
@@ -166,7 +175,8 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Remove_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            BmpCoffer.Instance.DeletePlaylist(_currentPlaylist);
+            PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
         private void Remove_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Remove_Button.Background.Opacity = 1; }
