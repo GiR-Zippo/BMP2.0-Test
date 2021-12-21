@@ -274,7 +274,7 @@
     <Compile Include="UI_Skinned\Playlist\MediaBrowser.xaml.cs">
       <DependentUpon>MediaBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI_Skinned\Playlist\SkinnedPlaylist_Siren.cs" />
+    <Compile Include="UI_Skinned\Playlist\Skinned_PlaylistView_Siren.cs" />
     <Compile Include="UI_Skinned\Playlist\Skinned_PlaylistView.xaml.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

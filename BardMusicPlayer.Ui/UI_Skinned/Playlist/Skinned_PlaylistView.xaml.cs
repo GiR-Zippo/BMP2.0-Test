@@ -154,15 +154,12 @@ namespace BardMusicPlayer.Ui.Skinned
 
             foreach (string s in PlaylistContainer.SelectedItems)
             {
-                foreach (BmpSong song in _currentPlaylist)
-                {
-                    if (song.Title == PlaylistContainer.SelectedItem as string)
-                    {
-                        _currentPlaylist.Remove(song);
-                        BmpCoffer.Instance.DeleteSong(song);
-                        break;
-                    }
-                }
+                BmpSong song = GetSong(s);
+                if (song == null)
+                    continue;
+                _currentPlaylist.Remove(song);
+                BmpCoffer.Instance.DeleteSong(song);
+                break;
             }
             BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
             RefreshPlaylist();
@@ -173,17 +170,13 @@ namespace BardMusicPlayer.Ui.Skinned
             if (_currentPlaylist == null)
                 return;
 
-            foreach (var s in PlaylistContainer.Items)
+            foreach (string s in PlaylistContainer.Items)
             {
-                foreach (BmpSong song in _currentPlaylist)
-                {
-                    if (song.Title == s as string )
-                    {
-                        _currentPlaylist.Remove(song);
-                        BmpCoffer.Instance.DeleteSong(song);
-                        break;
-                    }
-                }
+                BmpSong song = GetSong(s);
+                if (song == null)
+                    continue;
+                _currentPlaylist.Remove(song);
+                BmpCoffer.Instance.DeleteSong(song);
             }
             BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
             RefreshPlaylist();
@@ -244,6 +237,19 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Close_Button.Background.Opacity = 0;
         }
         #endregion
+
+        public BmpSong GetSong(string songname)
+        {
+            if (_currentPlaylist == null)
+                return null;
+
+            foreach (var item in _currentPlaylist)
+            {
+                if (item.Title == songname)
+                    return item;
+            }
+            return null;
+        }
 
     }
 }

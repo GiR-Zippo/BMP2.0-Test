@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using BardMusicPlayer.UI.Functions;
 using System.Windows.Media;
 using System.Drawing;
 using BardMusicPlayer.Ui.Globals.SkinContainer;
@@ -121,7 +117,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             CurrentsongIndex--;
             string t = PlaylistContainer.Items[CurrentsongIndex] as string;
-            var song = PlaylistFunctions.GetSong(t);
+            var song = GetSong(t);
             if (song == null)
                 return;
             scrollpos = 0;
@@ -176,7 +172,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private void LoadButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
 #if SIREN
-            var song = PlaylistFunctions.GetSong(PlaylistContainer.SelectedItem as string);
+            var song = GetSong(PlaylistContainer.SelectedItem as string);
             if (song == null)
                 return;
             scrollpos = 0;
@@ -199,7 +195,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             CurrentsongIndex++;
             string t = PlaylistContainer.Items[CurrentsongIndex] as string;
-            var song = PlaylistFunctions.GetSong(t);
+            var song = GetSong(t);
             if (song == null)
                 return;
             scrollpos = 0;
