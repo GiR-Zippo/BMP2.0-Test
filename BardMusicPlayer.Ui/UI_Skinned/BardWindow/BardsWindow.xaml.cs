@@ -21,7 +21,11 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             InitializeComponent();
             ApplySkin();
+            SkinContainer.OnNewSkinLoaded += SkinContainer_OnNewSkinLoaded;
         }
+
+        private void SkinContainer_OnNewSkinLoaded(object sender, EventArgs e)
+        { ApplySkin(); }
 
         public void ApplySkin()
         {

@@ -298,10 +298,7 @@ namespace BardMusicPlayer.Ui.Skinned
             TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
             TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
 
-
-            //this._PlaylistView.ApplySkin();
-            //this._BardListView.ApplySkin();
-            //this._mediaBrowser.ApplySkin();
+            SkinContainer.NewSkinLoaded(); //inform all members that a new skin was loaded
         }
 
         #region loaders

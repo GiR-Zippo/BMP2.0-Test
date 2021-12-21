@@ -23,11 +23,15 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             InitializeComponent();
             ApplySkin();
+            SkinContainer.OnNewSkinLoaded += SkinContainer_OnNewSkinLoaded;
 #if SIREN
             Siren.BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
 #endif
             RefreshPlaylist();
         }
+
+        private void SkinContainer_OnNewSkinLoaded(object sender, EventArgs e)
+        { ApplySkin(); }
 
         public void ApplySkin()
         {
@@ -153,6 +157,11 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
+        /// <summary>
+        /// opens the playlists browser
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             MediaBrowser mb = new MediaBrowser();
@@ -160,6 +169,11 @@ namespace BardMusicPlayer.Ui.Skinned
             mb.OnPlaylistChanged += OnPlaylistChanged;
         }
 
+        /// <summary>
+        /// triggered from playlist browser
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnPlaylistChanged(object sender, string e)
         {
             PlaylistFunctions.SetCurrentPlaylist(e);

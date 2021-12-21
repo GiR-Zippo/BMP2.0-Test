@@ -23,8 +23,13 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             InitializeComponent();
             ApplySkin();
+            SkinContainer.OnNewSkinLoaded += SkinContainer_OnNewSkinLoaded;
+
             PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
+
+        private void SkinContainer_OnNewSkinLoaded(object sender, EventArgs e)
+        { ApplySkin(); }
 
         public void ApplySkin()
         {
@@ -134,7 +139,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Next_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (_currentPlaylistIndex == PlaylistsContainer.Items.Count)
+            if (_currentPlaylistIndex == PlaylistsContainer.Items.Count -1)
                 return;
 
             _currentPlaylistIndex++;

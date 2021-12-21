@@ -194,7 +194,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private void NextButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
 #if SIREN
-            if (CurrentsongIndex == PlaylistContainer.Items.Count)
+            if (CurrentsongIndex == PlaylistContainer.Items.Count -1)
                 return;
 
             CurrentsongIndex++;

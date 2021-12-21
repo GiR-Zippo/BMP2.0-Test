@@ -10,6 +10,12 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
 {
     public static class SkinContainer
     {
+        public static event EventHandler OnNewSkinLoaded;
+        public static void NewSkinLoaded()
+        {
+            OnNewSkinLoaded?.Invoke(null, null);
+        }
+
         #region ENUMS
         public enum CBUTTON_TYPES
         {
