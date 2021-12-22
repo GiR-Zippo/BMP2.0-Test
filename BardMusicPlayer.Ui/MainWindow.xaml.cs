@@ -1,6 +1,7 @@
 ﻿using BardMusicPlayer.Ui.Skinned;
 using BardMusicPlayer.Ui.Classic;
 using System.Windows;
+using BardMusicPlayer.Pigeonhole;
 
 namespace BardMusicPlayer.Ui
 {
@@ -13,8 +14,11 @@ namespace BardMusicPlayer.Ui
         {
             InitializeComponent();
             Globals.Settings.LoadConfig();
-            //SwitchClassicStyle();
-            SwitchSkinnedStyle();
+
+            if (BmpPigeonhole.Instance.ClassicUi)
+                SwitchClassicStyle();
+            else
+                SwitchSkinnedStyle();
         }
 
         public void SwitchClassicStyle()

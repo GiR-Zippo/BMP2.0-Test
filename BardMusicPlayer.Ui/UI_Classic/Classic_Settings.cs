@@ -30,7 +30,7 @@ namespace BardMusicPlayer.Ui.Classic
                 MIDI_Input_DeviceBox.Items.Add(input);
 
             this.MIDI_Input_DeviceBox.SelectedIndex = BmpPigeonhole.Instance.MidiInputDev;
-
+            this.SkinUiBox.IsChecked = !BmpPigeonhole.Instance.ClassicUi;
             Globals.Globals.CurrentTrack = 1;
         }
 
@@ -55,6 +55,11 @@ namespace BardMusicPlayer.Ui.Classic
             int data = MIDI_Input_DeviceBox.SelectedIndex;
             BmpMaestro.Instance.OpenInputDevice(data);
             BmpPigeonhole.Instance.MidiInputDev = data;
+        }
+
+        private void SkinUiBox_Checked(object sender, RoutedEventArgs e)
+        {
+            BmpPigeonhole.Instance.ClassicUi = !(SkinUiBox.IsChecked ?? true);
         }
     }
 }

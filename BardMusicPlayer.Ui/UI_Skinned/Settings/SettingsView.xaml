@@ -10,7 +10,13 @@
         <TabControl TabStripPlacement="Left" Margin="0,0,-83,0" HorizontalAlignment="Left" Width="657" >
             <TabItem Header="General">
                 <Grid Background="#FFE5E5E5" >
-                    <Button Content="Load Skin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" Margin="10,10,0,0"/>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="1" x:Name="ClassicSkin" Content="Use classic BMP 1.x Ui (needs BMP restart)" Checked="ClassicSkin_Checked"/>
+                    <Button   Grid.Row="2" Content="Load Skin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" Margin="10,10,0,0"/>
                 </Grid>
             </TabItem>
             <TabItem Header="SyncSettings">

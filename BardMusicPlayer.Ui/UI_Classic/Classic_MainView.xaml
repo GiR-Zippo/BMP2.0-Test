@@ -113,6 +113,7 @@ Width="Auto" Height="Auto"
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <Label Margin="10,0,0,0"     Grid.Row="0" Content="Autostart" HorizontalAlignment="Left"/>
                                     <ComboBox Margin="90,0,0,0" Grid.Row="0" x:Name="Autostart_source" SelectionChanged="Autostart_source_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120">
@@ -122,6 +123,7 @@ Width="Auto" Height="Auto"
                                     </ComboBox>
                                     <CheckBox Margin="10,10,0,0" Grid.Row="1" x:Name="SaveChatlogBox" Content="Save chatlogs to logs folder"/>
                                     <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="VerboseBox" Content="Enable verbose mode"/>
+                                    <CheckBox Margin="10,0,0,0"  Grid.Row="3" x:Name="SkinUiBox" Content="Use skinned Ui" Checked="SkinUiBox_Checked"/>
 
                                 </Grid>
                             </GroupBox>

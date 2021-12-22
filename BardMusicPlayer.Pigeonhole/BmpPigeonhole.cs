@@ -122,6 +122,11 @@ namespace BardMusicPlayer.Pigeonhole
         /// <summary>
         /// Sets PlayAllTracks
         /// </summary>
+        public virtual bool ClassicUi { get; set; } = true;
+
+        /// <summary>
+        /// Sets PlayAllTracks
+        /// </summary>
         public virtual string LastSkin { get; set; } = "";
 
         /// <summary>

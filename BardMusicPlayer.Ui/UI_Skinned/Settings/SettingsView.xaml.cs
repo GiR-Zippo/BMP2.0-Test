@@ -17,12 +17,12 @@ namespace BardMusicPlayer.Ui.Skinned
             Autostart_source.SelectedIndex = (int)Globals.Settings.AutostartType;
             
             MIDI_Input_DeviceBox.Items.Clear();
-            MIDI_Input_DeviceBox.Items.Add((0, "None"));
+            _ = MIDI_Input_DeviceBox.Items.Add((0, "None"));
             foreach (var input in Maestro.Utils.MidiInput.ReloadMidiInputDevices())
-                MIDI_Input_DeviceBox.Items.Add(input);
+                _ = MIDI_Input_DeviceBox.Items.Add(input);
 
             this.MIDI_Input_DeviceBox.SelectedIndex = BmpPigeonhole.Instance.MidiInputDev+1;
-
+            ClassicSkin.IsChecked = BmpPigeonhole.Instance.ClassicUi;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -60,6 +60,11 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Force_Playback_Checked(object sender, RoutedEventArgs e)
         {
             BmpPigeonhole.Instance.ForcePlayback = (ForcePlaybackBox.IsChecked ?? false);
+        }
+
+        private void ClassicSkin_Checked(object sender, RoutedEventArgs e)
+        {
+            BmpPigeonhole.Instance.ClassicUi = ClassicSkin.IsChecked ?? true;
         }
     }
 }
