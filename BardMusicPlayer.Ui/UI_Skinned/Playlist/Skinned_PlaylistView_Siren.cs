@@ -57,7 +57,7 @@ namespace BardMusicPlayer.Ui.Skinned
                     if (i + scrollpos >= data.Length + 10)
                     {
                         scrollpos = 0;
-                        break;
+                        return;
                     }
                 }
                 else
