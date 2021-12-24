@@ -27,11 +27,13 @@ namespace BardMusicPlayer.Maestro
 
         private BmpMaestro()
         {
+            //Create the orchestrator
             _orchestrator = new Orchestrator();
         }
 
         public static BmpMaestro Instance => LazyInstance.Value;
 
+        #region Getters
         /// <summary>
         /// Get all game the orchestrator is accessing
         /// </summary>
@@ -47,92 +49,9 @@ namespace BardMusicPlayer.Maestro
         {
             return _orchestrator.GetAllPerformers();
         }
+        #endregion
 
-        /// <summary>
-        /// Sets a new song for the sequencer
-        /// </summary>
-        /// <param name="bmpSong"></param>
-        /// <param name="track">the tracknumber which should be played; 0 all tracks</param>
-        /// <returns></returns>
-        public void SetSong(BmpSong bmpSong, int track)
-        {
-            _orchestrator.Stop();
-            _orchestrator.LoadBMPSong(bmpSong);
-        }
-
-        /// <summary>
-        /// Sets the song for the sequencer
-        /// </summary>
-        /// <param name="filename">midi file with full path</param>
-        public void SetSong(string filename)
-        {
-           _orchestrator.Stop();
-           _orchestrator.LoadMidiFile(filename);
-        }
-
-        /// <summary>
-        /// Starts the playback
-        /// </summary>
-        /// <returns></returns>
-        public void StartLocalPerformer()
-        {
-            if (_orchestrator != null)
-            {
-                _NoteKeyDelay = BmpPigeonhole.Instance.NoteKeyDelay;
-                BmpPigeonhole.Instance.NoteKeyDelay = 1;
-                _orchestrator.Start();
-            }
-        }
-
-        /// <summary>
-        /// Pause the song playback
-        /// </summary>
-        /// <returns></returns>
-        public void PauseLocalPerformer()
-        {
-            if (_orchestrator != null)
-            {
-                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
-                _orchestrator.Pause();
-            }
-        }
-
-        /// <summary>
-        /// Stops the song playback
-        /// </summary>
-        /// <returns></returns>
-        public void StopLocalPerformer()
-        {
-            if (_orchestrator != null)
-            {
-                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
-                _orchestrator.Stop();
-            }
-        }
-
-        /// <summary>
-        /// Change the tracknumber (-1 all tracks)
-        /// </summary>
-        /// <param name="track"></param>
-        /// <returns></returns>
-        public void SetTracknumber(int track)
-        {
-            if (_orchestrator != null)
-                _orchestrator.SetTracknumber(track);
-        }
-
-        /// <summary>
-        /// Set the tracknumber (-1 all tracks)
-        /// </summary>
-        /// <param name="game">the bard</param>
-        /// <param name="track">track</param>
-        /// <returns></returns>
-        public void SetTracknumber(Game game, int track)
-        {
-            if (_orchestrator != null)
-                _orchestrator.SetTracknumber(game, track);
-        }
-
+        #region Setters
         /// <summary>
         /// Sets the host bard
         /// </summary>
@@ -154,43 +73,9 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
-        /// Destroys the sequencer
-        /// </summary>
-        /// <returns></returns>
-        public void DestroySongFromLocalPerformer()
-        {
-            if (_orchestrator != null)
-                _orchestrator.Dispose();
-        }
-
-        /// <summary>
-        /// Start the eventhandler
-        /// </summary>
-        /// <returns></returns>
-        public void Start()
-        {
-            if (Started) return;
-            StartEventsHandler();
-            Started = true;
-        }
-
-        /// <summary>
-        /// Stop the eventhandler
-        /// </summary>
-        /// <returns></returns>
-        public void Stop()
-        {
-            if (!Started) return;
-            StopEventsHandler();
-            Started = false;
-            Dispose();
-        }
-
-        /// <summary>
         /// Sets the playback at position (timeindex in ticks)
         /// </summary>
-        /// <param name="timeindex"></param>
-        /// <returns></returns>
+        /// <param name="ticks">time ticks</param>
         public void SetPlaybackStart(int ticks)
         {
             if (_orchestrator != null)
@@ -201,7 +86,6 @@ namespace BardMusicPlayer.Maestro
         /// Sets the playback at position (timeindex in miliseconds)
         /// </summary>
         /// <param double="miliseconds"></param>
-        /// <returns></returns>
         public void SetPlaybackStart(double miliseconds)
         {
             if (_orchestrator != null)
@@ -209,10 +93,51 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
+        /// Sets a new song for the sequencer
+        /// </summary>
+        /// <param name="bmpSong"></param>
+        public void SetSong(BmpSong bmpSong)
+        {
+            _orchestrator.Stop();
+            _orchestrator.LoadBMPSong(bmpSong);
+        }
+
+        /// <summary>
+        /// Sets the song for the sequencer
+        /// </summary>
+        /// <param name="filename">midi file with full path</param>
+        public void SetSong(string filename)
+        {
+           _orchestrator.Stop();
+           _orchestrator.LoadMidiFile(filename);
+        }
+
+        /// <summary>
+        /// Change the tracknumber; 0 all tracks
+        /// </summary>
+        /// <param name="tracknumber"></param>
+        public void SetTracknumber(int tracknumber)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetTracknumber(tracknumber);
+        }
+
+        /// <summary>
+        /// Set the tracknumber 0 all tracks
+        /// </summary>
+        /// <param name="game">the bard</param>
+        /// <param name="tracknumber">track</param>
+        public void SetTracknumber(Game game, int tracknumber)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetTracknumber(game, tracknumber);
+        }
+        #endregion
+
+        /// <summary>
         /// Opens a MidiInput device
         /// </summary>
         /// <param int="device"></param>
-        /// <returns></returns>
         public void OpenInputDevice(int device)
         {
             if (_orchestrator == null)
@@ -220,14 +145,74 @@ namespace BardMusicPlayer.Maestro
             _orchestrator.OpenInputDevice(device);
         }
 
-
-        public void ForceAddPerformer()
+        #region Playback
+        /// <summary>
+        /// Starts the playback
+        /// </summary>
+        public void StartLocalPerformer()
         {
-            if (_orchestrator == null)
-                _orchestrator = new Orchestrator();
-            _orchestrator.ForceAddPerformer();
+            if (_orchestrator != null)
+            {
+                _NoteKeyDelay = BmpPigeonhole.Instance.NoteKeyDelay;
+                BmpPigeonhole.Instance.NoteKeyDelay = 1;
+                _orchestrator.Start();
+            }
         }
 
+        /// <summary>
+        /// Pause the song playback
+        /// </summary>
+        public void PauseLocalPerformer()
+        {
+            if (_orchestrator != null)
+            {
+                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
+                _orchestrator.Pause();
+            }
+        }
+
+        /// <summary>
+        /// Stops the song playback
+        /// </summary>
+        public void StopLocalPerformer()
+        {
+            if (_orchestrator != null)
+            {
+                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
+                _orchestrator.Stop();
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Destroys the sequencer
+        /// </summary>
+        public void DestroySongFromLocalPerformer()
+        {
+            if (_orchestrator != null)
+                _orchestrator.Dispose();
+        }
+
+        /// <summary>
+        /// Start the eventhandler
+        /// </summary>
+        public void Start()
+        {
+            if (Started) return;
+            StartEventsHandler();
+            Started = true;
+        }
+
+        /// <summary>
+        /// Stop the eventhandler
+        /// </summary>
+        public void Stop()
+        {
+            if (!Started) return;
+            StopEventsHandler();
+            Started = false;
+            Dispose();
+        }
 
         ~BmpMaestro() { Dispose(); }
 

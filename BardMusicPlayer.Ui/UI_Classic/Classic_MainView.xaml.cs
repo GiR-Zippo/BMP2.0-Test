@@ -44,14 +44,16 @@ namespace BardMusicPlayer.Ui.Classic
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
             BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
+            BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             LoadConfig();
         }
 
-        private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
+        #region EventHandler
+        private void Instance_PlaybackTimeChanged(object sender, Maestro.Events.CurrentPlayPositionEvent e)
         {
-            this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent.ChatLogCode, seerEvent.ChatLogLine)));
+            this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackTimeChanged(e)));
         }
 
         private void Instance_PlaybackMaxTime(object sender, Maestro.Events.MaxPlayTimeEvent e)
@@ -59,20 +61,26 @@ namespace BardMusicPlayer.Ui.Classic
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackMaxTime(e)));
         }
 
-        private void Instance_PlaybackTimeChanged(object sender, Maestro.Events.CurrentPlayPositionEvent e)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackTimeChanged(e)));
-        }
-
         private void Instance_PlaybackStopped(object sender, bool e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackStopped()));
+        }
+
+        private void Instance_TrackNumberChanged(object sender, Maestro.Events.TrackNumberChangedEvent e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.TracknumberChanged(e)));
+        }
+
+        private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent.ChatLogCode, seerEvent.ChatLogLine)));
         }
 
         private void Instance_EnsembleStarted(Seer.Events.EnsembleStarted seerEvent)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.EnsembleStart()));
         }
+        #endregion
 
         public void AppendChatLog(string code, string line)
         {
@@ -134,6 +142,10 @@ namespace BardMusicPlayer.Ui.Classic
             Play_Button.Content = @"▶";
         }
 
+        public void TracknumberChanged(Maestro.Events.TrackNumberChangedEvent e)
+        {
+            NumValue = e.TrackNumber;
+        }
 
         /* Track UP/Down */
         private int _numValue = 1;

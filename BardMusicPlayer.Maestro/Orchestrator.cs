@@ -12,6 +12,14 @@ using BardMusicPlayer.Transmogrify.Song;
 
 namespace BardMusicPlayer.Maestro
 {
+    /// <summary>
+    /// The brain of the operation;
+    /// Automatically add the found games
+    /// - creates the perfomers
+    /// - creates the sequencers
+    /// - load songs
+    /// - manages play functions
+    /// </summary>
     public class Orchestrator : IDisposable
     {
         private Sequencer sequencer { get; set; } = null;
@@ -79,56 +87,30 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
-        /// Force add a performer
-        /// </summary>
-        public void ForceAddPerformer()
-        {
-            Game game = BmpSeer.Instance.Games.Values.First();
-
-            var result = performer.Find(kvp => kvp.Key == game.Pid);
-            if (result.Key == game.Pid)
-                return;
-            while (true)
-            {
-                if (game.ConfigId.Length > 0)
-                {
-                    //Bard is loaded and prepared
-                    Performer perf = new Performer(game);
-                    perf.HostProcess = true;
-                    perf.Sequencer = sequencer;
-                    perf.TrackNumber = 0;
-                    performer.Add(new KeyValuePair<int, Performer>(game.Pid, perf));    //Add the performer
-                    BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //And trigger an event
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
         /// sets the track for all performer
         /// </summary>
-        /// <param name="track"></param>
-        public void SetTracknumber(int track)
+        /// <param name="tracknumber"></param>
+        public void SetTracknumber(int tracknumber)
         {
             foreach (var perf in performer)
-                perf.Value.TrackNumber = track;
-            BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(null, track));
+                perf.Value.TrackNumber = tracknumber;
+            BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(null, tracknumber));
         }
 
         /// <summary>
         /// sets the track for specific performer
         /// </summary>
         /// <param name="game"></param>
-        /// <param name="track"></param>
-        public void SetTracknumber(Game game, int track)
+        /// <param name="tracknumber"></param>
+        public void SetTracknumber(Game game, int tracknumber)
         {
             foreach (var perf in performer)
             {
                 if (perf.Value.game.Pid == game.Pid)
                 {
-                    perf.Value.TrackNumber = track;
+                    perf.Value.TrackNumber = tracknumber;
                     if (perf.Value.HostProcess)
-                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, track));
+                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber));
                 }
             }
         }
@@ -137,16 +119,16 @@ namespace BardMusicPlayer.Maestro
         /// sets the track for specific performer
         /// </summary>
         /// <param name="game"></param>
-        /// <param name="track"></param>
-        public void SetTracknumber(Performer p, int track)
+        /// <param name="tracknumber"></param>
+        public void SetTracknumber(Performer p, int tracknumber)
         {
             foreach (var perf in performer)
             {
                 if (perf.Value.PId == p.PId)
                 {
-                    perf.Value.TrackNumber = track;
+                    perf.Value.TrackNumber = tracknumber;
                     if (perf.Value.HostProcess)
-                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, track));
+                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber));
                 }
             }
         }

@@ -50,7 +50,7 @@ namespace BardMusicPlayer.Ui.Functions
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             CurrentSong = item;
             //BmpMaestro.Instance.DestroySongFromLocalPerformer();
-            BmpMaestro.Instance.SetSong(CurrentSong, Globals.Globals.CurrentTrack);
+            BmpMaestro.Instance.SetSong(CurrentSong);
             BmpMaestro.Instance.SetTracknumber(Globals.Globals.CurrentTrack);
             SetInstrumentName();
         }
