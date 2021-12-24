@@ -163,8 +163,8 @@ Width="Auto" Height="Auto"
                             <RowDefinition Height="12"/>
                             <RowDefinition Height="12"/>
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="0" x:Name="track_cmdUp"   x:FieldModifier="private" FontSize="10" Content="▲" Click="track_cmdUp_Click"   Width="12" TextOptions.TextHintingMode="Fixed" />
-                        <Button Grid.Row="1" x:Name="track_cmdDown" x:FieldModifier="private" FontSize="10" Content="▼" Click="track_cmdDown_Click" Width="12" TextOptions.TextHintingMode="Fixed"/>
+                        <Button Grid.Row="0" x:Name="track_cmdUp"   FontSize="8" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe MDL2 Assets" Content="&#xE70E;" Click="track_cmdUp_Click"   Width="12" TextOptions.TextHintingMode="Fixed" />
+                        <Button Grid.Row="1" x:Name="track_cmdDown" FontSize="8" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe MDL2 Assets" Content="&#xE70D;" Click="track_cmdDown_Click" Width="12" TextOptions.TextHintingMode="Fixed"/>
                     </Grid>
                 </Grid>
                 <!-- End Track Selection-->

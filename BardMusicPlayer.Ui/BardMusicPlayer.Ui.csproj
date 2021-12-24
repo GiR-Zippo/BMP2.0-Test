@@ -267,6 +267,9 @@
     <Compile Include="Controls\BardView.xaml.cs">
       <DependentUpon>BardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NumericUpDown.xaml.cs">
+      <DependentUpon>NumericUpDown.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_Classic\Classic_Settings.cs" />
     <Compile Include="UI_Skinned\BardWindow\BardsWindow.xaml.cs">
       <DependentUpon>BardsWindow.xaml</DependentUpon>
@@ -276,6 +279,10 @@
     </Compile>
     <Compile Include="UI_Skinned\Playlist\Skinned_PlaylistView_Siren.cs" />
     <Compile Include="UI_Skinned\Playlist\Skinned_PlaylistView.xaml.cs" />
+    <Page Include="Controls\NumericUpDown.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

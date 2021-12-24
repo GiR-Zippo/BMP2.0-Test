@@ -1,39 +1,26 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BardMusicPlayer.Grunt;
 using BardMusicPlayer.Maestro.Events;
 using BardMusicPlayer.Maestro.Performance;
 using BardMusicPlayer.Maestro.Sequencing;
-using BardMusicPlayer.Quotidian.Enums;
 using BardMusicPlayer.Quotidian.Structs;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Transmogrify.Song;
-using Melanchall.DryWetMidi.Core;
-using Melanchall.DryWetMidi.Interaction;
-using Melanchall.DryWetMidi.Multimedia;
 
 namespace BardMusicPlayer.Maestro
 {
     public class Orchestrator : IDisposable
     {
         private Sequencer sequencer { get; set; } = null;
-        List<KeyValuePair<int, Performer>> performer { get; set; } = null;
-
-        public IEnumerable<Game> GetPerformer()
-        {
-            List<Game> games =  new List<Game>();
-            foreach (KeyValuePair<int, Performer> performer in performer)
-                games.Add(performer.Value.game);
-            return games;
-        }
-
         private CancellationTokenSource _updaterTokenSource;
+        private List<KeyValuePair<int, Performer>> performer { get; set; } = null;
 
+        /// <summary>
+        /// The constructor
+        /// </summary>
         public Orchestrator()
         {
             performer = new List<KeyValuePair<int, Performer>>();
@@ -42,19 +29,33 @@ namespace BardMusicPlayer.Maestro
             BmpSeer.Instance.GameStopped += OnInstanceOnGameStopped;
         }
 
-        private void EnsureGameExists(Game game)
+        #region public
+        /// <summary>
+        /// Gets all games
+        /// </summary>
+        public IEnumerable<Game> GetAllGames()
         {
-            if (BmpSeer.Instance.Games.Count == 1)
-                _ = AddPerformer(game, true);
-            else
-                _ = AddPerformer(game, false);
+            List<Game> games =  new List<Game>();
+            foreach (KeyValuePair<int, Performer> performer in performer)
+                games.Add(performer.Value.game);
+            return games;
         }
 
-        private void OnInstanceOnGameStopped(Seer.Events.GameStopped g)
+        /// <summary>
+        /// Gets all performers
+        /// </summary>
+        public IEnumerable<Performer> GetAllPerformers()
         {
-            RemovePerformer(g.Pid);
+            List<Performer> games = new List<Performer>();
+            foreach (KeyValuePair<int, Performer> performer in performer)
+                games.Add(performer.Value);
+            return games;
         }
 
+        /// <summary>
+        /// load a midi file
+        /// </summary>
+        /// <param name="midifilename">full path and filename</param>
         public void LoadMidiFile(string midifilename)
         {
             sequencer.Load(midifilename);
@@ -64,6 +65,10 @@ namespace BardMusicPlayer.Maestro
             InitNewPerformance();
         }
 
+        /// <summary>
+        /// loads a BMPSong from the database
+        /// </summary>
+        /// <param name="song"></param>
         public void LoadBMPSong(BmpSong song)
         {
             sequencer.Load(song);
@@ -73,6 +78,9 @@ namespace BardMusicPlayer.Maestro
             InitNewPerformance();
         }
 
+        /// <summary>
+        /// Force add a performer
+        /// </summary>
         public void ForceAddPerformer()
         {
             Game game = BmpSeer.Instance.Games.Values.First();
@@ -88,7 +96,7 @@ namespace BardMusicPlayer.Maestro
                     Performer perf = new Performer(game);
                     perf.HostProcess = true;
                     perf.Sequencer = sequencer;
-                    perf.TrackNum = 0;
+                    perf.TrackNumber = 0;
                     performer.Add(new KeyValuePair<int, Performer>(game.Pid, perf));    //Add the performer
                     BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //And trigger an event
                     return;
@@ -96,47 +104,85 @@ namespace BardMusicPlayer.Maestro
             }
         }
 
-        public async Task<bool> AddPerformer(Game game, bool IsHost)
+        /// <summary>
+        /// sets the track for all performer
+        /// </summary>
+        /// <param name="track"></param>
+        public void SetTracknumber(int track)
         {
-            var result = performer.Find(kvp => kvp.Key == game.Pid);
-            if (result.Key == game.Pid)
-                return true;
-            while (true)
-            {
-                if (game.ConfigId.Length > 0)
-                {
-                    //Bard is loaded and prepared
-                    Performer perf = new Performer(game);
-                    perf.HostProcess = IsHost;
-                    perf.Sequencer = sequencer;
-                    perf.TrackNum = 0;
-                    performer.Add(new KeyValuePair<int, Performer>(game.Pid, perf));    //Add the performer
-                    BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //And trigger an event
-                    return true;
-                }
-                await Task.Delay(200);
-            }
+            foreach (var perf in performer)
+                perf.Value.TrackNumber = track;
+            BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(null, track));
         }
 
-        public void RemovePerformer(int Pid)
+        /// <summary>
+        /// sets the track for specific performer
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="track"></param>
+        public void SetTracknumber(Game game, int track)
         {
             foreach (var perf in performer)
             {
-                if (perf.Key == Pid)
+                if (perf.Value.game.Pid == game.Pid)
                 {
-                    performer.Remove(perf);
-                    perf.Value.Close();
-                    BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //trigger the event
-                    return;
+                    perf.Value.TrackNumber = track;
+                    if (perf.Value.HostProcess)
+                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, track));
                 }
             }
         }
 
-        public void ChangeTracknumber(int track)
+        /// <summary>
+        /// sets the track for specific performer
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="track"></param>
+        public void SetTracknumber(Performer p, int track)
         {
             foreach (var perf in performer)
-                perf.Value.TrackNum = track;
-            BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(track));
+            {
+                if (perf.Value.PId == p.PId)
+                {
+                    perf.Value.TrackNumber = track;
+                    if (perf.Value.HostProcess)
+                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, track));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the host game
+        /// </summary>
+        /// <param name="game"></param>
+        public void SetHostBard(Game game)
+        {
+            if (game == null)
+                return;
+            foreach (var perf in performer)
+                if (perf.Value.PId == game.Pid)
+                {
+                    perf.Value.HostProcess = true;
+                }
+                else
+                    perf.Value.HostProcess = false;
+        }
+
+        /// <summary>
+        /// Sets the host game
+        /// </summary>
+        /// <param name="p"></param>
+        public void SetHostBard(Performer p)
+        {
+            if (p == null)
+                return;
+            foreach (var perf in performer)
+                if (perf.Value.PId == p.PId)
+                {
+                    perf.Value.HostProcess = true;
+                }
+                else
+                    perf.Value.HostProcess = false;
         }
 
         /// <summary>
@@ -200,25 +246,90 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
-        /// adds the host performer, assuming first game is the host
-        /// TODO: Machs mal schicker
+        /// Disposing
         /// </summary>
-        private void addHostPerformer()
+        public void Dispose()
         {
-           /* while (true)
+            if (sequencer != null)
+                sequencer.Dispose();
+            // Dispose managed resources.
+            if (_updaterTokenSource != null)
+                _updaterTokenSource.Cancel();
+
+            foreach (var perf in performer)
+                perf.Value.Close();
+
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+
+        #region private
+
+        /// <summary>
+        /// Called if a game was found
+        /// </summary>
+        /// <param name="game">the found game</param>
+        private void EnsureGameExists(Game game)
+        {
+            if (BmpSeer.Instance.Games.Count == 1)
+                _ = AddPerformer(game, true);
+            else
+                _ = AddPerformer(game, false);
+        }
+
+        /// <summary>
+        /// Called when a game was stopped
+        /// </summary>
+        /// <param name="g"></param>
+        private void OnInstanceOnGameStopped(Seer.Events.GameStopped g)
+        {
+            RemovePerformer(g.Pid);
+        }
+
+        /// <summary>
+        /// Creates the performer. Is waiting till the game is ready for access
+        /// </summary>
+        /// <param name="game">the game</param>
+        /// <param name="IsHost">is it the host game</param>
+        /// <returns></returns>
+        private async Task<bool> AddPerformer(Game game, bool IsHost)
+        {
+            var result = performer.Find(kvp => kvp.Key == game.Pid);
+            if (result.Key == game.Pid)
+                return true;
+            while (true)
             {
-                Game game = BmpSeer.Instance.Games.ToList().First().Value;
                 if (game.ConfigId.Length > 0)
                 {
+                    //Bard is loaded and prepared
                     Performer perf = new Performer(game);
-                    perf.HostProcess = true;
+                    perf.HostProcess = IsHost;
                     perf.Sequencer = sequencer;
-                    perf.TrackNum = 0;
-                    performer.Add(perf);
+                    perf.TrackNumber = 0;
+                    performer.Add(new KeyValuePair<int, Performer>(game.Pid, perf));    //Add the performer
+                    BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //And trigger an event
+                    return true;
+                }
+                await Task.Delay(200);
+            }
+        }
+
+        /// <summary>
+        /// Removes a performer
+        /// </summary>
+        /// <param name="Pid"></param>
+        private void RemovePerformer(int Pid)
+        {
+            foreach (var perf in performer)
+            {
+                if (perf.Key == Pid)
+                {
+                    performer.Remove(perf);
+                    perf.Value.Close();
+                    BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //trigger the event
                     return;
                 }
-                Task.Delay(200);
-            }*/
+            }
         }
 
         /// <summary>
@@ -228,7 +339,8 @@ namespace BardMusicPlayer.Maestro
         private void InitNewPerformance()
         {
             BmpMaestro.Instance.PublishEvent(new MaxPlayTimeEvent(sequencer.MaxTimeAsTimeSpan, sequencer.MaxTick));
-            BmpSeer.Instance.InstrumentHeldChanged += delegate (Seer.Events.InstrumentHeldChanged e) {
+            BmpSeer.Instance.InstrumentHeldChanged += delegate (Seer.Events.InstrumentHeldChanged e) 
+            {
                 Instance_InstrumentHeldChanged(e);
             };
 
@@ -271,22 +383,6 @@ namespace BardMusicPlayer.Maestro
             }
             return;
         }
-
-        /// <summary>
-        /// Disposing
-        /// </summary>
-        public void Dispose()
-        {
-            if (sequencer != null)
-                sequencer.Dispose();
-            // Dispose managed resources.
-            if (_updaterTokenSource != null)
-                _updaterTokenSource.Cancel();
-
-            foreach (var perf in performer)
-                perf.Value.Close();
-
-            GC.SuppressFinalize(this);
-        }
+        #endregion
     }
 }

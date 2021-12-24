@@ -1,5 +1,6 @@
 ﻿using BardMusicPlayer.Maestro;
 using BardMusicPlayer.Maestro.Events;
+using BardMusicPlayer.Maestro.Performance;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Seer.Events;
 using BardMusicPlayer.Ui.Functions;
@@ -20,7 +21,7 @@ namespace BardMusicPlayer.Ui.Controls
         {
             InitializeComponent();
             this.DataContext = this;
-            Bards = new ObservableCollection<Game>();
+            Bards = new ObservableCollection<Performer>();
 
             BmpMaestro.Instance.OnPerformerChanged += OnPerfomerChanged;
             BmpMaestro.Instance.OnTrackNumberChanged += OnTrackNumberChanged;
@@ -29,19 +30,18 @@ namespace BardMusicPlayer.Ui.Controls
             BmpSeer.Instance.HomeWorldChanged += OnHomeWorldChanged;
         }
 
-        public ObservableCollection<Game> Bards { get; private set; }
+        public ObservableCollection<Performer> Bards { get; private set; }
 
         public Game SelectedBard { get; set; }
 
         private void OnPerfomerChanged(object sender, bool e)
         {
-            this.Bards = new ObservableCollection<Game>(BmpMaestro.Instance.GetPerformer());
+            this.Bards = new ObservableCollection<Performer>(BmpMaestro.Instance.GetAllPerformers());
             this.Dispatcher.BeginInvoke(new Action(() => this.BardsList.ItemsSource = Bards));
         }
 
         private void OnTrackNumberChanged(object sender, TrackNumberChangedEvent e)
         {
-            
         }
 
         private void OnPlayerNameChanged(PlayerNameChanged e)
@@ -61,7 +61,7 @@ namespace BardMusicPlayer.Ui.Controls
 
         private void UpdateList()
         {
-            this.Bards = new ObservableCollection<Game>(BmpMaestro.Instance.GetPerformer());
+            this.Bards = new ObservableCollection<Performer>(BmpMaestro.Instance.GetAllPerformers());
             this.Dispatcher.BeginInvoke(new Action(() => this.BardsList.ItemsSource = Bards));
         }
 
@@ -70,38 +70,39 @@ namespace BardMusicPlayer.Ui.Controls
             Console.WriteLine(this.BardsList.SelectedItem);
         }
 
-        /* Track UP/Down */
-        private int _numValue = 1;
-        public int NumValue
+        private void BardsList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            get { return _numValue; }
-            set
-            {
-                _numValue = value;
-                PlaybackFunctions.SetTrackNumber(_numValue);
-                return;
-            }
-        }
-        private void track_cmdUp_Click(object sender, RoutedEventArgs e)
-        {
-            NumValue++;
-            var tb = sender as Button;
-            var spn = tb.Parent as Grid;
-            var grd = spn.Parent as Grid;
-            var num = grd.Children[0] as TextBox;
-            num.Text = "T" + NumValue.ToString();
+            SelectedBard = BardsList.SelectedItem as Game;
+            
+
         }
 
-        private void track_cmdDown_Click(object sender, RoutedEventArgs e)
+        /* Track UP/Down */
+        private void NumericUpDown_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (NumValue == 0)
+            NumericUpDown ctl = sender as NumericUpDown;
+            ctl.OnValueChanged += OnValueChanged;
+        }
+
+        private void OnValueChanged(object sender, int s)
+        {
+            Performer game = (sender as NumericUpDown).DataContext as Performer;
+            BmpMaestro.Instance.SetTracknumber(game.game, s);
+        }
+
+        private void Test(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void HostChecker_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox ctl = sender as CheckBox;
+            if (!ctl.IsChecked ?? false)
                 return;
-            NumValue--;
-            var tb = sender as Button;
-            var spn = tb.Parent as Grid;
-            var grd = spn.Parent as Grid;
-            var num = grd.Children[0] as TextBox;
-            num.Text = "T" + NumValue.ToString();
+
+            var game = (sender as CheckBox).DataContext as Performer;
+            BmpMaestro.Instance.SetHostBard(game);
         }
     }
 }

@@ -5,13 +5,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using BardMusicPlayer.Maestro.Performance;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Transmogrify.Song;
-using Melanchall.DryWetMidi.Core;
-using Melanchall.DryWetMidi.Interaction;
 
 namespace BardMusicPlayer.Maestro
 {
@@ -19,7 +16,6 @@ namespace BardMusicPlayer.Maestro
     {
         private static readonly Lazy<BmpMaestro> LazyInstance = new(() => new BmpMaestro());
 
-        public IEnumerable<Game> Bards { get; private set; }
         public Game SelectedBard { get; set; }
         private int _NoteKeyDelay;
 
@@ -31,25 +27,25 @@ namespace BardMusicPlayer.Maestro
 
         private BmpMaestro()
         {
-            Bards = BmpSeer.Instance.Games.Values;
-            BmpSeer.Instance.GameStarted += e => EnsureGameExists(e.Game);
             _orchestrator = new Orchestrator();
-        }
-
-        private void EnsureGameExists(Game game)
-        {
-            if (!Bards.Contains(game))
-            {
-                Bards.Append(game);
-                SelectedBard ??= game;
-            }
         }
 
         public static BmpMaestro Instance => LazyInstance.Value;
 
-        public IEnumerable<Game> GetPerformer()
+        /// <summary>
+        /// Get all game the orchestrator is accessing
+        /// </summary>
+        public IEnumerable<Game> GetAllGames()
         {
-            return _orchestrator.GetPerformer();
+            return _orchestrator.GetAllGames();
+        }
+
+        /// <summary>
+        /// Get all performers the orchestrator has created
+        /// </summary>
+        public IEnumerable<Performer> GetAllPerformers()
+        {
+            return _orchestrator.GetAllPerformers();
         }
 
         /// <summary>
@@ -58,13 +54,17 @@ namespace BardMusicPlayer.Maestro
         /// <param name="bmpSong"></param>
         /// <param name="track">the tracknumber which should be played; 0 all tracks</param>
         /// <returns></returns>
-        public void PlayWithLocalPerformer(BmpSong bmpSong, int track)
+        public void SetSong(BmpSong bmpSong, int track)
         {
             _orchestrator.Stop();
             _orchestrator.LoadBMPSong(bmpSong);
         }
 
-        public void PlayWithLocalPerformer(string filename)
+        /// <summary>
+        /// Sets the song for the sequencer
+        /// </summary>
+        /// <param name="filename">midi file with full path</param>
+        public void SetSong(string filename)
         {
            _orchestrator.Stop();
            _orchestrator.LoadMidiFile(filename);
@@ -115,10 +115,42 @@ namespace BardMusicPlayer.Maestro
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>
-        public void ChangeTracknumber(int track)
+        public void SetTracknumber(int track)
         {
             if (_orchestrator != null)
-                _orchestrator.ChangeTracknumber(track);
+                _orchestrator.SetTracknumber(track);
+        }
+
+        /// <summary>
+        /// Set the tracknumber (-1 all tracks)
+        /// </summary>
+        /// <param name="game">the bard</param>
+        /// <param name="track">track</param>
+        /// <returns></returns>
+        public void SetTracknumber(Game game, int track)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetTracknumber(game, track);
+        }
+
+        /// <summary>
+        /// Sets the host bard
+        /// </summary>
+        /// <param name="game"></param>
+        public void SetHostBard(Game game)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetHostBard(game);
+        }
+
+        /// <summary>
+        /// Sets the host bard
+        /// </summary>
+        /// <param name="performer"></param>
+        public void SetHostBard(Performer performer)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetHostBard(performer);
         }
 
         /// <summary>

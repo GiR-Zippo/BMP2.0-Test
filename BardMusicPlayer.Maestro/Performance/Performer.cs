@@ -19,7 +19,7 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public Instrument ChosenInstrument { get; set; } = Instrument.Piano;
         public int OctaveShift { get; set; } = 0;
-        public int TrackNum { get; set; } = 0;
+        public int TrackNumber { get; set; } = 0;
         public bool PerformerEnabled { get; set; } = true;
         public string PerformerName { get; set; } = "";
         private bool holdNotes { get; set; } = true;
@@ -29,11 +29,14 @@ namespace BardMusicPlayer.Maestro.Performance
 
         private bool openDelay;
 
-        public bool HostProcess = false;
+        public bool HostProcess { get; set; } = false;
 
         public int PId = 0;
 
         public Game game;
+
+        public string PlayerName { get { return game.PlayerName; } }
+        public string HomeWorld { get { return game.HomeWorld; } }
 
         private bool performanceUp { get; set; } = false;
 
@@ -55,11 +58,11 @@ namespace BardMusicPlayer.Maestro.Performance
                     sequencer = new Sequencer();
                     if (value.LoadedFileType == Sequencer.FILETYPES.BmpSong)
                     {
-                        sequencer.Load(value.LoadedBmpSong, this.TrackNum);
+                        sequencer.Load(value.LoadedBmpSong, this.TrackNumber);
                         this.OctaveShift = +1;
                     }
                     else if (value.LoadedFileType == Sequencer.FILETYPES.MidiFile)
-                        sequencer.Load(value.LoadedFilename, this.TrackNum);
+                        sequencer.Load(value.LoadedFilename, this.TrackNumber);
 
                     if (HostProcess)
                         sequencer.OpenInputDevice(BmpPigeonhole.Instance.MidiInputDev);
@@ -73,8 +76,8 @@ namespace BardMusicPlayer.Maestro.Performance
                         forcePlayback = true;
 
                     // set the initial octave shift here, if we have a track to play
-                    if (this.TrackNum < sequencer.Sequence.Count)
-                        OctaveShift = sequencer.GetTrackPreferredOctaveShift(sequencer.Sequence[this.TrackNum]);
+                    if (this.TrackNumber < sequencer.Sequence.Count)
+                        OctaveShift = sequencer.GetTrackPreferredOctaveShift(sequencer.Sequence[this.TrackNumber]);
                     this.Update(value);
                 }
             }
@@ -131,7 +134,7 @@ namespace BardMusicPlayer.Maestro.Performance
                 track = args.MidiTrack,
             };
 
-            if ((sequencer.GetTrackNum(noteEvent.track) == this.TrackNum) || !sequencer.IsPlaying)
+            if ((sequencer.GetTrackNum(noteEvent.track) == this.TrackNumber) || !sequencer.IsPlaying)
             {
                 noteEvent.note = NoteHelper.ApplyOctaveShift(noteEvent.note, this.OctaveShift);
 
@@ -218,7 +221,7 @@ namespace BardMusicPlayer.Maestro.Performance
             if (programEvent.voice < 27 || programEvent.voice > 31)
                 return;
 
-            if (sequencer.GetTrackNum(programEvent.track) == this.TrackNum)
+            if (sequencer.GetTrackNum(programEvent.track) == this.TrackNumber)
             {
                 if (game.ChatStatus && !forcePlayback)
                     return;
@@ -261,7 +264,7 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public void Update(Sequencer bmpSeq)
         {
-            int tn = this.TrackNum;
+            int tn = this.TrackNumber;
 
             if (!(bmpSeq is Sequencer))
             {
@@ -316,7 +319,7 @@ namespace BardMusicPlayer.Maestro.Performance
                 return;
 
             // don't open instrument if we're not on a valid track
-            if (TrackNum == 0 || TrackNum >= sequencer.Sequence.Count)
+            if (TrackNumber == 0 || TrackNumber >= sequencer.Sequence.Count)
                 return;
 
             string keyMap = hotbar.GetInstrumentKeyMap(ChosenInstrument);

@@ -125,7 +125,11 @@ namespace BardMusicPlayer.Seer
             BmpSeer.Instance.PublishEvent(new GameStopped(Pid));
 
             _eventQueueOpen = false;
-            _eventTokenSource.Cancel();
+            try { _eventTokenSource.Cancel(); }
+            catch (Exception ex)
+            {
+                BmpSeer.Instance.PublishEvent(new GameExceptionEvent(this, Pid, ex));
+            }
 
             try
             {

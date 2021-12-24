@@ -121,6 +121,8 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void UpdateTrackNumberAndInstrument(int trackumber)
         {
+            Globals.Globals.CurrentTrack = trackumber;
+            PlaybackFunctions.SetInstrumentName();
             WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
             WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
             WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
