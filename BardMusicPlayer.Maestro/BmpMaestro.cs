@@ -132,6 +132,16 @@ namespace BardMusicPlayer.Maestro
             if (_orchestrator != null)
                 _orchestrator.SetTracknumber(game, tracknumber);
         }
+
+        /// <summary>
+        /// sets the track for host performer
+        /// </summary>
+        /// <param name="tracknumber"></param>
+        public void SetTracknumberOnHost(int tracknumber)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetTracknumberOnHost(tracknumber);
+        }
         #endregion
 
         /// <summary>

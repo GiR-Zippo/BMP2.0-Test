@@ -1,4 +1,5 @@
 ﻿using BardMusicPlayer.Coffer;
+using BardMusicPlayer.Siren;
 using BardMusicPlayer.Transmogrify.Song;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Ui.Globals.SkinContainer;
@@ -26,17 +27,14 @@ namespace BardMusicPlayer.Ui.Skinned
             InitializeComponent();
             ApplySkin();
             SkinContainer.OnNewSkinLoaded += SkinContainer_OnNewSkinLoaded;
-#if SIREN
-            Siren.BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
-#endif
-            if (!BmpCoffer.Instance.GetPlaylistNames().Contains("Default"))
-                _currentPlaylist = BmpCoffer.Instance.CreatePlaylist("Default");
-            else 
-                _currentPlaylist = BmpCoffer.Instance.GetPlaylist("Default");
+            BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
+
+            _currentPlaylist = PlaylistFunctions.CreatePlaylist("Default");
 
             RefreshPlaylist();
         }
 
+        #region Skinning
         private void SkinContainer_OnNewSkinLoaded(object sender, EventArgs e)
         { ApplySkin(); }
 
@@ -68,6 +66,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             PlaylistContainer_SelectionChanged(null, null);
         }
+        #endregion
 
         private void RefreshPlaylist()
         {
@@ -154,7 +153,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             foreach (string s in PlaylistContainer.SelectedItems)
             {
-                BmpSong song = GetSong(s);
+                BmpSong song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, s);
                 if (song == null)
                     continue;
                 _currentPlaylist.Remove(song);
@@ -172,7 +171,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             foreach (string s in PlaylistContainer.Items)
             {
-                BmpSong song = GetSong(s);
+                BmpSong song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, s);
                 if (song == null)
                     continue;
                 _currentPlaylist.Remove(song);
@@ -237,19 +236,5 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Close_Button.Background.Opacity = 0;
         }
         #endregion
-
-        public BmpSong GetSong(string songname)
-        {
-            if (_currentPlaylist == null)
-                return null;
-
-            foreach (var item in _currentPlaylist)
-            {
-                if (item.Title == songname)
-                    return item;
-            }
-            return null;
-        }
-
     }
 }

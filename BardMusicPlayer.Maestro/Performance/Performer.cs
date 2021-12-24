@@ -19,7 +19,7 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public Instrument ChosenInstrument { get; set; } = Instrument.Piano;
         public int OctaveShift { get; set; } = 0;
-        public int TrackNumber { get; set; } = 0;
+        public int TrackNumber { get; set; } = 1;
         public bool PerformerEnabled { get; set; } = true;
         public string PerformerName { get; set; } = "";
         private bool holdNotes { get; set; } = true;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BardMusicPlayer.Maestro.Events;
 using BardMusicPlayer.Maestro.Performance;
 using BardMusicPlayer.Maestro.Sequencing;
+using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Quotidian.Structs;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Transmogrify.Song;
@@ -134,6 +135,24 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
+        /// sets the track for host performer (used for Ui)
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="tracknumber"></param>
+        public void SetTracknumberOnHost(int tracknumber)
+        {
+            foreach (var perf in performer)
+            {
+                if (perf.Value.HostProcess)
+                {
+                    perf.Value.TrackNumber = tracknumber;
+                    BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber, true));
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets the host game
         /// </summary>
         /// <param name="game"></param>
@@ -205,6 +224,19 @@ namespace BardMusicPlayer.Maestro
         /// </summary>
         public void Start()
         {
+            //if we are a not a local orchestra
+            if (!BmpPigeonhole.Instance.LocalOrchestra)
+            {
+                foreach (var perf in performer)
+                {
+                    if (perf.Value.HostProcess)
+                    {
+                        perf.Value.Play(true);
+                        return;
+                    }
+                }
+            }
+
             foreach (var perf in performer)
                 perf.Value.Play(true);
         }
@@ -214,6 +246,19 @@ namespace BardMusicPlayer.Maestro
         /// </summary>
         public void Pause()
         {
+            //if we are a not a local orchestra
+            if (!BmpPigeonhole.Instance.LocalOrchestra)
+            {
+                foreach (var perf in performer)
+                {
+                    if (perf.Value.HostProcess)
+                    {
+                        perf.Value.Play(false);
+                        return;
+                    }
+                }
+            }
+
             foreach (var perf in performer)
                 perf.Value.Play(false);
         }
@@ -223,6 +268,19 @@ namespace BardMusicPlayer.Maestro
         /// </summary>
         public void Stop()
         {
+            //if we are a not a local orchestra
+            if (!BmpPigeonhole.Instance.LocalOrchestra)
+            {
+                foreach (var perf in performer)
+                {
+                    if (perf.Value.HostProcess)
+                    {
+                        perf.Value.Stop();
+                        return;
+                    }
+                }
+            }
+
             foreach (var perf in performer)
                 perf.Value.Stop();
         }
@@ -287,7 +345,7 @@ namespace BardMusicPlayer.Maestro
                     Performer perf = new Performer(game);
                     perf.HostProcess = IsHost;
                     perf.Sequencer = sequencer;
-                    perf.TrackNumber = 0;
+                    perf.TrackNumber = 1;
                     performer.Add(new KeyValuePair<int, Performer>(game.Pid, perf));    //Add the performer
                     BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //And trigger an event
                     return true;

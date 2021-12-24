@@ -10,14 +10,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Coffer;
-using BardMusicPlayer.UI.Functions;
 using BardMusicPlayer.Maestro;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
-#if SIREN
-using BardMusicPlayer.Siren;
-#endif
+using BardMusicPlayer.Transmogrify.Song;
 
 namespace BardMusicPlayer.Ui.Classic
 {
@@ -26,19 +22,12 @@ namespace BardMusicPlayer.Ui.Classic
     /// </summary>
     public partial class Classic_MainView : UserControl
     {
-        public class MidiInputDevice
-        {
-            public int Key;
-            public string Value;
-        }
-
-
         public Classic_MainView()
         {
             InitializeComponent();
 
             ShowingPlaylists = true;
-            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
+            PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
 
             this.SongName.Text = PlaybackFunctions.GetSongName();
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
@@ -80,7 +69,52 @@ namespace BardMusicPlayer.Ui.Classic
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.EnsembleStart()));
         }
-        #endregion
+
+        private void PlaybackTimeChanged(Maestro.Events.CurrentPlayPositionEvent e)
+        {
+            string time;
+            string Seconds = e.timeSpan.Seconds.ToString();
+            string Minutes = e.timeSpan.Minutes.ToString();
+            time = ((Minutes.Length == 1) ? "0" + Minutes : Minutes) + ":" + ((Seconds.Length == 1) ? "0" + Seconds : Seconds);
+            ElapsedTime.Content = time;
+
+            if (!_Playbar_dragStarted)
+                Playbar_Slider.Value = e.tick;
+        }
+
+        private void PlaybackMaxTime(Maestro.Events.MaxPlayTimeEvent e)
+        {
+            string time;
+            string Seconds = e.timeSpan.Seconds.ToString();
+            string Minutes = e.timeSpan.Minutes.ToString();
+            time = ((Minutes.Length == 1) ? "0" + Minutes : Minutes) + ":" + ((Seconds.Length == 1) ? "0" + Seconds : Seconds);
+            TotalTime.Content = time;
+
+            Playbar_Slider.Maximum = e.tick;
+
+        }
+
+        public void PlaybackStopped()
+        {
+            Play_Button.Content = @"▶";
+        }
+
+        public void TracknumberChanged(Maestro.Events.TrackNumberChangedEvent e)
+        {
+            NumValue = e.TrackNumber;
+            
+        }
+
+        public void EnsembleStart()
+        {
+            if (Globals.Settings.AutostartType != Globals.Settings.Autostart_Types.VIA_METRONOME)
+                return;
+            if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
+                return;
+            Thread.Sleep(2475);
+            PlaybackFunctions.PlaySong();
+            Play_Button.Content = @"⏸";
+        }
 
         public void AppendChatLog(string code, string line)
         {
@@ -101,51 +135,7 @@ namespace BardMusicPlayer.Ui.Classic
             }
             this.ChatBox.AppendText(line + "\r\n");
         }
-
-        public void EnsembleStart()
-        {
-            if (Globals.Settings.AutostartType != Globals.Settings.Autostart_Types.VIA_METRONOME)
-                return;
-            if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
-                return;
-            Thread.Sleep(2475);
-            PlaybackFunctions.PlaySong();
-            Play_Button.Content = @"⏸";
-        }
-
-        private void PlaybackMaxTime(Maestro.Events.MaxPlayTimeEvent e)
-        {
-            string time;
-            string Seconds = e.timeSpan.Seconds.ToString();
-            string Minutes = e.timeSpan.Minutes.ToString();
-            time = ((Minutes.Length == 1) ? "0" + Minutes : Minutes) + ":" + ((Seconds.Length == 1) ? "0" + Seconds : Seconds);
-            TotalTime.Content = time;
-
-            Playbar_Slider.Maximum = e.tick;
-
-        }
-
-        private void PlaybackTimeChanged(Maestro.Events.CurrentPlayPositionEvent e)
-        {
-            string time;
-            string Seconds = e.timeSpan.Seconds.ToString();
-            string Minutes = e.timeSpan.Minutes.ToString();
-            time = ((Minutes.Length == 1) ? "0" + Minutes : Minutes) + ":" + ((Seconds.Length == 1) ? "0" + Seconds : Seconds);
-            ElapsedTime.Content = time;
-
-            if (!_Playbar_dragStarted)
-                Playbar_Slider.Value = e.tick;
-        }
-
-        public void PlaybackStopped()
-        {
-            Play_Button.Content = @"▶";
-        }
-
-        public void TracknumberChanged(Maestro.Events.TrackNumberChangedEvent e)
-        {
-            NumValue = e.TrackNumber;
-        }
+        #endregion
 
         /* Track UP/Down */
         private int _numValue = 1;
@@ -156,13 +146,13 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 _numValue = value;
                 track_txtNum.Text = "t" + value.ToString();
-                PlaybackFunctions.SetTrackNumber(_numValue);
                 InstrumentInfo.Content = PlaybackFunctions.InstrumentName;
             }
         }
         private void track_cmdUp_Click(object sender, RoutedEventArgs e)
         { 
             NumValue++;
+            PlaybackFunctions.SetTrackNumber(NumValue);
         }
 
         private void track_cmdDown_Click(object sender, RoutedEventArgs e)
@@ -170,6 +160,7 @@ namespace BardMusicPlayer.Ui.Classic
             if (NumValue == 1)
                 return;
             NumValue--;
+            PlaybackFunctions.SetTrackNumber(NumValue);
         }
 
         private void track_txtNum_TextChanged(object sender, TextChangedEventArgs e)
@@ -179,33 +170,6 @@ namespace BardMusicPlayer.Ui.Classic
 
             if (!int.TryParse(track_txtNum.Text.Replace("t", ""), out _numValue))
                 track_txtNum.Text = _numValue.ToString();
-        }
-
-        private void Siren_Load_Click(object sender, RoutedEventArgs e)
-        {
-#if SIREN
-            BmpSiren.Instance.Load(PlaybackFunctions.CurrentSong);
-#endif
-        }
-
-        private void Siren_Play_Click(object sender, RoutedEventArgs e)
-        {
-#if SIREN
-            BmpSiren.Instance.Play();
-#endif
-        }
-
-        private void Siren_Stop_Click(object sender, RoutedEventArgs e)
-        {
-#if SIREN
-            BmpSiren.Instance.Stop();
-#endif
-        }
-
-        private void Siren_Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            /*Slider slider = e.OriginalSource as Slider;
-            BmpSiren.Instance.Setup((float)slider.Value, 2, 100);*/
         }
     }
 }

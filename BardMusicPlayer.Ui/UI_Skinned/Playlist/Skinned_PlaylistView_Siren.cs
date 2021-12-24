@@ -4,13 +4,11 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Drawing;
+using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Ui.Globals.SkinContainer;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
-
-#if SIREN
 using BardMusicPlayer.Siren;
-#endif
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -19,8 +17,8 @@ namespace BardMusicPlayer.Ui.Skinned
     /// </summary>
     public partial class Skinned_PlaylistView : Window
     {
-        int scrollpos = 0;          //position of the title scroller
-        double lasttime = 0;        //last poll time of Instance_SynthTimePositionChanged
+        private int scrollpos = 0;          //position of the title scroller
+        private double lasttime = 0;        //last poll time of Instance_SynthTimePositionChanged
         public int CurrentsongIndex { get; set; } = 0;   //index of the currentSong for siren
         /// <summary>
         /// Triggered from Siren
@@ -40,6 +38,7 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
+        #region Scroller
         /// <summary>
         /// Writes the song title in the lower right corner
         /// </summary>
@@ -103,7 +102,9 @@ namespace BardMusicPlayer.Ui.Skinned
             SongTime.Source = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions())).ImageSource;
             SongTime.Stretch = Stretch.UniformToFill;
         }
+        #endregion
 
+        #region SirenButtons
         /// <summary>
         /// selects the previous song and load it into siren
         /// </summary>
@@ -111,20 +112,18 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <param name="e"></param>
         private void PrevButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-#if SIREN
             if (CurrentsongIndex <= 0)
                 return;
 
             CurrentsongIndex--;
             string t = PlaylistContainer.Items[CurrentsongIndex] as string;
-            var song = GetSong(t);
+            var song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, t);
             if (song == null)
                 return;
             scrollpos = 0;
             lasttime = 0;
             this.WriteSongTitle(song.Title);
             _ = BmpSiren.Instance.Load(song);
-#endif
         }
 
         /// <summary>
@@ -134,10 +133,8 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <param name="e"></param>
         private void Playbutton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-#if SIREN
             if (BmpSiren.Instance.IsReadyForPlayback)
                 _ = BmpSiren.Instance.Play();
-#endif
         }
 
         /// <summary>
@@ -147,9 +144,7 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <param name="e"></param>
         private void PauseButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-#if SIREN
             _ = BmpSiren.Instance.Pause();
-#endif
         }
 
         /// <summary>
@@ -159,9 +154,7 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <param name="e"></param>
         private void StopButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-#if SIREN
             _ = BmpSiren.Instance.Stop();
-#endif
         }
 
         /// <summary>
@@ -171,15 +164,13 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <param name="e"></param>
         private void LoadButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-#if SIREN
-            var song = GetSong(PlaylistContainer.SelectedItem as string);
+            var song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, PlaylistContainer.SelectedItem as string);
             if (song == null)
                 return;
             scrollpos = 0;
             lasttime = 0;
             this.WriteSongTitle(song.Title);
             _ = BmpSiren.Instance.Load(song);
-#endif
         }
 
         /// <summary>
@@ -189,21 +180,19 @@ namespace BardMusicPlayer.Ui.Skinned
         /// <param name="e"></param>
         private void NextButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-#if SIREN
             if (CurrentsongIndex == PlaylistContainer.Items.Count -1)
                 return;
 
             CurrentsongIndex++;
             string t = PlaylistContainer.Items[CurrentsongIndex] as string;
-            var song = GetSong(t);
+            var song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, t);
             if (song == null)
                 return;
             scrollpos = 0;
             lasttime = 0;
             this.WriteSongTitle(song.Title);
             _ = BmpSiren.Instance.Load(song);
-#endif
         }
-
+        #endregion
     }
 }

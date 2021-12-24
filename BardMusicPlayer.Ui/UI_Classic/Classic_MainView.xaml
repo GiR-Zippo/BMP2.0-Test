@@ -65,7 +65,7 @@ Width="Auto" Height="Auto"
                     </TabItem>
                     <TabItem Header="Performers">
                         <Grid>
-                            <control:BardView/>
+                            <control:BardView x:Name="BardsList"/>
                         </Grid>
                     </TabItem>
                     <TabItem Header="Settings">
@@ -96,11 +96,13 @@ Width="Auto" Height="Auto"
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
-                                    <CheckBox Margin="10,10,0,0" Grid.Row="0" x:Name="HoldNotesBox" Content="Hold notes" Checked="Hold_Notes_Checked"/>
-                                    <CheckBox Margin="10,0,0,0"  Grid.Row="1" x:Name="ForcePlaybackBox" Content="force playback" Checked="Force_Playback_Checked"/>
-                                    <Label Margin="10,0,0,0"     Grid.Row="2" Content="MIDI Input device" HorizontalAlignment="Left"/>
-                                    <ComboBox Margin="120,0,0,0" Grid.Row="2" x:Name="MIDI_Input_DeviceBox" 
+                                    <CheckBox Margin="10,10,0,0" Grid.Row="0" x:Name="LocalOrchestraBox" Content="Local Orchestra" Unchecked="LocalOrchestraBox_Checked" Checked="LocalOrchestraBox_Checked"/>
+                                    <CheckBox Margin="10,0,0,0"  Grid.Row="1" x:Name="HoldNotesBox" Content="Hold notes"           Unchecked="Hold_Notes_Checked"        Checked="Hold_Notes_Checked"/>
+                                    <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="ForcePlaybackBox" Content="force playback"   Unchecked="Force_Playback_Checked"    Checked="Force_Playback_Checked"/>
+                                    <Label Margin="10,0,0,0"     Grid.Row="3" Content="MIDI Input device" HorizontalAlignment="Left"/>
+                                    <ComboBox Margin="120,0,0,0" Grid.Row="3" x:Name="MIDI_Input_DeviceBox" 
                                         DisplayMemberPath="Value"
                                         SelectionChanged="MIDI_Input_Device_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="200">
                                         <ComboBoxItem>None</ComboBoxItem>
@@ -123,7 +125,7 @@ Width="Auto" Height="Auto"
                                     </ComboBox>
                                     <CheckBox Margin="10,10,0,0" Grid.Row="1" x:Name="SaveChatlogBox" Content="Save chatlogs to logs folder"/>
                                     <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="VerboseBox" Content="Enable verbose mode"/>
-                                    <CheckBox Margin="10,0,0,0"  Grid.Row="3" x:Name="SkinUiBox" Content="Use skinned Ui" Checked="SkinUiBox_Checked"/>
+                                    <CheckBox Margin="10,0,0,0"  Grid.Row="3" x:Name="SkinUiBox" Content="Use skinned Ui" Unchecked="SkinUiBox_Checked" Checked="SkinUiBox_Checked"/>
 
                                 </Grid>
                             </GroupBox>

@@ -32,7 +32,7 @@ namespace BardMusicPlayer.Ui.Controls
 
         public ObservableCollection<Performer> Bards { get; private set; }
 
-        public Game SelectedBard { get; set; }
+        public Performer SelectedBard { get; set; }
 
         private void OnPerfomerChanged(object sender, bool e)
         {
@@ -42,6 +42,7 @@ namespace BardMusicPlayer.Ui.Controls
 
         private void OnTrackNumberChanged(object sender, TrackNumberChangedEvent e)
         {
+            UpdateList();
         }
 
         private void OnPlayerNameChanged(PlayerNameChanged e)
@@ -72,9 +73,7 @@ namespace BardMusicPlayer.Ui.Controls
 
         private void BardsList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            SelectedBard = BardsList.SelectedItem as Game;
-            
-
+            SelectedBard = BardsList.SelectedItem as Performer;
         }
 
         /* Track UP/Down */
@@ -88,11 +87,6 @@ namespace BardMusicPlayer.Ui.Controls
         {
             Performer game = (sender as NumericUpDown).DataContext as Performer;
             BmpMaestro.Instance.SetTracknumber(game.game, s);
-        }
-
-        private void Test(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void HostChecker_Checked(object sender, RoutedEventArgs e)

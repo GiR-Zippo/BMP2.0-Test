@@ -83,8 +83,30 @@ namespace BardMusicPlayer.Ui.Functions
         public static void SetTrackNumber(int track)
         {
             Globals.Globals.CurrentTrack = track;
-            BmpMaestro.Instance.SetTracknumber(Globals.Globals.CurrentTrack);
+            BmpMaestro.Instance.SetTracknumberOnHost(Globals.Globals.CurrentTrack);
             SetInstrumentName();
+        }
+
+        public static string GetInstrumentName(int tracknumber)
+        {
+            if (tracknumber == 0)
+                return "None";
+            else
+            {
+                if (CurrentSong == null)
+                    return "None";
+                if (CurrentSong.TrackContainers.Count <= tracknumber)
+                    return "None";
+                try
+                {
+                    ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)CurrentSong.TrackContainers[tracknumber].ConfigContainers[0].ProcessorConfig;
+                    return classicConfig.Instrument.Name;
+                }
+                catch (KeyNotFoundException)
+                {
+                    return "Unknown";
+                }
+            }
         }
 
         public static void SetInstrumentName()

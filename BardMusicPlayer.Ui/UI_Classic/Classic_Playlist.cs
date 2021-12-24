@@ -1,6 +1,6 @@
 ﻿using BardMusicPlayer.Coffer;
+using BardMusicPlayer.Transmogrify.Song;
 using BardMusicPlayer.Ui.Functions;
-using BardMusicPlayer.UI.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,59 +20,102 @@ namespace BardMusicPlayer.Ui.Classic
     {
 
         private bool ShowingPlaylists = false;
+        IPlaylist _currentPlaylist;
 
+        /// <summary>
+        /// Create a new playlist but don't save it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Playlist_New_Button_Click(object sender, RoutedEventArgs e)
         {
             var inputbox = new TextInputWindow("Playlistname");
             if (inputbox.ShowDialog() == true)
             {
-                PlaylistFunctions.CreatePlaylist(inputbox.ResponseText);
-                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+                _currentPlaylist = PlaylistFunctions.CreatePlaylist(inputbox.ResponseText);
+                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist);
                 ShowingPlaylists = false;
             }
         }
 
+        /// <summary>
+        /// Load a playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Playlist_Load_Button_Click(object sender, RoutedEventArgs e)
         {
             ShowingPlaylists = true;
-            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
+            PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
 
+        /// <summary>
+        /// Save a playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Playlist_Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistFunctions.SaveCurrentPlaylist();
+            BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
         }
+
 
         private void Playlist_Add_Button_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistFunctions.AddSongToCurrentPlaylist();
-            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+            if (_currentPlaylist == null)
+                return;
+
+            if (PlaybackFunctions.CurrentSong == null)
+                return;
+
+            BmpCoffer.Instance.SaveSong(PlaybackFunctions.CurrentSong);
+            _currentPlaylist.Add(PlaybackFunctions.CurrentSong);
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist);
         }
 
+        /// <summary>
+        /// remove a song from the playlist but don't save
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Playlist_Remove_Button_Click(object sender, RoutedEventArgs e)
         {
-            PlaylistFunctions.RemoveSongFromCurrentPlaylist();
-            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+            string name = PlaylistContainer.SelectedItem as string;
+            foreach (BmpSong s in _currentPlaylist)
+            {
+                if (s.Title == name)
+                {
+                    _currentPlaylist.Remove(s);
+                    break;
+                }
+            }
+            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist);
         }
 
+        /// <summary>
+        /// Delete a playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Playlist_Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             ShowingPlaylists = true;
-            PlaylistFunctions.DeleteCurrentPlaylist();
-            PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylists();
+            BmpCoffer.Instance.DeletePlaylist(_currentPlaylist);
+            PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
 
         private void PlaylistContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (ShowingPlaylists)
             {
-                PlaylistFunctions.SetCurrentPlaylist((string)PlaylistContainer.SelectedItem);
+                _currentPlaylist = BmpCoffer.Instance.GetPlaylist((string)PlaylistContainer.SelectedItem);
                 ShowingPlaylists = false;
-                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems();
+                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist);
                 return;
             }
-            PlaylistFunctions.SetCurrentCurrentSong((string)PlaylistContainer.SelectedItem);
-            this.SongName.Text = PlaybackFunctions.GetSongName();
+
+            PlaybackFunctions.LoadSongFromPlaylist(PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, (string)PlaylistContainer.SelectedItem));
+            this.SongName.Text = PlaybackFunctions.CurrentSong.Title;
             this.InstrumentInfo.Content = PlaybackFunctions.InstrumentName;
             return;
         }

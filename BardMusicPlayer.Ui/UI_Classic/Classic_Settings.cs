@@ -2,7 +2,6 @@
 using BardMusicPlayer.Maestro;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Ui.Functions;
-using BardMusicPlayer.UI.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +20,7 @@ namespace BardMusicPlayer.Ui.Classic
         {
             this.Autostart_source.SelectedIndex = BmpPigeonhole.Instance.AutostartMethod;
 
+            this.LocalOrchestraBox.IsChecked = BmpPigeonhole.Instance.LocalOrchestra;
             this.HoldNotesBox.IsChecked = BmpPigeonhole.Instance.HoldNotes;
             this.ForcePlaybackBox.IsChecked = BmpPigeonhole.Instance.ForcePlayback;
 
@@ -40,14 +40,19 @@ namespace BardMusicPlayer.Ui.Classic
             Globals.Settings.AutostartType = (Globals.Settings.Autostart_Types)d;
         }
 
+        private void LocalOrchestraBox_Checked(object sender, RoutedEventArgs e)
+        {
+            BmpPigeonhole.Instance.LocalOrchestra = LocalOrchestraBox.IsChecked ?? false;
+        }
+
         private void Hold_Notes_Checked(object sender, RoutedEventArgs e)
         {
-            BmpPigeonhole.Instance.HoldNotes = (HoldNotesBox.IsChecked ?? false);
+            BmpPigeonhole.Instance.HoldNotes = HoldNotesBox.IsChecked ?? false;
         }
 
         private void Force_Playback_Checked(object sender, RoutedEventArgs e)
         {
-            BmpPigeonhole.Instance.ForcePlayback = (ForcePlaybackBox.IsChecked ?? false);
+            BmpPigeonhole.Instance.ForcePlayback = ForcePlaybackBox.IsChecked ?? false;
         }
 
         private void MIDI_Input_Device_SelectionChanged(object sender, SelectionChangedEventArgs e)

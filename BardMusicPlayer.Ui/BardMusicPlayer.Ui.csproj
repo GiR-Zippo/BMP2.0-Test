@@ -271,6 +271,7 @@
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_Classic\Classic_Settings.cs" />
+    <Compile Include="UI_Classic\Classic_Siren.cs" />
     <Compile Include="UI_Skinned\BardWindow\BardsWindow.xaml.cs">
       <DependentUpon>BardsWindow.xaml</DependentUpon>
     </Compile>

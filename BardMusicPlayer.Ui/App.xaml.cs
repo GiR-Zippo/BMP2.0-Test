@@ -13,10 +13,7 @@ using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Maestro;
 using System.Diagnostics;
-
-#if SIREN
 using BardMusicPlayer.Siren;
-#endif
 
 namespace BardMusicPlayer.Ui
 {
@@ -40,29 +37,26 @@ namespace BardMusicPlayer.Ui
             BmpSeer.Instance.Start();
             //BmpGrunt.Instance.Start();
             BmpMaestro.Instance.Start();
-#if SIREN
             BmpSiren.Instance.Setup();
-#endif
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             //LogManager.Shutdown();
-#if SIREN
+
             if (BmpSiren.Instance.IsReadyForPlayback)
                 BmpSiren.Instance.Stop();
             BmpSiren.Instance.ShutDown();
-#endif
+
             BmpMaestro.Instance.Stop();
             //BmpGrunt.Instance.Stop();
             BmpSeer.Instance.Stop();
             BmpSeer.Instance.DestroyFirewall("BardMusicPlayer");
             BmpCoffer.Instance.Dispose();
             BmpPigeonhole.Instance.Dispose();
-#if SIREN
+
             //Wasabi hangs kill it with fire
             Process.GetCurrentProcess().Kill();
-#endif
         }
     }
 }
