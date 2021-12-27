@@ -87,7 +87,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Instance_TrackNumberChanged(object sender, Maestro.Events.TrackNumberChangedEvent e)
         {
-            this.Dispatcher.BeginInvoke(new Action(() => this.UpdateTrackNumberAndInstrument(e.TrackNumber)));
+            this.Dispatcher.BeginInvoke(new Action(() => this.UpdateTrackNumberAndInstrument(e)));
         }
 
         public void EnsembleStart()
@@ -119,9 +119,11 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
-        private void UpdateTrackNumberAndInstrument(int trackumber)
+        private void UpdateTrackNumberAndInstrument(Maestro.Events.TrackNumberChangedEvent e)
         {
-            Globals.Globals.CurrentTrack = trackumber;
+            if (!e.IsHost)
+                return;
+            Globals.Globals.CurrentTrack = e.TrackNumber;
             PlaybackFunctions.SetInstrumentName();
             WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
             WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());

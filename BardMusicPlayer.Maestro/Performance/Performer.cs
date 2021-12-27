@@ -21,7 +21,6 @@ namespace BardMusicPlayer.Maestro.Performance
         public int OctaveShift { get; set; } = 0;
         public int TrackNumber { get; set; } = 1;
         public bool PerformerEnabled { get; set; } = true;
-        public string PerformerName { get; set; } = "";
         private bool holdNotes { get; set; } = true;
         private bool forcePlayback { get; set; } = false;
 
@@ -35,8 +34,13 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public Game game;
 
-        public string PlayerName { get { return game.PlayerName; } }
-        public string HomeWorld { get { return game.HomeWorld; } }
+        public string PlayerName { get { return game.PlayerName ?? "Unknown"; } }
+        public string HomeWorld { get { return game.HomeWorld ?? "Unknown"; } }
+        public string TrackInstrument { get 
+        {
+                if (sequencer == null)
+                    return "Unknown";
+            return sequencer.GetTrackPreferredInstrument(TrackNumber).Name ?? "Unknown"; } }
 
         private bool performanceUp { get; set; } = false;
 
@@ -92,7 +96,6 @@ namespace BardMusicPlayer.Maestro.Performance
                 hook.Hook(arg.Process, false);
                 hotkeys.LoadKeybindDat(arg.ConfigId);
                 hotbar.LoadHotbarDat(arg.ConfigId);
-                PerformerName = arg.PlayerName;
                 PId = arg.Pid;
                 game = arg;
             }

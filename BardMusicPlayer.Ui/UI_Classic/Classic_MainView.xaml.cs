@@ -101,7 +101,8 @@ namespace BardMusicPlayer.Ui.Classic
 
         public void TracknumberChanged(Maestro.Events.TrackNumberChangedEvent e)
         {
-            NumValue = e.TrackNumber;
+            if (e.IsHost)
+                NumValue = e.TrackNumber;
             
         }
 

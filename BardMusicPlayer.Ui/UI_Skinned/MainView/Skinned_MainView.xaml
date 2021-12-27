@@ -132,7 +132,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
-            <Image Grid.Column="1" x:Name="InstrumentDigit" HorizontalAlignment="Left" Height="9" Width="102" />
+            <Image Grid.Column="1" x:Name="InstrumentDigit" Margin="-35,0,0,0" HorizontalAlignment="Left" Height="9" Width="112" />
             <Image Grid.Column="2" x:Name="SmallTrackDigit" Margin="0,-5,0,0" HorizontalAlignment="Left" Height="11" Width="18" />
 
         </Grid>

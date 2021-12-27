@@ -5,26 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BardMusicPlayer.Ui.Skinned"
         mc:Ignorable="d"
-        Title="Settings" Height="450" Width="668.75">
-    <Grid>
-        <TabControl TabStripPlacement="Left" Margin="0,0,-83,0" HorizontalAlignment="Left" Width="657" >
+        Title="Settings" Height="450" Width="378.938">
+    <Grid HorizontalAlignment="Left" Width="Auto">
+        <TabControl TabStripPlacement="Left" Margin="0,0,-291,0" Width="Auto" >
             <TabItem Header="General">
-                <Grid Background="#FFE5E5E5" >
+                <Grid Background="#FFE5E5E5" HorizontalAlignment="Left" Width="285" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="11"/>
                     </Grid.RowDefinitions>
                     <CheckBox Grid.Row="1" Margin="10,10,0,0" x:Name="ClassicSkin" Content="Use classic BMP 1.x Ui (needs BMP restart)" Unchecked="ClassicSkin_Checked" Checked="ClassicSkin_Checked"/>
-                    <Button   Grid.Row="2" Margin="10,0,0,0" Content="Load Skin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" />
+                    <Button   Grid.Row="2" Margin="10,0,0,0" Content="Load Skin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click" Grid.RowSpan="2" />
                 </Grid>
             </TabItem>
+
             <TabItem Header="SyncSettings">
-                <Grid Background="#FFE5E5E5">
+                <Grid Background="#FFE5E5E5" Width="285">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
@@ -41,8 +42,9 @@
             </TabItem>
 
             <TabItem Header="Playback">
-                <Grid Background="#FFE5E5E5">
+                <Grid Background="#FFE5E5E5" Width="285">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -54,7 +56,7 @@
                     <Label Margin="10,0,0,0"     Grid.Row="3" Content="MIDI Input device" HorizontalAlignment="Left"/>
                     <ComboBox Margin="120,0,0,0" Grid.Row="3" x:Name="MIDI_Input_DeviceBox" 
                                         DisplayMemberPath="Value"
-                                        SelectionChanged="MIDI_Input_Device_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="200">
+                                        SelectionChanged="MIDI_Input_Device_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150">
                         <ComboBoxItem>None</ComboBoxItem>
                     </ComboBox>
                 </Grid>

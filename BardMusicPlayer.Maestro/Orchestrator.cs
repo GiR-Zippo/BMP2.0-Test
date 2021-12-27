@@ -110,8 +110,7 @@ namespace BardMusicPlayer.Maestro
                 if (perf.Value.game.Pid == game.Pid)
                 {
                     perf.Value.TrackNumber = tracknumber;
-                    if (perf.Value.HostProcess)
-                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber));
+                    BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber, perf.Value.HostProcess));
                 }
             }
         }
@@ -128,8 +127,7 @@ namespace BardMusicPlayer.Maestro
                 if (perf.Value.PId == p.PId)
                 {
                     perf.Value.TrackNumber = tracknumber;
-                    if (perf.Value.HostProcess)
-                        BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber));
+                    BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber, perf.Value.HostProcess));
                 }
             }
         }

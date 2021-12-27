@@ -40,7 +40,6 @@ namespace BardMusicPlayer.Ui.Functions
             
             CurrentSong = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
             BmpMaestro.Instance.SetSong(openFileDialog.FileName);
-            BmpMaestro.Instance.SetTracknumber(Globals.Globals.CurrentTrack);
             SetInstrumentName();
             return true;
         }
@@ -49,9 +48,7 @@ namespace BardMusicPlayer.Ui.Functions
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             CurrentSong = item;
-            //BmpMaestro.Instance.DestroySongFromLocalPerformer();
             BmpMaestro.Instance.SetSong(CurrentSong);
-            BmpMaestro.Instance.SetTracknumber(Globals.Globals.CurrentTrack);
             SetInstrumentName();
         }
 
