@@ -11,10 +11,10 @@ namespace BardMusicPlayer.Maestro
     {
         public EventHandler<CurrentPlayPositionEvent> OnPlaybackTimeChanged;
         public EventHandler<MaxPlayTimeEvent> OnSongMaxTime;
+        public EventHandler<bool> OnSongLoaded;
         public EventHandler<bool> OnPlaybackStopped;
         public EventHandler<bool> OnPerformerChanged;
         public EventHandler<TrackNumberChangedEvent> OnTrackNumberChanged;
-
         private ConcurrentQueue<MaestroEvent> _eventQueue;
         private bool _eventQueueOpen;
 
@@ -36,6 +36,11 @@ namespace BardMusicPlayer.Maestro
                                 break;
                             case MaxPlayTimeEvent maxPlayTime:
                                 OnSongMaxTime(this, maxPlayTime);
+                                break;
+                            case SongLoadedEvent songloaded:
+                                if (OnSongLoaded == null)
+                                    break;
+                                OnSongLoaded(this, true);
                                 break;
                             case PlaybackStoppedEvent playbackStopped:
                                 if (OnPlaybackStopped == null)

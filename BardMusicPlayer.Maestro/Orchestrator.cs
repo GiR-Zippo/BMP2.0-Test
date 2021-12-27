@@ -381,7 +381,7 @@ namespace BardMusicPlayer.Maestro
             {
                 Instance_InstrumentHeldChanged(e);
             };
-
+            BmpMaestro.Instance.PublishEvent(new SongLoadedEvent());
             _updaterTokenSource = new CancellationTokenSource();
             Task.Factory.StartNew(() => Updater(_updaterTokenSource.Token), TaskCreationOptions.LongRunning);
         }
