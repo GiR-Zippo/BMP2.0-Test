@@ -22,6 +22,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Prev_Button_Click(object sender, RoutedEventArgs e)
         {
             this.Prev_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_PREVIOUS_BUTTON];
+            _PlaylistView.PlayPrevSong();
         }
         private void Prev_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Prev_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_PREVIOUS_BUTTON_ACTIVE]; }
@@ -73,6 +74,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Next_Button_Click(object sender, RoutedEventArgs e)
         {
             this.Next_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_NEXT_BUTTON];
+            _PlaylistView.PlayNextSong();
         }
         private void Next_Button_Down(object sender, MouseButtonEventArgs e)
         { this.Next_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_NEXT_BUTTON_ACTIVE]; }
@@ -117,7 +119,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
 
         /// <summary>
-        ///     switch a track down
+        ///     switch a track Up
         /// </summary>
         private void TrackUp_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -132,10 +134,8 @@ namespace BardMusicPlayer.Ui.Skinned
         private void TrackUp_Button_Up(object sender, MouseButtonEventArgs e)
         { this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED]; }
 
-
-
         /// <summary>
-        ///     close the player
+        ///     open the settings
         /// </summary>
         private void Settings_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -162,13 +162,67 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Close_Button_Up(object sender, MouseButtonEventArgs e)
         { this.Close_Button.Background = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_CLOSE_BUTTON]; }
 
-
-        private void Loop_Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        ///     Show/Hide Playlist
+        /// </summary>
+        private void Playlist_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            if (_PlaylistView.Visibility == Visibility.Visible)
+            {
+                _PlaylistView.Visibility = Visibility.Hidden;
+                this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON];
+            }
+            else
+            {
+                _PlaylistView.Visibility = Visibility.Visible;
+                this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_SELECTED];
+            }
+        }
+        private void Playlist_Button_Down(object sender, MouseButtonEventArgs e)
+        {
+           if (_PlaylistView.Visibility == Visibility.Visible)
+                this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_DEPRESSED];
+            else
+                this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_DEPRESSED_SELECTED];
+        }
+        private void Playlist_Button_Up(object sender, MouseButtonEventArgs e)
+        {
+            if (_PlaylistView.Visibility == Visibility.Visible)
+                this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON];
+            else
+                this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_SELECTED];
         }
 
-        private void Skip_Button_Click(object sender, RoutedEventArgs e)
+
+        private void Random_Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (_PlaylistView.NormalPlay)
+            {
+                _PlaylistView.NormalPlay = false;
+                this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_SELECTED];
+            }
+            else
+            {
+                _PlaylistView.NormalPlay = true;
+                this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON];
+            }
+        }
+        private void Random_Button_Down(object sender, MouseButtonEventArgs e)
+        {
+            if (_PlaylistView.NormalPlay)
+                this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_DEPRESSED];
+            else
+                this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_SELECTED_DEPRESSED];
+        }
+        private void Random_Button_Up(object sender, MouseButtonEventArgs e)
+        {
+            if (_PlaylistView.NormalPlay)
+                this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_SELECTED];
+            else
+                this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON];
+        }
+
+        private void Loop_Button_Click(object sender, RoutedEventArgs e)
         {
 
         }

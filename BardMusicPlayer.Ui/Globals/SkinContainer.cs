@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace BardMusicPlayer.Ui.Globals.SkinContainer
@@ -182,6 +179,26 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             EQ_PREAMP_LINE
         }
 
+        public enum SHUFREP_TYPES
+        {
+            MAIN_SHUFFLE_BUTTON =0,
+            MAIN_SHUFFLE_BUTTON_DEPRESSED,
+            MAIN_SHUFFLE_BUTTON_SELECTED,
+            MAIN_SHUFFLE_BUTTON_SELECTED_DEPRESSED,
+            MAIN_REPEAT_BUTTON,
+            MAIN_REPEAT_BUTTON_DEPRESSED,
+            MAIN_REPEAT_BUTTON_SELECTED,
+            MAIN_REPEAT_BUTTON_SELECTED_DEPRESSED,
+            MAIN_EQ_BUTTON,
+            MAIN_EQ_BUTTON_SELECTED,
+            MAIN_EQ_BUTTON_DEPRESSED,
+            MAIN_EQ_BUTTON_DEPRESSED_SELECTED,
+            MAIN_PLAYLIST_BUTTON,
+            MAIN_PLAYLIST_BUTTON_SELECTED,
+            MAIN_PLAYLIST_BUTTON_DEPRESSED,
+            MAIN_PLAYLIST_BUTTON_DEPRESSED_SELECTED
+        }
+
         public enum MEDIABROWSER_TYPES
         {
             MEDIABROWSER_TOP_LEFT =0,
@@ -251,6 +268,7 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
         public static Dictionary<PLAYLIST_TYPES, ImageBrush> PLAYLIST = new Dictionary<PLAYLIST_TYPES, ImageBrush> { };
         public static Dictionary<SWINDOW_TYPES, ImageBrush> SWINDOW = new Dictionary<SWINDOW_TYPES, ImageBrush> { };
         public static Dictionary<EQ_TYPES, ImageBrush> EQUALIZER = new Dictionary<EQ_TYPES, ImageBrush> { };
+        public static Dictionary<SHUFREP_TYPES, ImageBrush> SHUFREP = new Dictionary<SHUFREP_TYPES, ImageBrush> { };
         public static Dictionary<MEDIABROWSER_TYPES, ImageBrush> MEDIABROWSER = new Dictionary<MEDIABROWSER_TYPES, ImageBrush> { };
         public static Dictionary<GENEX_TYPES, ImageBrush> GENEX = new Dictionary<GENEX_TYPES, ImageBrush> { };
         public static Dictionary<VISCOLOR_TYPES, System.Drawing.Color> VISCOLOR = new Dictionary<VISCOLOR_TYPES, System.Drawing.Color> { };

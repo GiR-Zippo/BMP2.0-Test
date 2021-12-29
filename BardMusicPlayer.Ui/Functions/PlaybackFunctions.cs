@@ -17,7 +17,8 @@ namespace BardMusicPlayer.Ui.Functions
         {
             PLAYBACK_STATE_STOPPED = 0,
             PLAYBACK_STATE_PLAYING,
-            PLAYBACK_STATE_PAUSE
+            PLAYBACK_STATE_PAUSE,
+            PLAYBACK_STATE_PLAYNEXT //indicates the next song should be played
         };
 
         public static PlaybackState_Enum PlaybackState;

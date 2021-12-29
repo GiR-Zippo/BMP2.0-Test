@@ -85,7 +85,6 @@ namespace BardMusicPlayer.Ui.Skinned
             {SkinContainer.TITLEBAR_TYPES.MAIN_SHADE_POSITION_THUMB_RIGHT, new List<int> {23, 36, 3, 7 } },
         };
 
-
         Dictionary<SkinContainer.EQ_TYPES, List<int>> eqdata = new Dictionary<SkinContainer.EQ_TYPES, List<int>>
         {
             { SkinContainer.EQ_TYPES.EQ_WINDOW_BACKGROUND, new List<int> {0,0,275, 116}},
@@ -110,6 +109,26 @@ namespace BardMusicPlayer.Ui.Skinned
             { SkinContainer.EQ_TYPES.EQ_PRESETS_BUTTON, new List<int> {224,164,44, 12}},
             { SkinContainer.EQ_TYPES.EQ_PRESETS_BUTTON_SELECTED, new List<int> {224,176,44,12}},
             { SkinContainer.EQ_TYPES.EQ_PREAMP_LINE, new List<int> {0,314,113, 1}}
+        };
+
+        Dictionary<SkinContainer.SHUFREP_TYPES, List<int>> shufrepdata = new Dictionary<SkinContainer.SHUFREP_TYPES, List<int>>
+        {
+            { SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON, new List<int> {28,0,  47,  15}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_DEPRESSED, new List<int> {28,15, 47, 15,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_SELECTED, new List<int> {28, 30, 47, 15,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON_SELECTED_DEPRESSED, new List<int> {28, 45, 47, 15,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON, new List<int> {0,0,  28,  15}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_DEPRESSED, new List<int> {0,15, 28, 15,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_SELECTED, new List<int> {0, 30, 28, 15,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_SELECTED_DEPRESSED, new List<int> {0, 45, 28, 15,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_EQ_BUTTON, new List<int> {0,61,  23, 12}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_EQ_BUTTON_SELECTED, new List<int> {0,73,  23,  12}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_EQ_BUTTON_DEPRESSED, new List<int> {46,61,  23,  12}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_EQ_BUTTON_DEPRESSED_SELECTED, new List<int> {46, 73, 23, 12,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON, new List<int> {23,61,  23,  12}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_SELECTED, new List<int> {23, 73, 23, 12,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_DEPRESSED, new List<int> {69, 61, 23, 12,}},
+            { SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_DEPRESSED_SELECTED, new List<int> {69, 73, 23, 12, } }
         };
 
         Dictionary<SkinContainer.MEDIABROWSER_TYPES, List<int>> mediabrowserdata = new Dictionary<SkinContainer.MEDIABROWSER_TYPES, List<int>>
@@ -251,6 +270,7 @@ namespace BardMusicPlayer.Ui.Skinned
             SkinContainer.NUMBERS.Clear();
             SkinContainer.PLAYLIST.Clear();
             SkinContainer.PLAYLISTCOLOR.Clear();
+            SkinContainer.SHUFREP.Clear();
             SkinContainer.MEDIABROWSER.Clear();
             SkinContainer.SWINDOW.Clear();
             SkinContainer.EQUALIZER.Clear();
@@ -267,6 +287,7 @@ namespace BardMusicPlayer.Ui.Skinned
             loadTransportbarAndClutter(filename);
             loadPlaylistDesign(filename);
             loadPlaylistColor(filename);
+            loadShufRepDesign(filename);
             loadMediaBrowserWindow(filename);
             loadAVSWindow(filename);
             loadGenEx(filename);
@@ -282,6 +303,9 @@ namespace BardMusicPlayer.Ui.Skinned
             this.TitleBar.Fill = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_TITLE_BAR];
             this.Settings_Button.Background = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_OPTIONS_BUTTON];
             this.Close_Button.Background = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_CLOSE_BUTTON];
+
+            this.Playlist_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_PLAYLIST_BUTTON_SELECTED];
+            this.Random_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_SHUFFLE_BUTTON];
 
             this.Prev_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_PREVIOUS_BUTTON];
             this.Play_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_PLAY_BUTTON];
@@ -408,6 +432,28 @@ namespace BardMusicPlayer.Ui.Skinned
             Application.Current.Resources["PLAYLIST_SLIDER_THUMB"] = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_SCROLL_HANDLE];
             Application.Current.Resources["PLAYLIST_SLIDER_THUMB_SELECTED"] = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_SCROLL_HANDLE_SELECTED];
 
+        }
+
+        /// <summary>
+        /// load the shufle repeat button design
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
+        private void loadShufRepDesign(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "shufrep.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("shufrep.bmp");
+            foreach (KeyValuePair<SkinContainer.SHUFREP_TYPES, List<int>> data in shufrepdata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.SHUFREP.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
         }
 
         /// <summary>

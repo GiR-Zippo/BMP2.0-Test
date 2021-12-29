@@ -37,7 +37,7 @@ namespace BardMusicPlayer.Ui.Skinned
             _PlaylistView = new Skinned_PlaylistView();
             _BardListView = new BardsWindow();
 
-            var mw = ((MainWindow)System.Windows.Application.Current.MainWindow);
+            var mw = (MainWindow)Application.Current.MainWindow;
             _PlaylistView.Show();
             _BardListView.Show();
             
@@ -45,11 +45,10 @@ namespace BardMusicPlayer.Ui.Skinned
             _PlaylistView.Left = ((MainWindow)Application.Current.MainWindow).Left;
             _PlaylistView.OnLoadSongFromPlaylist += OnLoadSongFromPlaylist;
 
-            
-
             BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
+            BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
 
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
@@ -63,6 +62,9 @@ namespace BardMusicPlayer.Ui.Skinned
             Scroller = new CancellationTokenSource();
             UpdateScroller(Scroller.Token, PlaybackFunctions.GetSongName()).ConfigureAwait(false);
             WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
+
+            if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYNEXT)
+                PlaybackFunctions.PlaySong();
         }
 
         private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
@@ -88,6 +90,11 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Instance_TrackNumberChanged(object sender, Maestro.Events.TrackNumberChangedEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.UpdateTrackNumberAndInstrument(e)));
+        }
+
+        private void Instance_PlaybackStopped(object sender, bool e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.OnSongStopped()));
         }
 
         public void EnsembleStart()
@@ -128,6 +135,12 @@ namespace BardMusicPlayer.Ui.Skinned
             WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
             WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
             WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
+        }
+
+        private void OnSongStopped()
+        {
+            /*if (_PlaylistView.LoopPlay)
+                _PlaylistView.PlayNextSong();*/
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)

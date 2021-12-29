@@ -21,6 +21,8 @@ namespace BardMusicPlayer.Ui.Skinned
         public EventHandler<BmpSong> OnLoadSongFromPlaylist;
 
         private IPlaylist _currentPlaylist = null; //The currently used playlist
+        public bool NormalPlay { get; set; } = true; //True if normal or false if shuffle
+        public bool LoopPlay { get; set; } = true;
 
         public Skinned_PlaylistView()
         {
@@ -75,6 +77,49 @@ namespace BardMusicPlayer.Ui.Skinned
                 return;
             foreach (BmpSong d in _currentPlaylist)
                 PlaylistContainer.Items.Add(d.Title);
+        }
+
+        public void PlayPrevSong()
+        {
+            if (NormalPlay)
+            {
+                int idx = PlaylistContainer.SelectedIndex;
+                if (idx- 1 == -1)
+                    return;
+                PlaylistContainer.SelectedIndex = idx - 1;
+            }
+            else
+            {
+                Random rnd = new Random();
+                PlaylistContainer.SelectedIndex = rnd.Next(0, PlaylistContainer.Items.Count);
+            }
+
+            string item = PlaylistContainer.SelectedItem as string;
+            BmpSong song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, item);
+            PlaybackFunctions.LoadSongFromPlaylist(song);
+            PlaybackFunctions.PlaybackState = PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYNEXT;
+            OnLoadSongFromPlaylist?.Invoke(this, song);
+        }
+
+        public void PlayNextSong()
+        {
+            if (NormalPlay)
+            {
+                int idx = PlaylistContainer.SelectedIndex;
+                if ( idx + 1 >= PlaylistContainer.Items.Count)
+                    return;
+                PlaylistContainer.SelectedIndex = idx + 1;
+            }
+            else
+            {
+                Random rnd = new Random();
+                PlaylistContainer.SelectedIndex = rnd.Next(0, PlaylistContainer.Items.Count);
+            }
+            string item = PlaylistContainer.SelectedItem as string;
+            BmpSong song = PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, item);
+            PlaybackFunctions.LoadSongFromPlaylist(song);
+            PlaybackFunctions.PlaybackState = PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYNEXT;
+            OnLoadSongFromPlaylist?.Invoke(this, song);
         }
 
         private void PlaylistContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
