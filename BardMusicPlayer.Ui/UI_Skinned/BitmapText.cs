@@ -55,6 +55,8 @@ namespace BardMusicPlayer.Ui.Skinned
         protected async Task UpdateScroller(CancellationToken stoppingToken, string data)
         {
             string songname = data ;
+            scrollpos = 0;
+            scrolldir = true;
             while (!stoppingToken.IsCancellationRequested)
             {
                 WriteSongField(songname);

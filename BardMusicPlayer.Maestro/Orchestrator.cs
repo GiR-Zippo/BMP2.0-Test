@@ -190,10 +190,13 @@ namespace BardMusicPlayer.Maestro
         /// <param name="device"></param>
         public void OpenInputDevice(int device)
         {
-            if (performer.Count > 0)
+            foreach (var perf in performer)
             {
-                performer.First().Value.Sequencer.CloseInputDevice();
-                performer.First().Value.Sequencer.OpenInputDevice(device);
+                if (perf.Value.HostProcess)
+                {
+                    perf.Value.Sequencer.CloseInputDevice();
+                    perf.Value.Sequencer.OpenInputDevice(device);
+                }
             }
         }
 
@@ -382,8 +385,17 @@ namespace BardMusicPlayer.Maestro
                 Instance_InstrumentHeldChanged(e);
             };
             BmpMaestro.Instance.PublishEvent(new SongLoadedEvent());
+
+            Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
+            perf.Sequencer.PlayEnded += Sequencer_PlayEnded;
+
             _updaterTokenSource = new CancellationTokenSource();
             Task.Factory.StartNew(() => Updater(_updaterTokenSource.Token), TaskCreationOptions.LongRunning);
+        }
+
+        private void Sequencer_PlayEnded(object sender, EventArgs e)
+        {
+            BmpMaestro.Instance.PublishEvent(new PlaybackStoppedEvent());
         }
 
         /// <summary>
@@ -411,12 +423,12 @@ namespace BardMusicPlayer.Maestro
         {
             while (!token.IsCancellationRequested)
             {
-                //Get first performer
-                Performer perf = performer.First().Value;
+                //Get host performer
+                Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
 
                 BmpMaestro.Instance.PublishEvent(new CurrentPlayPositionEvent(perf.Sequencer.CurrentTimeAsTimeSpan, perf.Sequencer.CurrentTick));
-                if (!perf.Sequencer.IsPlaying)
-                    BmpMaestro.Instance.PublishEvent(new PlaybackStoppedEvent());
+                /*if (!perf.Sequencer.IsPlaying)
+                    BmpMaestro.Instance.PublishEvent(new PlaybackStoppedEvent());*/
                 await Task.Delay(200, token);
             }
             return;

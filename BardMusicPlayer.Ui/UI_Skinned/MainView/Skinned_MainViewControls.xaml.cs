@@ -1,12 +1,4 @@
-﻿using BardMusicPlayer.Transmogrify.Song;
-using BardMusicPlayer.Ui.Globals.SkinContainer;
-using BardMusicPlayer.Ui.Globals;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BardMusicPlayer.Ui.Globals.SkinContainer;
 using System.Windows;
 using System.Windows.Input;
 using BardMusicPlayer.Ui.Functions;
@@ -224,9 +216,30 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Loop_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            if (_PlaylistView.LoopPlay)
+            {
+                _PlaylistView.LoopPlay = false;
+                this.Loop_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON];
+            }
+            else
+            {
+                _PlaylistView.LoopPlay = true;
+                this.Loop_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_SELECTED];
+            }
         }
-
-        
+        private void Loop_Button_Down(object sender, MouseButtonEventArgs e)
+        {
+            if (_PlaylistView.LoopPlay)
+                this.Loop_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_DEPRESSED];
+            else
+                this.Loop_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_SELECTED_DEPRESSED];
+        }
+        private void Loop_Button_Up(object sender, MouseButtonEventArgs e)
+        {
+            if (_PlaylistView.LoopPlay)
+                this.Loop_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON];
+            else
+                this.Loop_Button.Background = SkinContainer.SHUFREP[SkinContainer.SHUFREP_TYPES.MAIN_REPEAT_BUTTON_SELECTED];
+        }
     }
 }

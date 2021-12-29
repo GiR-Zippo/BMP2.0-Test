@@ -139,8 +139,8 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void OnSongStopped()
         {
-            /*if (_PlaylistView.LoopPlay)
-                _PlaylistView.PlayNextSong();*/
+            if (_PlaylistView.LoopPlay)
+                _PlaylistView.PlayNextSong();
         }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)

@@ -134,10 +134,21 @@ Width="Auto" Height="Auto"
                     <TabItem Header="Statistics" />
                     <TabItem Header="Siren">
                         <Grid>
-                            <Button x:Name="Siren_Load" Content="Load" Click="Siren_Load_Click" Height="20" Width="30" Margin="10,10,435,167"/>
-                            <Button x:Name="Siren_Play" Content="Play" Click="Siren_Play_Click" Height="20" Width="30" Margin="42,10,403,167"/>
-                            <Button x:Name="Siren_Stop" Content="Stop" Click="Siren_Stop_Click" Height="20" Width="30" Margin="74,10,371,167"/>
-                            <Slider x:Name="Siren_Volume" Minimum="0" Maximum="3" Orientation="Vertical" Margin="174,23,277,10" ValueChanged="Siren_Volume_ValueChanged"></Slider>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="10"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Row="1" Grid.Column="0" x:Name="Siren_Load" Content="Load the current song" Click="Siren_Load_Click" Height="20" Width="30" />
+                            <Button Grid.Row="2" Grid.Column="0" x:Name="Siren_Play" Content="Play" Click="Siren_Play_Click" Height="20" Width="30" />
+                            <Button Grid.Row="3" Grid.Column="0" x:Name="Siren_Stop" Content="Stop" Click="Siren_Stop_Click" Height="20" Width="30" />
+                            <Slider Grid.Row="1" Grid.Column="1" x:Name="Siren_Volume" Minimum="0" Maximum="3" Orientation="Vertical"  ValueChanged="Siren_Volume_ValueChanged"></Slider>
                         </Grid>
                     </TabItem>
                 </TabControl>

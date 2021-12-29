@@ -22,7 +22,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private IPlaylist _currentPlaylist = null; //The currently used playlist
         public bool NormalPlay { get; set; } = true; //True if normal or false if shuffle
-        public bool LoopPlay { get; set; } = true;
+        public bool LoopPlay { get; set; } = false; //if true play the whole playlist and repeat
 
         public Skinned_PlaylistView()
         {
@@ -107,7 +107,12 @@ namespace BardMusicPlayer.Ui.Skinned
             {
                 int idx = PlaylistContainer.SelectedIndex;
                 if ( idx + 1 >= PlaylistContainer.Items.Count)
-                    return;
+                {
+                    if (LoopPlay)
+                        PlaylistContainer.SelectedIndex = 0;
+                    else
+                        return;
+                }
                 PlaylistContainer.SelectedIndex = idx + 1;
             }
             else
