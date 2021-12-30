@@ -293,6 +293,7 @@ namespace BardMusicPlayer.Ui.Skinned
             //Load the background image
             loadBackgroundMain(filename);
 
+            //Clear the container
             SkinContainer.TITLEBAR.Clear();
             SkinContainer.VOLUME.Clear();
             SkinContainer.BALANCE.Clear();
@@ -313,6 +314,7 @@ namespace BardMusicPlayer.Ui.Skinned
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]));
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS]));
 
+            //load the bitmaps
             loadTitlebarAndButtons(filename);
             loadVolumebar(filename);
             loadBalancebar(filename);
@@ -326,6 +328,7 @@ namespace BardMusicPlayer.Ui.Skinned
             loadAVSWindow(filename);
             loadGenEx(filename);
 
+            //apply skin
             ApplySkin();
         }
 
@@ -334,6 +337,7 @@ namespace BardMusicPlayer.Ui.Skinned
         /// </summary>
         private void ApplySkin()
         {
+            //Set the main window skin
             this.TitleBar.Fill = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_TITLE_BAR_SELECTED];
             this.Settings_Button.Background = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_OPTIONS_BUTTON];
             this.Close_Button.Background = SkinContainer.TITLEBAR[SkinContainer.TITLEBAR_TYPES.MAIN_CLOSE_BUTTON];
@@ -357,12 +361,14 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Trackbar_Background.Fill = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_0];
             this.Octavebar_Background.Fill = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_5];
 
+            //set the global resources
             Application.Current.Resources["MAIN_VOLUME_THUMB"] = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB];
             Application.Current.Resources["MAIN_VOLUME_THUMB_SELECTED"] = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB_SELECTED];
             Application.Current.Resources["MAIN_BALANCE_THUMB"] = SkinContainer.BALANCE[SkinContainer.BALANCE_TYPES.MAIN_BALANCE_THUMB];
             Application.Current.Resources["MAIN_BALANCE_THUMB_SELECTED"] = SkinContainer.BALANCE[SkinContainer.BALANCE_TYPES.MAIN_BALANCE_THUMB_SELECTED];
-
-            SkinContainer.NewSkinLoaded(); //inform all members that a new skin was loaded
+            
+            //inform all members a new skin was loaded
+            SkinContainer.NewSkinLoaded();
         }
 
         #region loaders
@@ -375,7 +381,20 @@ namespace BardMusicPlayer.Ui.Skinned
             BitmapImage image = ExtractBitmapFromZip(filename, "main.bmp");
             if (image == null)
                 image = loadDefaultSkinBitmap("main.bmp");
+
             this.Background = new ImageBrush(image);
+
+            /*Image img = ExtractImageFromZip(filename, "main.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("main.bmp");
+
+            Bitmap bitmap = new Bitmap(img.Width, img.Height);
+            var graphics = Graphics.FromImage(bitmap);
+            graphics.DrawImage(img, new Rectangle(0,0, img.Width, img.Height), 0, 0, img.Width, img.Height, GraphicsUnit.Pixel, GetTransparentAttribFromColor()); ;
+            this.Background = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions()));*/
+
         }
 
 
@@ -991,6 +1010,15 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             string x = data.Split('#')[1];
             return ColorTranslator.FromHtml("#"+x);
+        }
+
+        System.Drawing.Imaging.ImageAttributes GetTransparentAttribFromColor()
+        {
+            System.Drawing.Color lowerColor = System.Drawing.Color.FromArgb(100, 0, 100);
+            System.Drawing.Color upperColor = System.Drawing.Color.FromArgb(100, 0, 100);
+            System.Drawing.Imaging.ImageAttributes imageAttr = new System.Drawing.Imaging.ImageAttributes();
+            imageAttr.SetColorKey(lowerColor, upperColor, System.Drawing.Imaging.ColorAdjustType.Default);
+            return imageAttr;
         }
         #endregion
     }

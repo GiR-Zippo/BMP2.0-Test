@@ -147,7 +147,9 @@
                 <ColumnDefinition Width="21"/>
                 <ColumnDefinition Width="1.5"/>
                 <ColumnDefinition Width="21"/>
+                <ColumnDefinition Width="15"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="22"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="Prev_Button" 
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
@@ -164,6 +166,7 @@
             <Button Grid.Row="1" Grid.Column="9" Style="{StaticResource ImageButton}" x:Name="Remove_Button" 
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
                                         Click="Remove_Button_Click" PreviewMouseUp="Remove_Button_Up" PreviewMouseDown="Remove_Button_Down"  BorderThickness="0" />
+            <TextBox Grid.Row="1" Grid.Column="11" x:Name="PlaylistName_Box" Height="18" Width="271" HorizontalAlignment="Left" Margin="0,-14,0,0"/>
         </Grid>
     </Grid>
 </Window>

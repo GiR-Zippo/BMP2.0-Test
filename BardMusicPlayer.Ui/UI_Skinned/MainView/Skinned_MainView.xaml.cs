@@ -38,23 +38,25 @@ namespace BardMusicPlayer.Ui.Skinned
             InitializeComponent();
             LoadSkin(BmpPigeonhole.Instance.LastSkin);
 
-            _PlaylistView = new Skinned_PlaylistView();
+            //open the bards window
             _BardListView = new BardsWindow();
-
-            var mw = (MainWindow)Application.Current.MainWindow;
-            _PlaylistView.Show();
             _BardListView.Show();
 
+            //open the playlist and bind the event
+            _PlaylistView = new Skinned_PlaylistView();
+            _PlaylistView.Show();
             _PlaylistView.Top = ((MainWindow)Application.Current.MainWindow).Top + ((MainWindow)Application.Current.MainWindow).ActualHeight;
             _PlaylistView.Left = ((MainWindow)Application.Current.MainWindow).Left;
             _PlaylistView.OnLoadSongFromPlaylist += OnLoadSongFromPlaylist;
 
-            BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
+            //bind events from maestro
             BmpMaestro.Instance.OnSongLoaded += Instance_OnSongLoaded;
+            BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
             BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
 
+            //same for seer
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
 
@@ -65,6 +67,7 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Octavebar_Slider.Minimum = 0;
             this.Octavebar_Slider.Value = 4;
 
+            //if we have selected all tracks in the config use it
             if (BmpPigeonhole.Instance.PlayAllTracks)
                 BmpMaestro.Instance.SetTracknumberOnHost(0);
 
@@ -72,42 +75,34 @@ namespace BardMusicPlayer.Ui.Skinned
             WriteSmallDigitField(track.ToString());
         }
 
+        #region EventCallbacks
+        /// <summary>
+        /// called from playlist if a song should be loaded
+        /// </summary>
         private void OnLoadSongFromPlaylist(object sender, BmpSong e)
         {
+            //Cancel and rebuild the scroller
             Scroller.Cancel();
             Scroller = new CancellationTokenSource();
             UpdateScroller(Scroller.Token, PlaybackFunctions.GetSongName()).ConfigureAwait(false);
             WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
 
+            //if playlist is on autoplay, play next song
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYNEXT)
                 PlaybackFunctions.PlaySong();
         }
-
-        private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent.ChatLogCode, seerEvent.ChatLogLine)));
-        }
-
-        private void Instance_EnsembleStarted(Seer.Events.EnsembleStarted seerEvent)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() => this.EnsembleStart()));
-        }
-
-        private void Instance_PlaybackMaxTime(object sender, Maestro.Events.MaxPlayTimeEvent e)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackMaxTime(e)));
-        }
-
         private void Instance_OnSongLoaded(object sender, Maestro.Events.SongLoadedEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.OnSongLoaded(e)));
         }
-
+        private void Instance_PlaybackMaxTime(object sender, Maestro.Events.MaxPlayTimeEvent e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackMaxTime(e)));
+        }
         private void Instance_PlaybackTimeChanged(object sender, Maestro.Events.CurrentPlayPositionEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackTimeChanged(e)));
         }
-
         private void Instance_TrackNumberChanged(object sender, Maestro.Events.TrackNumberChangedEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.UpdateTrackNumberAndInstrument(e)));
@@ -117,7 +112,74 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.OnSongStopped()));
         }
+        private void Instance_EnsembleStarted(Seer.Events.EnsembleStarted seerEvent)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.EnsembleStart()));
+        }
+        private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent.ChatLogCode, seerEvent.ChatLogLine)));
+        }
 
+        /// <summary>
+        /// triggered if a song was loaded into maestro
+        /// </summary>
+        private void OnSongLoaded(Maestro.Events.SongLoadedEvent e)
+        {
+            MaxTracks = e.MaxTracks;
+            if (Trackbar_Slider.Value > MaxTracks)
+                Trackbar_Slider.Value = MaxTracks;
+
+            if (BmpMaestro.Instance.GetHostBardTrack() <= MaxTracks)
+                return;
+            BmpMaestro.Instance.SetTracknumberOnHost(MaxTracks);
+        }
+
+        /// <summary>
+        /// triggered if we know the max time from meastro
+        /// </summary>
+        private void PlaybackMaxTime(Maestro.Events.MaxPlayTimeEvent e)
+        {
+            DisplayPlayTime(e.timeSpan);
+            Playbar_Slider.Dispatcher.BeginInvoke(new Action(() => Playbar_Slider.Maximum = e.tick));
+        }
+
+        /// <summary>
+        /// triggered via maestro
+        /// </summary>
+        private void PlaybackTimeChanged(Maestro.Events.CurrentPlayPositionEvent e)
+        {
+            if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
+                DisplayPlayTime(e.timeSpan);
+            if (!_Playbar_dragStarted)
+                Playbar_Slider.Dispatcher.BeginInvoke(new Action(() => Playbar_Slider.Value = e.tick));
+        }
+
+        /// <summary>
+        /// update the track and instrument if a track was changed
+        /// </summary>
+        private void UpdateTrackNumberAndInstrument(Maestro.Events.TrackNumberChangedEvent e)
+        {
+            if (!e.IsHost)
+                return;
+            int track = BmpMaestro.Instance.GetHostBardTrack();
+            this.Trackbar_Slider.Value = track;
+            WriteSmallDigitField(e.TrackNumber.ToString());
+            WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
+        }
+
+        /// <summary>
+        /// triggered if playback was stopped
+        /// </summary>
+        private void OnSongStopped()
+        {
+            if (_PlaylistView.LoopPlay)
+                _PlaylistView.PlayNextSong();
+        }
+
+        /// <summary>
+        /// if seer triggeres an metronome start event
+        /// </summary>
         public void EnsembleStart()
         {
             if (BmpPigeonhole.Instance.AutostartMethod != (int)Globals.Globals.Autostart_Types.VIA_METRONOME)
@@ -128,8 +190,14 @@ namespace BardMusicPlayer.Ui.Skinned
             PlaybackFunctions.PlaySong();
         }
 
+        /// <summary>
+        /// triggered if a chatmsg is comming
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="line"></param>
         public void AppendChatLog(string code, string line)
         {
+            //The old autostart method with the chat
             if (code == "0039")
             {
                 if (line.Contains(@"Anzählen beginnt") ||
@@ -146,22 +214,8 @@ namespace BardMusicPlayer.Ui.Skinned
                 }
             }
         }
+        #endregion
 
-        private void UpdateTrackNumberAndInstrument(Maestro.Events.TrackNumberChangedEvent e)
-        {
-            if (!e.IsHost)
-                return;
-            int track = BmpMaestro.Instance.GetHostBardTrack();
-            this.Trackbar_Slider.Value = track;
-            WriteSmallDigitField(e.TrackNumber.ToString());
-            WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
-        }
-
-        private void OnSongStopped()
-        {
-            if (_PlaylistView.LoopPlay)
-                _PlaylistView.PlayNextSong();
-        }
 
         private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -181,30 +235,6 @@ namespace BardMusicPlayer.Ui.Skinned
             //TitleBar.Fill = _titlebar_image[1];
         }
 
-        private void PlaybackMaxTime(Maestro.Events.MaxPlayTimeEvent e)
-        {
-            DisplayPlayTime(e.timeSpan);
-            Playbar_Slider.Dispatcher.BeginInvoke(new Action(() => Playbar_Slider.Maximum = e.tick));
-        }
-
-        private void OnSongLoaded(Maestro.Events.SongLoadedEvent e)
-        {
-            MaxTracks = e.MaxTracks;
-            if (Trackbar_Slider.Value > MaxTracks)
-                Trackbar_Slider.Value = MaxTracks;
-
-            if (BmpMaestro.Instance.GetHostBardTrack() <= MaxTracks)
-                return;
-            BmpMaestro.Instance.SetTracknumberOnHost(MaxTracks);
-        }
-
-        private void PlaybackTimeChanged(Maestro.Events.CurrentPlayPositionEvent e)
-        {
-            if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
-                DisplayPlayTime(e.timeSpan);
-            if (!_Playbar_dragStarted)
-                Playbar_Slider.Dispatcher.BeginInvoke(new Action(() => Playbar_Slider.Value = e.tick));
-        }
 
         private void Playbar_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -241,7 +271,5 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             this._PlaylistView.Visibility = Visibility.Visible;
         }
-
-
     }
 }

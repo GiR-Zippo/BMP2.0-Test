@@ -440,9 +440,6 @@ namespace BardMusicPlayer.Maestro.Sequencing
 
         public Instrument GetTrackPreferredInstrument(int tracknumber)
         {
-            if (tracknumber == 0)
-                return Instrument.Piano;
-
             if (tracknumber >= preferredInstruments.Count)
                 return Instrument.None;
 

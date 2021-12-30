@@ -41,7 +41,9 @@ namespace BardMusicPlayer.Maestro.Performance
             get {
                     if (sequencer == null)
                         return "Unknown";
-                    return sequencer.GetTrackPreferredInstrument(TrackNumber).Name;
+                if (TrackNumber == 0)
+                    return Instrument.Piano;
+                return sequencer.GetTrackPreferredInstrument(TrackNumber -1).Name; // -1 cuz all tracks doesn't have an instrument
                 }
         }
 

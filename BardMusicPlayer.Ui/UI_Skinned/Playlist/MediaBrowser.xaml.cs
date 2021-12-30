@@ -65,9 +65,12 @@ namespace BardMusicPlayer.Ui.Skinned
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMALBG];
             this.PlaylistsContainer.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             this.PlaylistContainer.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
+            this.PlaylistName_Box.Background = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
+
             col = SkinContainer.PLAYLISTCOLOR[SkinContainer.PLAYLISTCOLOR_TYPES.PLAYLISTCOLOR_NORMAL];
             this.PlaylistsContainer.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
             this.PlaylistContainer.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
+            this.PlaylistName_Box.Foreground = new SolidColorBrush(Color.FromArgb(col.A, col.R, col.G, col.B));
         }
 
         private void PlaylistsContainer_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -102,6 +105,7 @@ namespace BardMusicPlayer.Ui.Skinned
             PlaylistContainer.Items.Clear();
             foreach (var item in _currentPlaylist)
                 PlaylistContainer.Items.Add(item.Title);
+            PlaylistName_Box.Text = _currentPlaylist.GetName();
         }
 
         private void PlaylistsContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -159,15 +163,11 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void New_Button_Click(object sender, RoutedEventArgs e)
         {
-            var inputbox = new TextInputWindow("Playlistname");
-            if (inputbox.ShowDialog() == true)
-            {
-                if (BmpCoffer.Instance.GetPlaylistNames().Contains(inputbox.ResponseText))
-                    return;
-                _currentPlaylist = BmpCoffer.Instance.CreatePlaylist(inputbox.ResponseText);
-                BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
-                PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
-            }
+            if (BmpCoffer.Instance.GetPlaylistNames().Contains(this.PlaylistName_Box.Text))
+                return;
+            _currentPlaylist = BmpCoffer.Instance.CreatePlaylist(this.PlaylistName_Box.Text);
+            BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
+            PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
         private void New_Button_Down(object sender, MouseButtonEventArgs e)
         { this.New_Button.Background.Opacity = 1; }
@@ -176,6 +176,8 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void Reload_Button_Click(object sender, RoutedEventArgs e)
         {
+            _currentPlaylist.SetName(this.PlaylistName_Box.Text);
+            BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
             PlaylistsContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
         private void Reload_Button_Down(object sender, MouseButtonEventArgs e)
