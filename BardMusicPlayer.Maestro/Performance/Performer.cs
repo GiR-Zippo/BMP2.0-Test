@@ -36,11 +36,14 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public string PlayerName { get { return game.PlayerName ?? "Unknown"; } }
         public string HomeWorld { get { return game.HomeWorld ?? "Unknown"; } }
-        public string TrackInstrument { get 
-        {
-                if (sequencer == null)
-                    return "Unknown";
-            return sequencer.GetTrackPreferredInstrument(TrackNumber).Name ?? "Unknown"; } }
+        public string TrackInstrument 
+        { 
+            get {
+                    if (sequencer == null)
+                        return "Unknown";
+                    return sequencer.GetTrackPreferredInstrument(TrackNumber).Name;
+                }
+        }
 
         private bool performanceUp { get; set; } = false;
 

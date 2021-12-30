@@ -24,6 +24,7 @@ namespace BardMusicPlayer.Ui.Skinned
     /// </summary>
     public partial class Skinned_MainView : UserControl
     {
+        private int MaxTracks { get; set; } = 1;
         private bool _Playbar_dragStarted = false;
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
@@ -46,14 +47,17 @@ namespace BardMusicPlayer.Ui.Skinned
             _PlaylistView.OnLoadSongFromPlaylist += OnLoadSongFromPlaylist;
 
             BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
+            BmpMaestro.Instance.OnSongLoaded += Instance_OnSongLoaded;
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
             BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
 
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
-            WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
-            WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
+
+            int track = BmpMaestro.Instance.GetHostBardTrack();
+            WriteTrackField("Track " + track.ToString());
+            WriteSmallDigitField(track.ToString());
         }
 
         private void OnLoadSongFromPlaylist(object sender, BmpSong e)
@@ -61,7 +65,7 @@ namespace BardMusicPlayer.Ui.Skinned
             Scroller.Cancel();
             Scroller = new CancellationTokenSource();
             UpdateScroller(Scroller.Token, PlaybackFunctions.GetSongName()).ConfigureAwait(false);
-            WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
+            WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
 
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYNEXT)
                 PlaybackFunctions.PlaySong();
@@ -80,6 +84,11 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Instance_PlaybackMaxTime(object sender, Maestro.Events.MaxPlayTimeEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackMaxTime(e)));
+        }
+
+        private void Instance_OnSongLoaded(object sender, Maestro.Events.SongLoadedEvent e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.OnSongLoaded(e)));
         }
 
         private void Instance_PlaybackTimeChanged(object sender, Maestro.Events.CurrentPlayPositionEvent e)
@@ -130,11 +139,10 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             if (!e.IsHost)
                 return;
-            Globals.Globals.CurrentTrack = e.TrackNumber;
-            PlaybackFunctions.SetInstrumentName();
-            WriteTrackField("Track " + Globals.Globals.CurrentTrack.ToString());
-            WriteSmallDigitField(Globals.Globals.CurrentTrack.ToString());
-            WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
+            int track = BmpMaestro.Instance.GetHostBardTrack();
+            WriteTrackField("Track " + e.TrackNumber.ToString());
+            WriteSmallDigitField(e.TrackNumber.ToString());
+            WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
         }
 
         private void OnSongStopped()
@@ -166,6 +174,15 @@ namespace BardMusicPlayer.Ui.Skinned
             DisplayPlayTime(e.timeSpan);
             Playbar_Slider.Dispatcher.BeginInvoke(new Action(() => Playbar_Slider.Maximum = e.tick));
         }
+
+        private void OnSongLoaded(Maestro.Events.SongLoadedEvent e)
+        {
+            MaxTracks = e.MaxTracks;
+            if (BmpMaestro.Instance.GetHostBardTrack() <= MaxTracks)
+                return;
+            BmpMaestro.Instance.SetTracknumberOnHost(MaxTracks);
+        }
+
         private void PlaybackTimeChanged(Maestro.Events.CurrentPlayPositionEvent e)
         {
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)

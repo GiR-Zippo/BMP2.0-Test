@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using BardMusicPlayer.Ui.Functions;
 using System.Threading;
+using BardMusicPlayer.Maestro;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -84,7 +85,7 @@ namespace BardMusicPlayer.Ui.Skinned
                 Scroller.Cancel();
                 Scroller = new CancellationTokenSource();
                 UpdateScroller(Scroller.Token, PlaybackFunctions.GetSongName()).ConfigureAwait(false);
-                WriteInstrumentDigitField(PlaybackFunctions.InstrumentName);
+                WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
             }
         }
         private void Load_Button_Down(object sender, MouseButtonEventArgs e)
@@ -98,11 +99,11 @@ namespace BardMusicPlayer.Ui.Skinned
         /// </summary>
         private void TrackDown_Button_Click(object sender, RoutedEventArgs e)
         {
+            int track = BmpMaestro.Instance.GetHostBardTrack();
             this.TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
-            if (Globals.Globals.CurrentTrack <= 0)
+            if (track <= 0)
                 return;
-            Globals.Globals.CurrentTrack--;
-            PlaybackFunctions.SetTrackNumber(Globals.Globals.CurrentTrack);
+            BmpMaestro.Instance.SetTracknumberOnHost(track -1);
         }
         private void TrackDown_Button_Down(object sender, MouseButtonEventArgs e)
         { this.TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_PRESSED]; }
@@ -115,11 +116,11 @@ namespace BardMusicPlayer.Ui.Skinned
         /// </summary>
         private void TrackUp_Button_Click(object sender, RoutedEventArgs e)
         {
+            int track = BmpMaestro.Instance.GetHostBardTrack();
             this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
-            if (Globals.Globals.CurrentTrack == 8)
+            if (track == MaxTracks)
                 return;
-            Globals.Globals.CurrentTrack++;
-            PlaybackFunctions.SetTrackNumber(Globals.Globals.CurrentTrack);
+            BmpMaestro.Instance.SetTracknumberOnHost(track +1);
         }
         private void TrackUp_Button_Down(object sender, MouseButtonEventArgs e)
         { this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_PRESSED]; }

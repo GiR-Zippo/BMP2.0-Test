@@ -61,6 +61,13 @@ namespace BardMusicPlayer.Maestro
             return games;
         }
 
+        public int GetHostBardTrack()
+        {
+            Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
+            
+            return perf == null ? 1 : perf.TrackNumber;
+        }
+
         /// <summary>
         /// load a midi file
         /// </summary>
@@ -384,7 +391,7 @@ namespace BardMusicPlayer.Maestro
             {
                 Instance_InstrumentHeldChanged(e);
             };
-            BmpMaestro.Instance.PublishEvent(new SongLoadedEvent());
+            BmpMaestro.Instance.PublishEvent(new SongLoadedEvent(sequencer.MaxTrack));
 
             Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
             perf.Sequencer.PlayEnded += Sequencer_PlayEnded;

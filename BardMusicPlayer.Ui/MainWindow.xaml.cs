@@ -13,7 +13,6 @@ namespace BardMusicPlayer.Ui
         public MainWindow()
         {
             InitializeComponent();
-            Globals.Settings.LoadConfig();
 
             if (BmpPigeonhole.Instance.ClassicUi)
                 SwitchClassicStyle();

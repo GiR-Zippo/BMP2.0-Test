@@ -22,6 +22,8 @@ namespace BardMusicPlayer.Ui.Classic
     /// </summary>
     public partial class Classic_MainView : UserControl
     {
+        private int MaxTracks = 1;
+
         public Classic_MainView()
         {
             InitializeComponent();
@@ -32,6 +34,7 @@ namespace BardMusicPlayer.Ui.Classic
             this.SongName.Text = PlaybackFunctions.GetSongName();
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
+            BmpMaestro.Instance.OnSongLoaded += Instance_OnSongLoaded;
             BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
             BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
@@ -48,6 +51,11 @@ namespace BardMusicPlayer.Ui.Classic
         private void Instance_PlaybackMaxTime(object sender, Maestro.Events.MaxPlayTimeEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.PlaybackMaxTime(e)));
+        }
+
+        private void Instance_OnSongLoaded(object sender, Maestro.Events.SongLoadedEvent e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.OnSongLoaded(e)));
         }
 
         private void Instance_PlaybackStopped(object sender, bool e)
@@ -92,6 +100,15 @@ namespace BardMusicPlayer.Ui.Classic
 
             Playbar_Slider.Maximum = e.tick;
 
+        }
+
+        private void OnSongLoaded(Maestro.Events.SongLoadedEvent e)
+        {
+            MaxTracks = e.MaxTracks;
+            if (NumValue <= MaxTracks)
+                return;
+            NumValue = MaxTracks;
+            BmpMaestro.Instance.SetTracknumberOnHost(MaxTracks);
         }
 
         public void PlaybackStopped()
@@ -147,13 +164,15 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 _numValue = value;
                 track_txtNum.Text = "t" + value.ToString();
-                InstrumentInfo.Content = PlaybackFunctions.InstrumentName;
+                InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
         private void track_cmdUp_Click(object sender, RoutedEventArgs e)
-        { 
+        {
+            if (NumValue == MaxTracks)
+                return;
             NumValue++;
-            PlaybackFunctions.SetTrackNumber(NumValue);
+            BmpMaestro.Instance.SetTracknumberOnHost(NumValue);
         }
 
         private void track_cmdDown_Click(object sender, RoutedEventArgs e)
@@ -161,7 +180,7 @@ namespace BardMusicPlayer.Ui.Classic
             if (NumValue == 1)
                 return;
             NumValue--;
-            PlaybackFunctions.SetTrackNumber(NumValue);
+            BmpMaestro.Instance.SetTracknumberOnHost(NumValue);
         }
 
         private void track_txtNum_TextChanged(object sender, TextChangedEventArgs e)

@@ -115,8 +115,8 @@ namespace BardMusicPlayer.Ui.Classic
             }
 
             PlaybackFunctions.LoadSongFromPlaylist(PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, (string)PlaylistContainer.SelectedItem));
-            this.SongName.Text = PlaybackFunctions.CurrentSong.Title;
-            this.InstrumentInfo.Content = PlaybackFunctions.InstrumentName;
+            this.SongName.Text = PlaybackFunctions.GetSongName();
+            this.InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             return;
         }
     }

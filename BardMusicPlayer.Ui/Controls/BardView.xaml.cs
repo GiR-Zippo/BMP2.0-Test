@@ -46,7 +46,7 @@ namespace BardMusicPlayer.Ui.Controls
             UpdateList();
         }
 
-        private void OnSongLoaded(object sender, bool e)
+        private void OnSongLoaded(object sender, SongLoadedEvent e)
         {
             UpdateList();
         }

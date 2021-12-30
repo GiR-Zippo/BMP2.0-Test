@@ -31,7 +31,6 @@ namespace BardMusicPlayer.Ui.Classic
 
             this.MIDI_Input_DeviceBox.SelectedIndex = BmpPigeonhole.Instance.MidiInputDev;
             this.SkinUiBox.IsChecked = !BmpPigeonhole.Instance.ClassicUi;
-            Globals.Globals.CurrentTrack = 1;
         }
 
         private void Autostart_source_SelectionChanged(object sender, SelectionChangedEventArgs e)

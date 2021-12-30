@@ -8,6 +8,9 @@ namespace BardMusicPlayer.Ui.Functions
 {
     public static class PlaybackFunctions
     {
+        /// <summary>
+        /// The playback states
+        /// </summary>
         public enum PlaybackState_Enum
         {
             PLAYBACK_STATE_STOPPED = 0,
@@ -15,12 +18,17 @@ namespace BardMusicPlayer.Ui.Functions
             PLAYBACK_STATE_PAUSE,
             PLAYBACK_STATE_PLAYNEXT //indicates the next song should be played
         };
-
         public static PlaybackState_Enum PlaybackState;
+
+        /// <summary>
+        /// The currently loaded song
+        /// </summary>
         public static BmpSong CurrentSong { get; set; }
-        public static string InstrumentName;
 
-
+        /// <summary>
+        /// Loads a midi file into the sequencer
+        /// </summary>
+        /// <returns>true if success</returns>
         public static bool LoadSong()
         {
             var openFileDialog = new OpenFileDialog
@@ -36,36 +44,51 @@ namespace BardMusicPlayer.Ui.Functions
             
             CurrentSong = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
             BmpMaestro.Instance.SetSong(openFileDialog.FileName);
-            SetInstrumentName();
             return true;
         }
 
+        /// <summary>
+        /// Load a song from the playlist into the sequencer
+        /// </summary>
+        /// <param name="item"></param>
         public static void LoadSongFromPlaylist(BmpSong item)
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             CurrentSong = item;
             BmpMaestro.Instance.SetSong(CurrentSong);
-            SetInstrumentName();
         }
 
+        /// <summary>
+        /// Starts the performance
+        /// </summary>
         public static void PlaySong()
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_PLAYING;
             BmpMaestro.Instance.StartLocalPerformer();
         }
 
+        /// <summary>
+        /// Pause the performance
+        /// </summary>
         public static void PauseSong()
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_PAUSE;
             BmpMaestro.Instance.PauseLocalPerformer();
         }
 
+        /// <summary>
+        /// Stops the performance
+        /// </summary>
         public static void StopSong()
         {
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             BmpMaestro.Instance.StopLocalPerformer();
         }
 
+        /// <summary>
+        /// Gets the song name from the current song
+        /// </summary>
+        /// <returns>song name as string</returns>
         public static string GetSongName()
         {
             if (CurrentSong == null)
@@ -73,26 +96,24 @@ namespace BardMusicPlayer.Ui.Functions
             return CurrentSong.Title;
         }
 
-        public static void SetTrackNumber(int track)
+        /// <summary>
+        /// Gets the instrument from the current song and track
+        /// </summary>
+        /// <returns>instrument name as string</returns>
+        public static string GetInstrumentNameForHostPlayer()
         {
-            Globals.Globals.CurrentTrack = track;
-            BmpMaestro.Instance.SetTracknumberOnHost(Globals.Globals.CurrentTrack);
-            SetInstrumentName();
-        }
-
-        public static string GetInstrumentName(int tracknumber)
-        {
+            int tracknumber = BmpMaestro.Instance.GetHostBardTrack();
             if (tracknumber == 0)
-                return "None";
+                return "All Tracks";
             else
             {
                 if (CurrentSong == null)
-                    return "None";
-                if (CurrentSong.TrackContainers.Count <= tracknumber)
+                    return "No song loaded";
+                if (tracknumber > CurrentSong.TrackContainers.Count)
                     return "None";
                 try
                 {
-                    ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)CurrentSong.TrackContainers[tracknumber].ConfigContainers[0].ProcessorConfig;
+                    ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)CurrentSong.TrackContainers[tracknumber -1].ConfigContainers[0].ProcessorConfig; // track -1 cuz track 0 isn't in this container
                     return classicConfig.Instrument.Name;
                 }
                 catch (KeyNotFoundException)
@@ -102,24 +123,30 @@ namespace BardMusicPlayer.Ui.Functions
             }
         }
 
-        public static void SetInstrumentName()
+        /// <summary>
+        /// Gets the instrument name from a given song and track
+        /// </summary>
+        /// <param name="song"></param>
+        /// <param name="tracknumber"></param>
+        /// <returns>instrument name as string</returns>
+        public static string GetInstrumentName(BmpSong song, int tracknumber)
         {
-            if (Globals.Globals.CurrentTrack == 0)
-                InstrumentName = "None";
+            if (tracknumber == 0)
+                return "All Tracks";
             else
             {
-                if (CurrentSong == null)
-                    return;
-                if (CurrentSong.TrackContainers.Count <= Globals.Globals.CurrentTrack -1)
-                    return;
+                if (song == null)
+                    return "No song loaded";
+                if (tracknumber > CurrentSong.TrackContainers.Count)
+                    return "None";
                 try
                 {
-                    ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)CurrentSong.TrackContainers[Globals.Globals.CurrentTrack - 1].ConfigContainers[0].ProcessorConfig;
-                    InstrumentName = classicConfig.Instrument.Name;
+                    ClassicProcessorConfig classicConfig = (ClassicProcessorConfig)song.TrackContainers[tracknumber-1].ConfigContainers[0].ProcessorConfig;
+                    return classicConfig.Instrument.Name;
                 }
-                catch(System.Collections.Generic.KeyNotFoundException)
+                catch (KeyNotFoundException)
                 {
-                    InstrumentName = "Unknown";
+                    return "Unknown";
                 }
             }
         }

@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
+using BardMusicPlayer.Maestro;
 
 namespace BardMusicPlayer.Ui.Classic
 {
@@ -40,7 +41,7 @@ namespace BardMusicPlayer.Ui.Classic
             if (PlaybackFunctions.LoadSong())
             {
                 SongName.Text = PlaybackFunctions.GetSongName();
-                InstrumentInfo.Content = PlaybackFunctions.InstrumentName;
+                InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
 
@@ -54,13 +55,13 @@ namespace BardMusicPlayer.Ui.Classic
 
             if (_alltracks)
             {
-                PlaybackFunctions.SetTrackNumber(0);
+                BmpMaestro.Instance.SetTracknumberOnHost(0);
                 all_tracks_button.Background = Brushes.LightSteelBlue;
             }
             else
             {
-                PlaybackFunctions.SetTrackNumber(1);
-                NumValue = Globals.Globals.CurrentTrack;
+                BmpMaestro.Instance.SetTracknumberOnHost(1);
+                NumValue = BmpMaestro.Instance.GetHostBardTrack();
                 all_tracks_button.ClearValue(Button.BackgroundProperty);
             }
         }
