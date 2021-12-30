@@ -4,6 +4,9 @@ using System.Windows.Input;
 using BardMusicPlayer.Ui.Functions;
 using System.Threading;
 using BardMusicPlayer.Maestro;
+using System.Windows.Controls.Primitives;
+using System.Windows.Media.Animation;
+using System;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -93,39 +96,27 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Load_Button_Up(object sender, MouseButtonEventArgs e)
         { this.Load_Button.Background = SkinContainer.CBUTTONS[SkinContainer.CBUTTON_TYPES.MAIN_EJECT_BUTTON]; }
 
-
-        /// <summary>
-        ///     switch a track down
-        /// </summary>
-        private void TrackDown_Button_Click(object sender, RoutedEventArgs e)
+        private void Trackbar_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            int track = BmpMaestro.Instance.GetHostBardTrack();
-            this.TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
-            if (track <= 0)
+            if (Trackbar_Slider.Value > MaxTracks)
                 return;
-            BmpMaestro.Instance.SetTracknumberOnHost(track -1);
+            this.Trackbar_Background.Fill = SkinContainer.VOLUME[(SkinContainer.VOLUME_TYPES)Trackbar_Slider.Value];
+            WriteSmallDigitField(Trackbar_Slider.Value.ToString());
         }
-        private void TrackDown_Button_Down(object sender, MouseButtonEventArgs e)
-        { this.TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_PRESSED]; }
-        private void TrackDown_Button_Up(object sender, MouseButtonEventArgs e)
-        { this.TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED]; }
 
-
-        /// <summary>
-        ///     switch a track Up
-        /// </summary>
-        private void TrackUp_Button_Click(object sender, RoutedEventArgs e)
+        private void Trackbar_Slider_DragStarted(object sender, DragStartedEventArgs e)
         {
-            int track = BmpMaestro.Instance.GetHostBardTrack();
-            this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
-            if (track == MaxTracks)
-                return;
-            BmpMaestro.Instance.SetTracknumberOnHost(track +1);
+            this._Trackbar_dragStarted = true;
         }
-        private void TrackUp_Button_Down(object sender, MouseButtonEventArgs e)
-        { this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_PRESSED]; }
-        private void TrackUp_Button_Up(object sender, MouseButtonEventArgs e)
-        { this.TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED]; }
+
+        private void Trackbar_Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            if (Trackbar_Slider.Value > MaxTracks)
+                Trackbar_Slider.Value = MaxTracks;
+
+            BmpMaestro.Instance.SetTracknumberOnHost((int)Trackbar_Slider.Value);
+            this._Trackbar_dragStarted = false;
+        }
 
         /// <summary>
         ///     open the settings

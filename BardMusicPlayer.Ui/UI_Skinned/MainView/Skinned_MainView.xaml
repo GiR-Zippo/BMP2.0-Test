@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/PlayBarStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/TrackBarStyle.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/ImageButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -35,11 +36,11 @@
             <!-- 4 Instrument and Track -->
             <RowDefinition Height="13"/>
             <!-- 5 Spacer -->
-            <RowDefinition Height="11"/>
+            <RowDefinition Height="9"/>
             <!-- 6 TrackSelector -->
-            <RowDefinition Height="11"/>
+            <RowDefinition Height="16"/>
             <!-- 7 Spacer -->
-            <RowDefinition Height="5"/>
+            <RowDefinition Height="2"/>
             <!-- 8 Positionbar -->
             <RowDefinition Height="18"/>
             <!-- 9 Spacer -->
@@ -131,7 +132,7 @@
             </Grid.ColumnDefinitions>
 
             <Image Grid.Column="1" x:Name="InstrumentDigit" Margin="-35,0,0,0" HorizontalAlignment="Left" Height="9" Width="112" />
-            <Image Grid.Column="2" x:Name="SmallTrackDigit" Margin="0,-5,0,0" HorizontalAlignment="Left" Height="11" Width="18" />
+            <Image Grid.Column="2" x:Name="SmallTrackDigit" Margin="0,-5,0,0" HorizontalAlignment="Left" Height="11" Width="30" />
 
         </Grid>
 
@@ -139,33 +140,22 @@
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="161"/>
-                <ColumnDefinition Width="14"/>
-                <ColumnDefinition Width="75"/>
+                <ColumnDefinition Width="102"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="34.5"/>
                 <ColumnDefinition Width="15"/>
             </Grid.ColumnDefinitions>
-            <Rectangle Grid.Column="1" x:Name="MAIN_VOLUME_BACKGROUND" 
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Width="100"
-                Height="12" PreviewMouseDown="TitleBar_MouseDown"
-                Fill="{DynamicResource MAIN_VOLUME_BACKGROUND}" />
-            <Button Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="TrackDown_Button"
-                HorizontalAlignment="Left" Click="TrackDown_Button_Click"  PreviewMouseUp="TrackDown_Button_Up"  PreviewMouseDown="TrackDown_Button_Down" 
-                BorderThickness="0" 
-                Width="14"
-                Height="12"
-                VerticalAlignment="Top" />
-            <Image Grid.Column="2" x:Name="TrackDigit" Height="8" Width="65"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"/>
-            <Button Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="TrackUp_Button" 
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Width="16"
-                Height="12" Click="TrackUp_Button_Click"  PreviewMouseUp="TrackUp_Button_Up"  PreviewMouseDown="TrackUp_Button_Down"   BorderThickness="0"/>
-            <Button Grid.Column="4" Style="{StaticResource ImageButton}" x:Name="Playlist_Button" Margin="0,-3"
+            <Rectangle Grid.Column="1" x:Name="Trackbar_Background" HorizontalAlignment="Left" Width="102" Height="20" VerticalAlignment="Top" Margin="0,-2,0,0">
+                <Rectangle.Fill>
+                    <ImageBrush  />
+                </Rectangle.Fill>
+            </Rectangle>
+            <Slider Grid.Column="1" Style="{StaticResource Volumebar_Slider}" x:Name="Trackbar_Slider"  HorizontalAlignment="left" Margin="0,-2,0,0"
+                VerticalAlignment="Stretch" Width="102" Height="16" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="1"
+                ValueChanged="Trackbar_Slider_ValueChanged" 
+                Thumb.DragStarted="Trackbar_Slider_DragStarted" 
+                Thumb.DragCompleted="Trackbar_Slider_DragCompleted"/>
+            <Button Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="Playlist_Button" Margin="0,-2"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Width="34.5"

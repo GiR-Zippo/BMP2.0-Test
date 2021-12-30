@@ -26,6 +26,8 @@ namespace BardMusicPlayer.Ui.Skinned
     {
         private int MaxTracks { get; set; } = 1;
         private bool _Playbar_dragStarted = false;
+        private bool _Trackbar_dragStarted { get; set; } = false;
+
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
 
@@ -55,8 +57,9 @@ namespace BardMusicPlayer.Ui.Skinned
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
 
+            this.Trackbar_Slider.Maximum = 8;
+
             int track = BmpMaestro.Instance.GetHostBardTrack();
-            WriteTrackField("Track " + track.ToString());
             WriteSmallDigitField(track.ToString());
         }
 
@@ -140,7 +143,7 @@ namespace BardMusicPlayer.Ui.Skinned
             if (!e.IsHost)
                 return;
             int track = BmpMaestro.Instance.GetHostBardTrack();
-            WriteTrackField("Track " + e.TrackNumber.ToString());
+            this.Trackbar_Slider.Value = track;
             WriteSmallDigitField(e.TrackNumber.ToString());
             WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
         }
@@ -178,6 +181,9 @@ namespace BardMusicPlayer.Ui.Skinned
         private void OnSongLoaded(Maestro.Events.SongLoadedEvent e)
         {
             MaxTracks = e.MaxTracks;
+            if (Trackbar_Slider.Value > MaxTracks)
+                Trackbar_Slider.Value = MaxTracks;
+
             if (BmpMaestro.Instance.GetHostBardTrack() <= MaxTracks)
                 return;
             BmpMaestro.Instance.SetTracknumberOnHost(MaxTracks);

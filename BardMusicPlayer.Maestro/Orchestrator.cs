@@ -394,7 +394,8 @@ namespace BardMusicPlayer.Maestro
             BmpMaestro.Instance.PublishEvent(new SongLoadedEvent(sequencer.MaxTrack));
 
             Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
-            perf.Sequencer.PlayEnded += Sequencer_PlayEnded;
+            if (perf != null)
+                perf.Sequencer.PlayEnded += Sequencer_PlayEnded;
 
             _updaterTokenSource = new CancellationTokenSource();
             Task.Factory.StartNew(() => Updater(_updaterTokenSource.Token), TaskCreationOptions.LongRunning);
@@ -432,10 +433,9 @@ namespace BardMusicPlayer.Maestro
             {
                 //Get host performer
                 Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
+                if (perf != null)
+                    BmpMaestro.Instance.PublishEvent(new CurrentPlayPositionEvent(perf.Sequencer.CurrentTimeAsTimeSpan, perf.Sequencer.CurrentTick));
 
-                BmpMaestro.Instance.PublishEvent(new CurrentPlayPositionEvent(perf.Sequencer.CurrentTimeAsTimeSpan, perf.Sequencer.CurrentTick));
-                /*if (!perf.Sequencer.IsPlaying)
-                    BmpMaestro.Instance.PublishEvent(new PlaybackStoppedEvent());*/
                 await Task.Delay(200, token);
             }
             return;

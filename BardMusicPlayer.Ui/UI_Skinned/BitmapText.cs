@@ -16,7 +16,7 @@ namespace BardMusicPlayer.Ui.Skinned
 {
     public partial class Skinned_MainView : UserControl
     {
-        void WriteTrackField(string data)
+        /*void WriteTrackField(string data)
         {
             Bitmap bitmap = new Bitmap(50, 6);
             var graphics = Graphics.FromImage(bitmap);
@@ -26,12 +26,13 @@ namespace BardMusicPlayer.Ui.Skinned
                 graphics.DrawImage(SkinContainer.FONT[a], 5 * index, 0);
                 index++;
             }
-            TrackDigit.Source = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions())).ImageSource;
-        }
+            //TrackDigit.Source = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions())).ImageSource;
+        }*/
 
         void WriteSmallDigitField(string data)
         {
             data = data.Insert(0, "T");
+            data = data.Insert(1, ":");
 
             Bitmap bitmap = new Bitmap(30, 8);
             var graphics = Graphics.FromImage(bitmap);

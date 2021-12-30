@@ -85,6 +85,21 @@ namespace BardMusicPlayer.Ui.Skinned
             {SkinContainer.TITLEBAR_TYPES.MAIN_SHADE_POSITION_THUMB_RIGHT, new List<int> {23, 36, 3, 7 } },
         };
 
+        Dictionary<SkinContainer.VOLUME_TYPES, List<int>> volumedata = new Dictionary<SkinContainer.VOLUME_TYPES, List<int>>
+        { 
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_0, new List<int> {0,0,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_1, new List<int> {0,45,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_2, new List<int> {0,90,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_3, new List<int> {0,135,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_4, new List<int> {0,165,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_5, new List<int> {0,255,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_6, new List<int> {0,300,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_7, new List<int> {0,360,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_8, new List<int> {0,405,68,14} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB, new List<int> {15,422,14,11} },
+            { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB_SELECTED, new List<int> {0,422,14,11} }
+        };
+
         Dictionary<SkinContainer.EQ_TYPES, List<int>> eqdata = new Dictionary<SkinContainer.EQ_TYPES, List<int>>
         {
             { SkinContainer.EQ_TYPES.EQ_WINDOW_BACKGROUND, new List<int> {0,0,275, 116}},
@@ -264,6 +279,7 @@ namespace BardMusicPlayer.Ui.Skinned
             loadBackgroundMain(filename);
 
             SkinContainer.TITLEBAR.Clear();
+            SkinContainer.VOLUME.Clear();
             SkinContainer.CBUTTONS.Clear();
             SkinContainer.FONT.Clear();
             SkinContainer.GENEX.Clear();
@@ -282,6 +298,7 @@ namespace BardMusicPlayer.Ui.Skinned
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS]));
 
             loadTitlebarAndButtons(filename);
+            loadVolumebar(filename);
             loadControlButtons(filename);
             loadNumbersAndFont(filename);
             loadTransportbarAndClutter(filename);
@@ -320,8 +337,10 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Minutes_First.Fill = SkinContainer.NUMBERS[0];
             this.Minutes_Last.Fill = SkinContainer.NUMBERS[0];
 
-            TrackDown_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_LEFT_UNPRESSED];
-            TrackUp_Button.Background = SkinContainer.GENEX[SkinContainer.GENEX_TYPES.GENEX_SCROLL_RIGHT_UNPRESSED];
+            this.Trackbar_Background.Fill = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_0];
+
+            Application.Current.Resources["MAIN_VOLUME_THUMB"] = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB];
+            Application.Current.Resources["MAIN_VOLUME_THUMB_SELECTED"] = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB_SELECTED];
 
             SkinContainer.NewSkinLoaded(); //inform all members that a new skin was loaded
         }
@@ -362,6 +381,27 @@ namespace BardMusicPlayer.Ui.Skinned
         }
 
         /// <summary>
+        /// load volumebar
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
+        private void loadVolumebar(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "volume.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("volume.bmp");
+            foreach (KeyValuePair<SkinContainer.VOLUME_TYPES, List<int>> data in volumedata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.VOLUME.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+        }
+
+        /// <summary>
         /// load the playcontrol button for the main window
         /// </summary>
         /// <param name="filename">wsz fullpath and filename</param>
@@ -395,19 +435,6 @@ namespace BardMusicPlayer.Ui.Skinned
             this.PlayBar_Background.Fill = ExtractImage(img, 248, 9, 0, 0);
             Application.Current.Resources["MAIN_POSITION_SLIDER_THUMB"] = ExtractImage(img, 27, 9, 249, 0);
             Application.Current.Resources["MAIN_POSITION_SLIDER_THUMB_SELECTED"] = ExtractImage(img, 28, 9, 278, 0);
-
-            img = ExtractImageFromZip(filename, "volume.bmp");
-            if (img == null)
-                img = loadDefaultSkinData("volume.bmp");
-            {
-                Bitmap bitmap = new Bitmap(65, 12);
-                var graphics = Graphics.FromImage(bitmap);
-                using (SolidBrush brush = new SolidBrush(SkinContainer.VISCOLOR[SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]))
-                {
-                    graphics.FillRectangle(brush, 0, 0, 65, 12);
-                }
-                Application.Current.Resources["MAIN_VOLUME_BACKGROUND"] = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()));
-            }
         }
 
         /// <summary>

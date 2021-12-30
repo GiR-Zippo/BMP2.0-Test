@@ -60,6 +60,21 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             MAIN_SHADE_POSITION_THUMB_RIGHT
         }
 
+        public enum VOLUME_TYPES
+        {
+            MAIN_VOLUME_BACKGROUND_0 = 0,
+            MAIN_VOLUME_BACKGROUND_1,
+            MAIN_VOLUME_BACKGROUND_2,
+            MAIN_VOLUME_BACKGROUND_3,
+            MAIN_VOLUME_BACKGROUND_4,
+            MAIN_VOLUME_BACKGROUND_5,
+            MAIN_VOLUME_BACKGROUND_6,
+            MAIN_VOLUME_BACKGROUND_7,
+            MAIN_VOLUME_BACKGROUND_8,
+            MAIN_VOLUME_THUMB,
+            MAIN_VOLUME_THUMB_SELECTED
+        }
+
         public enum NUMBER_TYPES
         {
             DIGIT_0 = 0,
@@ -262,15 +277,16 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
         }
         #endregion
 
-        public static Dictionary<CBUTTON_TYPES, ImageBrush> CBUTTONS = new Dictionary<CBUTTON_TYPES, ImageBrush> { };
-        public static Dictionary<NUMBER_TYPES, ImageBrush>  NUMBERS  = new Dictionary<NUMBER_TYPES, ImageBrush> { };
-        public static Dictionary<TITLEBAR_TYPES, ImageBrush> TITLEBAR = new Dictionary<TITLEBAR_TYPES, ImageBrush> { };
-        public static Dictionary<PLAYLIST_TYPES, ImageBrush> PLAYLIST = new Dictionary<PLAYLIST_TYPES, ImageBrush> { };
-        public static Dictionary<SWINDOW_TYPES, ImageBrush> SWINDOW = new Dictionary<SWINDOW_TYPES, ImageBrush> { };
-        public static Dictionary<EQ_TYPES, ImageBrush> EQUALIZER = new Dictionary<EQ_TYPES, ImageBrush> { };
-        public static Dictionary<SHUFREP_TYPES, ImageBrush> SHUFREP = new Dictionary<SHUFREP_TYPES, ImageBrush> { };
-        public static Dictionary<MEDIABROWSER_TYPES, ImageBrush> MEDIABROWSER = new Dictionary<MEDIABROWSER_TYPES, ImageBrush> { };
-        public static Dictionary<GENEX_TYPES, ImageBrush> GENEX = new Dictionary<GENEX_TYPES, ImageBrush> { };
+        public static Dictionary<CBUTTON_TYPES,     ImageBrush> CBUTTONS =      new Dictionary<CBUTTON_TYPES, ImageBrush> { };
+        public static Dictionary<NUMBER_TYPES,      ImageBrush>  NUMBERS  =     new Dictionary<NUMBER_TYPES, ImageBrush> { };
+        public static Dictionary<TITLEBAR_TYPES,    ImageBrush> TITLEBAR =      new Dictionary<TITLEBAR_TYPES, ImageBrush> { };
+        public static Dictionary<VOLUME_TYPES,      ImageBrush> VOLUME =        new Dictionary<VOLUME_TYPES, ImageBrush> { };
+        public static Dictionary<PLAYLIST_TYPES,    ImageBrush> PLAYLIST =      new Dictionary<PLAYLIST_TYPES, ImageBrush> { };
+        public static Dictionary<SWINDOW_TYPES,     ImageBrush> SWINDOW =       new Dictionary<SWINDOW_TYPES, ImageBrush> { };
+        public static Dictionary<EQ_TYPES,          ImageBrush> EQUALIZER =     new Dictionary<EQ_TYPES, ImageBrush> { };
+        public static Dictionary<SHUFREP_TYPES,     ImageBrush> SHUFREP =       new Dictionary<SHUFREP_TYPES, ImageBrush> { };
+        public static Dictionary<MEDIABROWSER_TYPES,ImageBrush> MEDIABROWSER =  new Dictionary<MEDIABROWSER_TYPES, ImageBrush> { };
+        public static Dictionary<GENEX_TYPES,       ImageBrush> GENEX =         new Dictionary<GENEX_TYPES, ImageBrush> { };
         public static Dictionary<VISCOLOR_TYPES, System.Drawing.Color> VISCOLOR = new Dictionary<VISCOLOR_TYPES, System.Drawing.Color> { };
         public static Dictionary<PLAYLISTCOLOR_TYPES, System.Drawing.Color> PLAYLISTCOLOR = new Dictionary<PLAYLISTCOLOR_TYPES, System.Drawing.Color> { };
         public static string PLAYLIST_FONT;
