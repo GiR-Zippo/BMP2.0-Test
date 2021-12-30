@@ -29,6 +29,25 @@ namespace BardMusicPlayer.Ui.Skinned
             //TrackDigit.Source = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions())).ImageSource;
         }*/
 
+        void WriteSmallOctaveDigitField(string data)
+        {
+            Bitmap bitmap = new Bitmap(30, 8);
+            var graphics = Graphics.FromImage(bitmap);
+            int index = 0;
+            foreach (var a in data)
+            {
+                System.Drawing.Image img;
+                if (SkinContainer.FONT.ContainsKey(a))
+                    img = SkinContainer.FONT[a];
+                else
+                    img = SkinContainer.FONT[32];
+                graphics.DrawImage(img, 5 * index, 0);
+                index++;
+            }
+            SmallOctaveDigit.Source = new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions())).ImageSource;
+            SmallOctaveDigit.Stretch = Stretch.UniformToFill;
+        }
+
         void WriteSmallDigitField(string data)
         {
             data = data.Insert(0, "T");

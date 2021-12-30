@@ -75,6 +75,22 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
             MAIN_VOLUME_THUMB_SELECTED
         }
 
+        public enum BALANCE_TYPES
+        {
+            MAIN_BALANCE_BACKGROUND_0 = 0,
+            MAIN_BALANCE_BACKGROUND_1,
+            MAIN_BALANCE_BACKGROUND_2,
+            MAIN_BALANCE_BACKGROUND_3,
+            MAIN_BALANCE_BACKGROUND_4,
+            MAIN_BALANCE_BACKGROUND_5,
+            MAIN_BALANCE_BACKGROUND_6,
+            MAIN_BALANCE_BACKGROUND_7,
+            MAIN_BALANCE_BACKGROUND_8,
+            MAIN_BALANCE_THUMB,
+            MAIN_BALANCE_THUMB_SELECTED
+        }
+
+
         public enum NUMBER_TYPES
         {
             DIGIT_0 = 0,
@@ -281,6 +297,7 @@ namespace BardMusicPlayer.Ui.Globals.SkinContainer
         public static Dictionary<NUMBER_TYPES,      ImageBrush>  NUMBERS  =     new Dictionary<NUMBER_TYPES, ImageBrush> { };
         public static Dictionary<TITLEBAR_TYPES,    ImageBrush> TITLEBAR =      new Dictionary<TITLEBAR_TYPES, ImageBrush> { };
         public static Dictionary<VOLUME_TYPES,      ImageBrush> VOLUME =        new Dictionary<VOLUME_TYPES, ImageBrush> { };
+        public static Dictionary<BALANCE_TYPES,     ImageBrush> BALANCE =       new Dictionary<BALANCE_TYPES, ImageBrush> { };
         public static Dictionary<PLAYLIST_TYPES,    ImageBrush> PLAYLIST =      new Dictionary<PLAYLIST_TYPES, ImageBrush> { };
         public static Dictionary<SWINDOW_TYPES,     ImageBrush> SWINDOW =       new Dictionary<SWINDOW_TYPES, ImageBrush> { };
         public static Dictionary<EQ_TYPES,          ImageBrush> EQUALIZER =     new Dictionary<EQ_TYPES, ImageBrush> { };

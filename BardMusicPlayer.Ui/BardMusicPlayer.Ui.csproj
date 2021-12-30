@@ -337,6 +337,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\OctaveBarStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\TrackBarStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -486,6 +490,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Skin\shufrep.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Skin\balance.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

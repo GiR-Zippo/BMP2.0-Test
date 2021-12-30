@@ -27,6 +27,7 @@ namespace BardMusicPlayer.Ui.Skinned
         private int MaxTracks { get; set; } = 1;
         private bool _Playbar_dragStarted = false;
         private bool _Trackbar_dragStarted { get; set; } = false;
+        private bool _Octavebar_dragStarted { get; set; } = false;
 
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
@@ -58,6 +59,10 @@ namespace BardMusicPlayer.Ui.Skinned
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
 
             this.Trackbar_Slider.Maximum = 8;
+            this.Trackbar_Slider.Value = 1;
+            this.Octavebar_Slider.Maximum = 8;
+            this.Octavebar_Slider.Minimum = 0;
+            this.Octavebar_Slider.Value = 4;
 
             int track = BmpMaestro.Instance.GetHostBardTrack();
             WriteSmallDigitField(track.ToString());

@@ -79,6 +79,16 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
+        /// sets the octave shift for host performer
+        /// </summary>
+        /// <param name="octave"></param>
+        public void SetOctaveshiftOnHost(int octave)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetOctaveshiftOnHost(octave);
+        }
+
+        /// <summary>
         /// Sets the playback at position (timeindex in ticks)
         /// </summary>
         /// <param name="ticks">time ticks</param>

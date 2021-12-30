@@ -95,6 +95,22 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
+        /// sets the octaveshift for host performer (used for Ui)
+        /// </summary>
+        /// <param name="octave"></param>
+        public void SetOctaveshiftOnHost(int octave)
+        {
+            foreach (var perf in performer)
+            {
+                if (perf.Value.HostProcess)
+                {
+                    perf.Value.OctaveShift = octave;
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
         /// sets the track for all performer
         /// </summary>
         /// <param name="tracknumber"></param>

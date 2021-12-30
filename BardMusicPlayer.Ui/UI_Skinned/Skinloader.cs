@@ -100,6 +100,21 @@ namespace BardMusicPlayer.Ui.Skinned
             { SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB_SELECTED, new List<int> {0,422,14,11} }
         };
 
+        Dictionary<SkinContainer.BALANCE_TYPES, List<int>> balancedata = new Dictionary<SkinContainer.BALANCE_TYPES, List<int>>
+        {
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_0, new List<int> {9,0,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_1, new List<int> {9,45,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_2, new List<int> {9,90,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_3, new List<int> {9,135,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_4, new List<int> {9,165,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_5, new List<int> {9,255,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_6, new List<int> {9,300,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_7, new List<int> {9,360,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_BACKGROUND_8, new List<int> {9,405,38,14} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_THUMB,        new List<int> {15,422,14,11} },
+            { SkinContainer.BALANCE_TYPES.MAIN_BALANCE_THUMB_SELECTED, new List<int> {0,422,14,11} }
+        };
+
         Dictionary<SkinContainer.EQ_TYPES, List<int>> eqdata = new Dictionary<SkinContainer.EQ_TYPES, List<int>>
         {
             { SkinContainer.EQ_TYPES.EQ_WINDOW_BACKGROUND, new List<int> {0,0,275, 116}},
@@ -280,6 +295,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             SkinContainer.TITLEBAR.Clear();
             SkinContainer.VOLUME.Clear();
+            SkinContainer.BALANCE.Clear();
             SkinContainer.CBUTTONS.Clear();
             SkinContainer.FONT.Clear();
             SkinContainer.GENEX.Clear();
@@ -299,6 +315,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             loadTitlebarAndButtons(filename);
             loadVolumebar(filename);
+            loadBalancebar(filename);
             loadControlButtons(filename);
             loadNumbersAndFont(filename);
             loadTransportbarAndClutter(filename);
@@ -338,9 +355,12 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Minutes_Last.Fill = SkinContainer.NUMBERS[0];
 
             this.Trackbar_Background.Fill = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_0];
+            this.Octavebar_Background.Fill = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_BACKGROUND_5];
 
             Application.Current.Resources["MAIN_VOLUME_THUMB"] = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB];
             Application.Current.Resources["MAIN_VOLUME_THUMB_SELECTED"] = SkinContainer.VOLUME[SkinContainer.VOLUME_TYPES.MAIN_VOLUME_THUMB_SELECTED];
+            Application.Current.Resources["MAIN_BALANCE_THUMB"] = SkinContainer.BALANCE[SkinContainer.BALANCE_TYPES.MAIN_BALANCE_THUMB];
+            Application.Current.Resources["MAIN_BALANCE_THUMB_SELECTED"] = SkinContainer.BALANCE[SkinContainer.BALANCE_TYPES.MAIN_BALANCE_THUMB_SELECTED];
 
             SkinContainer.NewSkinLoaded(); //inform all members that a new skin was loaded
         }
@@ -395,6 +415,27 @@ namespace BardMusicPlayer.Ui.Skinned
                 var graphics = Graphics.FromImage(bitmap);
                 graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
                 SkinContainer.VOLUME.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// load volumebar
+        /// </summary>
+        /// <param name="filename">wsz fullpath and filename</param>
+        private void loadBalancebar(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "balance.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("balance.bmp");
+            foreach (KeyValuePair<SkinContainer.BALANCE_TYPES, List<int>> data in balancedata)
+            {
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.BALANCE.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
                                                                             Int32Rect.Empty,
                                                                             BitmapSizeOptions.FromEmptyOptions())));
                 bitmap.Dispose();

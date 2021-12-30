@@ -104,10 +104,11 @@ namespace BardMusicPlayer.Ui.Skinned
             WriteSmallDigitField(Trackbar_Slider.Value.ToString());
         }
 
+        /// <summary>
+        /// The track selection
+        /// </summary>
         private void Trackbar_Slider_DragStarted(object sender, DragStartedEventArgs e)
-        {
-            this._Trackbar_dragStarted = true;
-        }
+        { this._Trackbar_dragStarted = true; }
 
         private void Trackbar_Slider_DragCompleted(object sender, DragCompletedEventArgs e)
         {
@@ -116,6 +117,21 @@ namespace BardMusicPlayer.Ui.Skinned
 
             BmpMaestro.Instance.SetTracknumberOnHost((int)Trackbar_Slider.Value);
             this._Trackbar_dragStarted = false;
+        }
+
+        private void Octavebar_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.Octavebar_Background.Fill = SkinContainer.BALANCE[(SkinContainer.BALANCE_TYPES)Octavebar_Slider.Value];
+            WriteSmallOctaveDigitField((Octavebar_Slider.Value - 4).ToString());
+        }
+
+        private void Octavebar_Slider_DragStarted(object sender, DragStartedEventArgs e)
+        { this._Octavebar_dragStarted = true; }
+
+        private void Octavebar_Slider_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            this._Octavebar_dragStarted = false;
+            BmpMaestro.Instance.SetOctaveshiftOnHost((int)Octavebar_Slider.Value - 4);
         }
 
         /// <summary>

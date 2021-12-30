@@ -18,6 +18,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/PlayBarStyle.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/TrackBarStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/OctaveBarStyle.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/ImageButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -128,23 +129,27 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="72"/>
                 <ColumnDefinition Width="96"/>
+                <ColumnDefinition Width="70"/>
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
             <Image Grid.Column="1" x:Name="InstrumentDigit" Margin="-35,0,0,0" HorizontalAlignment="Left" Height="9" Width="112" />
             <Image Grid.Column="2" x:Name="SmallTrackDigit" Margin="0,-5,0,0" HorizontalAlignment="Left" Height="11" Width="30" />
-
+            <Image Grid.Column="3" x:Name="SmallOctaveDigit" Margin="0,-5,0,0" HorizontalAlignment="Left" Height="11" Width="30" />
         </Grid>
 
-        <!-- TrackSelector-->
+        <!-- TrackSelector and buttons-->
         <Grid Grid.Row="6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="161"/>
                 <ColumnDefinition Width="102"/>
+                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="57"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="34.5"/>
                 <ColumnDefinition Width="15"/>
             </Grid.ColumnDefinitions>
+            <!-- Track selection -->
             <Rectangle Grid.Column="1" x:Name="Trackbar_Background" HorizontalAlignment="Left" Width="102" Height="20" VerticalAlignment="Top" Margin="0,-2,0,0">
                 <Rectangle.Fill>
                     <ImageBrush  />
@@ -155,7 +160,19 @@
                 ValueChanged="Trackbar_Slider_ValueChanged" 
                 Thumb.DragStarted="Trackbar_Slider_DragStarted" 
                 Thumb.DragCompleted="Trackbar_Slider_DragCompleted"/>
-            <Button Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="Playlist_Button" Margin="0,-2"
+            <!-- Octave selection -->
+            <Rectangle Grid.Column="3" x:Name="Octavebar_Background" HorizontalAlignment="Left" Width="57" Height="20" VerticalAlignment="Top" Margin="0,-2,0,0">
+                <Rectangle.Fill>
+                    <ImageBrush  />
+                </Rectangle.Fill>
+            </Rectangle>
+            <Slider Grid.Column="3" Style="{StaticResource Balancebar_Slider}" x:Name="Octavebar_Slider"  HorizontalAlignment="left" Margin="0,-2,0,0"
+                VerticalAlignment="Stretch" Width="57" Height="16" Maximum="200" IsSnapToTickEnabled="True" TickFrequency="1"
+                ValueChanged="Octavebar_Slider_ValueChanged" 
+                Thumb.DragStarted="Octavebar_Slider_DragStarted" 
+                Thumb.DragCompleted="Octavebar_Slider_DragCompleted"/>
+            <!-- Right buttons -->
+            <Button Grid.Column="5" Style="{StaticResource ImageButton}" x:Name="Playlist_Button" Margin="0,-2"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Width="34.5"
