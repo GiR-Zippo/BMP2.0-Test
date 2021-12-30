@@ -100,9 +100,9 @@ Width="Auto" Height="Auto"
                                     </Grid.RowDefinitions>
                                     <CheckBox Margin="10,10,0,0" Grid.Row="0" x:Name="LocalOrchestraBox" Content="Local Orchestra" Unchecked="LocalOrchestraBox_Checked" Checked="LocalOrchestraBox_Checked"/>
                                     <CheckBox Margin="10,0,0,0"  Grid.Row="1" x:Name="HoldNotesBox" Content="Hold notes"           Unchecked="Hold_Notes_Checked"        Checked="Hold_Notes_Checked"/>
-                                    <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="ForcePlaybackBox" Content="force playback"   Unchecked="Force_Playback_Checked"    Checked="Force_Playback_Checked"/>
+                                    <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="ForcePlaybackBox" Content="Force playback"   Unchecked="Force_Playback_Checked"    Checked="Force_Playback_Checked"/>
                                     <Label Margin="10,0,0,0"     Grid.Row="3" Content="MIDI Input device" HorizontalAlignment="Left"/>
-                                    <ComboBox Margin="120,0,0,0" Grid.Row="3" x:Name="MIDI_Input_DeviceBox" 
+                                    <ComboBox Margin="120,0,0,0" Grid.Row="3" x:Name="MIDI_Input_DeviceBox" ItemsSource="{Binding}"
                                         DisplayMemberPath="Value"
                                         SelectionChanged="MIDI_Input_Device_SelectionChanged" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="200">
                                         <ComboBoxItem>None</ComboBoxItem>

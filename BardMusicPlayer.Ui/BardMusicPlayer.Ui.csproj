@@ -309,7 +309,6 @@
     </Compile>
     <Compile Include="Functions\PlaybackFunctions.cs" />
     <Compile Include="Functions\PlaylistFunctions.cs" />
-    <Compile Include="Globals\Settings.cs" />
     <Compile Include="Resources\TextInputWindow.xaml.cs">
       <DependentUpon>TextInputWindow.xaml</DependentUpon>
     </Compile>

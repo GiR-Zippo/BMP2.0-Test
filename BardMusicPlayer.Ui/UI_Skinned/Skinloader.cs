@@ -600,29 +600,53 @@ namespace BardMusicPlayer.Ui.Skinned
             {
                 Bitmap bitmap = new Bitmap(5, 6);
                 var graphics = Graphics.FromImage(bitmap);
-                //Top Row
-                for (int i = 0; i < 29; i++)
+
+
+                for (int row = 0; row != 3; row++)
                 {
-                    graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(i * 5, 0, 5, 6), GraphicsUnit.Pixel);
-                    if (65 + i <= 90)
+                    for (int col = 0; col < 30; col++)
                     {
-                        SkinContainer.FONT.Add(65 + i, new Bitmap(bitmap));
-                        SkinContainer.FONT.Add(97 + i, new Bitmap(bitmap));
+                        graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(col * 5, row*6, 5, 6), GraphicsUnit.Pixel);
+                        if (row == 0)
+                        {
+                            if (65 + col <= 90) //A-Z
+                            {
+                                SkinContainer.FONT.Add(65 + col, new Bitmap(bitmap));
+                                SkinContainer.FONT.Add(97 + col, new Bitmap(bitmap));
+                            }
+                            else if (col == 26 || col == 27)//@ or "
+                                SkinContainer.FONT.Add(((col == 26) ? 34 : 64), new Bitmap(bitmap));
+                            else if (col == 29) //Space
+                                SkinContainer.FONT.Add(32, new Bitmap(bitmap));
+                        }
+                        else if(row==1)
+                        {
+                            if(col < 10) //0-9
+                                SkinContainer.FONT.Add(48 + col, new Bitmap(bitmap));
+                            if (col == 12) //-
+                                SkinContainer.FONT.Add(58, new Bitmap(bitmap));
+                            if (col == 13 || col == 14) // ()
+                                SkinContainer.FONT.Add(27+col, new Bitmap(bitmap)); //40-13+col
+                            if (col == 15) //-
+                                SkinContainer.FONT.Add(45, new Bitmap(bitmap));
+                            if (col == 16) //'
+                                SkinContainer.FONT.Add(39, new Bitmap(bitmap));
+                            if (col == 17) //!
+                                SkinContainer.FONT.Add(33, new Bitmap(bitmap));
+                            if (col == 18) //_
+                                SkinContainer.FONT.Add(95, new Bitmap(bitmap));
+                            if (col == 19) //+
+                                SkinContainer.FONT.Add(43, new Bitmap(bitmap));
+                            if (col == 20) // \
+                                SkinContainer.FONT.Add(92, new Bitmap(bitmap));
+                            if (col == 21) // /
+                                SkinContainer.FONT.Add(47, new Bitmap(bitmap));
+                            if (col == 22) // [
+                                SkinContainer.FONT.Add(91, new Bitmap(bitmap));
+                            if (col == 23) // ]
+                                SkinContainer.FONT.Add(93, new Bitmap(bitmap));
+                        }
                     }
-                    else if (i == 26 || i == 27)
-                    {
-                        SkinContainer.FONT.Add(((i == 26) ? 34 : 64), new Bitmap(bitmap));
-                    }
-                    else
-                    {
-                        SkinContainer.FONT.Add(32, new Bitmap(bitmap));
-                    }
-                }
-                //Numbers
-                for (int i = 0; i < 10; i++)
-                {
-                    graphics.DrawImage(img, new Rectangle(0, 0, 5, 6), new Rectangle(i * 5, 6, 5, 6), GraphicsUnit.Pixel);
-                    SkinContainer.FONT.Add(48 + i, new Bitmap(bitmap));
                 }
                 bitmap.Dispose();
             }

@@ -171,6 +171,17 @@ namespace BardMusicPlayer.Maestro
             _orchestrator.OpenInputDevice(device);
         }
 
+
+        /// <summary>
+        /// close the MidiInput device
+        /// </summary>
+        public void CloseInputDevice()
+        {
+            if (_orchestrator == null)
+                _orchestrator = new Orchestrator();
+            _orchestrator.CloseInputDevice();
+        }
+
         #region Playback
         /// <summary>
         /// Starts the playback

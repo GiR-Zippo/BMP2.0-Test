@@ -224,6 +224,18 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
+        /// Close the MidiInput for the first performer
+        /// </summary>
+        public void CloseInputDevice()
+        {
+            foreach (var perf in performer)
+            {
+                if (perf.Value.HostProcess)
+                    perf.Value.Sequencer.CloseInputDevice();
+            }
+        }
+
+        /// <summary>
         /// Seeks the song to absolute position
         /// </summary>
         /// <param name="ticks"></param>

@@ -14,6 +14,7 @@ using BardMusicPlayer.Maestro;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using BardMusicPlayer.Transmogrify.Song;
+using BardMusicPlayer.Pigeonhole;
 
 namespace BardMusicPlayer.Ui.Classic
 {
@@ -120,12 +121,11 @@ namespace BardMusicPlayer.Ui.Classic
         {
             if (e.IsHost)
                 NumValue = e.TrackNumber;
-            
         }
 
         public void EnsembleStart()
         {
-            if (Globals.Settings.AutostartType != Globals.Settings.Autostart_Types.VIA_METRONOME)
+            if (BmpPigeonhole.Instance.AutostartMethod != (int)Globals.Globals.Autostart_Types.VIA_METRONOME)
                 return;
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                 return;
@@ -142,7 +142,7 @@ namespace BardMusicPlayer.Ui.Classic
                     line.Contains("The count-in will now commence.") ||
                     line.Contains("orchestre est pr"))
                 {
-                    if (Globals.Settings.AutostartType != Globals.Settings.Autostart_Types.VIA_CHAT)
+                    if (BmpPigeonhole.Instance.AutostartMethod != (int)Globals.Globals.Autostart_Types.VIA_CHAT)
                         return;
                     if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                         return;

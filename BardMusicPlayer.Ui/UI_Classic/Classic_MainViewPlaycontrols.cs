@@ -1,14 +1,11 @@
-﻿using BardMusicPlayer.Seer;
-using Melanchall.DryWetMidi.Interaction;
-using System;
-using System.Threading;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Maestro;
+using BardMusicPlayer.Pigeonhole;
 
 namespace BardMusicPlayer.Ui.Classic
 {
@@ -56,10 +53,12 @@ namespace BardMusicPlayer.Ui.Classic
             if (_alltracks)
             {
                 BmpMaestro.Instance.SetTracknumberOnHost(0);
+                BmpPigeonhole.Instance.PlayAllTracks = true;
                 all_tracks_button.Background = Brushes.LightSteelBlue;
             }
             else
             {
+                BmpPigeonhole.Instance.PlayAllTracks = false;
                 BmpMaestro.Instance.SetTracknumberOnHost(1);
                 NumValue = BmpMaestro.Instance.GetHostBardTrack();
                 all_tracks_button.ClearValue(Button.BackgroundProperty);
@@ -83,8 +82,7 @@ namespace BardMusicPlayer.Ui.Classic
 
         private void Playbar_Slider_DragCompleted(object sender, DragCompletedEventArgs e)
         {
-            Console.WriteLine("" + ((Slider)sender).Value.ToString());
-            Maestro.BmpMaestro.Instance.SetPlaybackStart((int)((Slider)sender).Value);
+            BmpMaestro.Instance.SetPlaybackStart((int)((Slider)sender).Value);
             this._Playbar_dragStarted = false;
         }
 

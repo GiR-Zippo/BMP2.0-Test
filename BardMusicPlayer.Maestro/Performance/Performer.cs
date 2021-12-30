@@ -72,7 +72,10 @@ namespace BardMusicPlayer.Maestro.Performance
                         sequencer.Load(value.LoadedFilename, this.TrackNumber);
 
                     if (HostProcess)
-                        sequencer.OpenInputDevice(BmpPigeonhole.Instance.MidiInputDev);
+                    {
+                        if (BmpPigeonhole.Instance.MidiInputDev != -1)
+                            sequencer.OpenInputDevice(BmpPigeonhole.Instance.MidiInputDev);
+                    }
 
                     sequencer.OnNote += InternalNote;
                     sequencer.OffNote += InternalNote;

@@ -143,7 +143,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="161"/>
                 <ColumnDefinition Width="102"/>
-                <ColumnDefinition Width="4"/>
+                <ColumnDefinition Width="2"/>
                 <ColumnDefinition Width="57"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="34.5"/>
@@ -172,7 +172,7 @@
                 Thumb.DragStarted="Octavebar_Slider_DragStarted" 
                 Thumb.DragCompleted="Octavebar_Slider_DragCompleted"/>
             <!-- Right buttons -->
-            <Button Grid.Column="5" Style="{StaticResource ImageButton}" x:Name="Playlist_Button" Margin="0,-2"
+            <Button Grid.Column="5" Style="{StaticResource ImageButton}" x:Name="Playlist_Button" Margin="0,-1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Width="34.5"

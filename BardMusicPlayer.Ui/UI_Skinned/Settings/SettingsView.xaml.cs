@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Maestro;
+using System.Collections.Generic;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -14,16 +15,15 @@ namespace BardMusicPlayer.Ui.Skinned
         public SettingsView()
         {
             InitializeComponent();
-            Autostart_source.SelectedIndex = (int)Globals.Settings.AutostartType;
+            Autostart_source.SelectedIndex = BmpPigeonhole.Instance.AutostartMethod;
 
             this.LocalOrchestraBox.IsChecked = BmpPigeonhole.Instance.LocalOrchestra;
             this.HoldNotesBox.IsChecked = BmpPigeonhole.Instance.HoldNotes;
             this.ForcePlaybackBox.IsChecked = BmpPigeonhole.Instance.ForcePlayback;
 
             MIDI_Input_DeviceBox.Items.Clear();
-            _ = MIDI_Input_DeviceBox.Items.Add((0, "None"));
-            foreach (var input in Maestro.Utils.MidiInput.ReloadMidiInputDevices())
-                _ = MIDI_Input_DeviceBox.Items.Add(input);
+            MIDI_Input_DeviceBox.ItemsSource = Maestro.Utils.MidiInput.ReloadMidiInputDevices();
+            this.MIDI_Input_DeviceBox.SelectedIndex = BmpPigeonhole.Instance.MidiInputDev + 1;
 
             this.MIDI_Input_DeviceBox.SelectedIndex = BmpPigeonhole.Instance.MidiInputDev+1;
             ClassicSkin.IsChecked = BmpPigeonhole.Instance.ClassicUi;
@@ -47,14 +47,19 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Autostart_source_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             int d = Autostart_source.SelectedIndex;
-            Globals.Settings.AutostartType = (Globals.Settings.Autostart_Types)d;
+            BmpPigeonhole.Instance.AutostartMethod = (int)d;
         }
         private void MIDI_Input_Device_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int data = MIDI_Input_DeviceBox.SelectedIndex;
-            data--;
-            BmpMaestro.Instance.OpenInputDevice(data);
-            BmpPigeonhole.Instance.MidiInputDev = data;
+            var d = (KeyValuePair<int, string>)MIDI_Input_DeviceBox.SelectedItem;
+            BmpPigeonhole.Instance.MidiInputDev = d.Key;
+            if (d.Key == -1)
+            {
+                BmpMaestro.Instance.CloseInputDevice();
+                return;
+            }
+
+            BmpMaestro.Instance.OpenInputDevice(d.Key);
         }
 
         private void LocalOrchestraBox_Checked(object sender, RoutedEventArgs e)

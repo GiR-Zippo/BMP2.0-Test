@@ -23,7 +23,7 @@ namespace BardMusicPlayer.Maestro.Utils
         public static Dictionary<int, string> ReloadMidiInputDevices()
         {
             Dictionary<int, string> midiInputs = new Dictionary<int, string>();
-
+            midiInputs.Add(-1, "None");
             for (int i = 0; i < InputDevice.DeviceCount; i++)
             {
                 MidiInCaps cap = InputDevice.GetDeviceCapabilities(i);

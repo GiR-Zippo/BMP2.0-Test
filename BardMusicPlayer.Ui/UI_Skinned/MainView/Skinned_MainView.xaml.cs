@@ -44,7 +44,7 @@ namespace BardMusicPlayer.Ui.Skinned
             var mw = (MainWindow)Application.Current.MainWindow;
             _PlaylistView.Show();
             _BardListView.Show();
-            
+
             _PlaylistView.Top = ((MainWindow)Application.Current.MainWindow).Top + ((MainWindow)Application.Current.MainWindow).ActualHeight;
             _PlaylistView.Left = ((MainWindow)Application.Current.MainWindow).Left;
             _PlaylistView.OnLoadSongFromPlaylist += OnLoadSongFromPlaylist;
@@ -58,11 +58,15 @@ namespace BardMusicPlayer.Ui.Skinned
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
 
+            //Set the *bar params
             this.Trackbar_Slider.Maximum = 8;
             this.Trackbar_Slider.Value = 1;
             this.Octavebar_Slider.Maximum = 8;
             this.Octavebar_Slider.Minimum = 0;
             this.Octavebar_Slider.Value = 4;
+
+            if (BmpPigeonhole.Instance.PlayAllTracks)
+                BmpMaestro.Instance.SetTracknumberOnHost(0);
 
             int track = BmpMaestro.Instance.GetHostBardTrack();
             WriteSmallDigitField(track.ToString());
@@ -116,7 +120,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         public void EnsembleStart()
         {
-            if (Globals.Settings.AutostartType != Globals.Settings.Autostart_Types.VIA_METRONOME)
+            if (BmpPigeonhole.Instance.AutostartMethod != (int)Globals.Globals.Autostart_Types.VIA_METRONOME)
                 return;
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                 return;
@@ -132,7 +136,7 @@ namespace BardMusicPlayer.Ui.Skinned
                     line.Contains("The count-in will now commence.") ||
                     line.Contains("orchestre est pr"))
                 {
-                    if (Globals.Settings.AutostartType != Globals.Settings.Autostart_Types.VIA_CHAT)
+                    if (BmpPigeonhole.Instance.AutostartMethod != (int)Globals.Globals.Autostart_Types.VIA_CHAT)
                         return;
 
                     if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)

@@ -91,7 +91,7 @@ namespace BardMusicPlayer.Ui.Skinned
             graphics.DrawImage(img, 5 * 0, 0);
             img = SkinContainer.FONT[(Minutes.Length == 1) ? Minutes.ToArray()[0] : Minutes.ToArray()[1]];
             graphics.DrawImage(img, 5 * 1, 0);
-            img = SkinContainer.FONT[32];
+            img = SkinContainer.FONT[58];
             graphics.DrawImage(img, 5 * 2, 0);
             img = SkinContainer.FONT[(Seconds.Length == 1) ? '0' : Seconds.ToArray()[0]];
             graphics.DrawImage(img, 5 * 3, 0);

@@ -7,6 +7,7 @@ using BardMusicPlayer.Maestro;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using System;
+using BardMusicPlayer.Pigeonhole;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -114,6 +115,10 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             if (Trackbar_Slider.Value > MaxTracks)
                 Trackbar_Slider.Value = MaxTracks;
+            if (Trackbar_Slider.Value == 0)
+                BmpPigeonhole.Instance.PlayAllTracks = true;
+            else
+                BmpPigeonhole.Instance.PlayAllTracks = false;
 
             BmpMaestro.Instance.SetTracknumberOnHost((int)Trackbar_Slider.Value);
             this._Trackbar_dragStarted = false;
