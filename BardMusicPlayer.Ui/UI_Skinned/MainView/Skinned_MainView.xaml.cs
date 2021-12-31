@@ -31,12 +31,15 @@ namespace BardMusicPlayer.Ui.Skinned
 
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
+        public Skinned_MainView_Ex _MainView_Ex;
 
         private CancellationTokenSource Scroller = new CancellationTokenSource();
         public Skinned_MainView()
         {
             InitializeComponent();
             LoadSkin(BmpPigeonhole.Instance.LastSkin);
+
+            _MainView_Ex = new Skinned_MainView_Ex();
 
             //open the bards window
             _BardListView = new BardsWindow();
@@ -73,6 +76,8 @@ namespace BardMusicPlayer.Ui.Skinned
 
             int track = BmpMaestro.Instance.GetHostBardTrack();
             WriteSmallDigitField(track.ToString());
+
+            SetWindowPositions();
         }
 
         #region EventCallbacks
@@ -221,12 +226,32 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             if (e.ChangedButton == MouseButton.Left)
             {
+                double oLeft = Application.Current.MainWindow.Left;
+                double oTop = Application.Current.MainWindow.Top;
+
                 ((MainWindow)System.Windows.Application.Current.MainWindow).DragMove();
-                Window mainWindow = Application.Current.MainWindow;
-                _PlaylistView.Width = mainWindow.Width;
-                _PlaylistView.Top = (mainWindow.Top + mainWindow.Height);
-                _PlaylistView.Left = mainWindow.Left;
-                mainWindow = null;
+                oLeft = (Application.Current.MainWindow.Left - oLeft);
+                oTop = (Application.Current.MainWindow.Top - oTop);
+
+
+                if (this._MainView_Ex.Visibility == Visibility.Visible)
+                {
+                    Window mainWindow = Application.Current.MainWindow;
+                    _MainView_Ex.Width = mainWindow.Width;
+                    _MainView_Ex.Top = (mainWindow.Top + mainWindow.Height);
+                    _MainView_Ex.Left = mainWindow.Left;
+
+                    _PlaylistView.Width = mainWindow.Width;
+                    _PlaylistView.Left = _PlaylistView.Left + oLeft;
+                    _PlaylistView.Top = _PlaylistView.Top + oTop;
+                    mainWindow = null;
+                }
+                else
+                {
+                    Window mainWindow = Application.Current.MainWindow;
+                    _PlaylistView.Left = _PlaylistView.Left + oLeft;
+                    _PlaylistView.Top = _PlaylistView.Top + oTop;
+                }
             }
         }
 
@@ -270,6 +295,63 @@ namespace BardMusicPlayer.Ui.Skinned
         private void ShowPlaylistWindow_Click(object sender, RoutedEventArgs e)
         {
             this._PlaylistView.Visibility = Visibility.Visible;
+        }
+
+        private void ShowExtendedView_Click(object sender, RoutedEventArgs e)
+        {
+            if (_MainView_Ex.IsVisible)
+                this._MainView_Ex.Visibility = Visibility.Hidden;
+            else
+            {
+                this._MainView_Ex.Visibility = Visibility.Visible;
+                Window mainWindow = Application.Current.MainWindow;
+                _MainView_Ex.Width = mainWindow.Width;
+                _MainView_Ex.Top = (mainWindow.Top + mainWindow.Height);
+                _MainView_Ex.Left = mainWindow.Left;
+            }
+        }
+
+        private void SetWindowPositions()
+        {
+            if (this._MainView_Ex.Visibility == Visibility.Visible)
+            {
+                Window mainWindow = Application.Current.MainWindow;
+                _MainView_Ex.Top = (mainWindow.Top + mainWindow.Height);
+                _MainView_Ex.Left = mainWindow.Left;
+
+                _PlaylistView.Top = (mainWindow.Top + mainWindow.Height) + 172;
+                _PlaylistView.Left = mainWindow.Left;
+                mainWindow = null;
+            }
+            else
+            {
+                Window mainWindow = Application.Current.MainWindow;
+                _PlaylistView.Top = (mainWindow.Top + mainWindow.Height);
+                _PlaylistView.Left = mainWindow.Left;
+            }
+        }
+
+        private void ResethWindowPositions_Click(object sender, RoutedEventArgs e)
+        {
+            if (this._MainView_Ex.Visibility == Visibility.Visible)
+            {
+                Window mainWindow = Application.Current.MainWindow;
+                _MainView_Ex.Width = mainWindow.Width;
+                _MainView_Ex.Top = (mainWindow.Top + mainWindow.Height);
+                _MainView_Ex.Left = mainWindow.Left;
+
+                _PlaylistView.Width = mainWindow.Width;
+                _PlaylistView.Top = (mainWindow.Top + mainWindow.Height) + 172;
+                _PlaylistView.Left = mainWindow.Left;
+                mainWindow = null;
+            }
+            else
+            {
+                Window mainWindow = Application.Current.MainWindow;
+                _PlaylistView.Width = mainWindow.Width;
+                _PlaylistView.Top = (mainWindow.Top + mainWindow.Height);
+                _PlaylistView.Left = mainWindow.Left;
+            }
         }
     }
 }

@@ -312,7 +312,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             List<string> visdata = ExtractViscolorFromZip(filename, "viscolor.txt");
             SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_BACKGROUND]));
-            SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS]));
+            //SkinContainer.VISCOLOR.Add(SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS, GetColor(visdata[(int)SkinContainer.VISCOLOR_TYPES.VISCOLOR_PEAKS]));
 
             //load the bitmaps
             loadTitlebarAndButtons(filename);
@@ -323,6 +323,7 @@ namespace BardMusicPlayer.Ui.Skinned
             loadTransportbarAndClutter(filename);
             loadPlaylistDesign(filename);
             loadPlaylistColor(filename);
+            loadEqBackGround(filename);
             loadShufRepDesign(filename);
             loadMediaBrowserWindow(filename);
             loadAVSWindow(filename);
@@ -520,6 +521,26 @@ namespace BardMusicPlayer.Ui.Skinned
             Application.Current.Resources["PLAYLIST_SLIDER_THUMB"] = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_SCROLL_HANDLE];
             Application.Current.Resources["PLAYLIST_SLIDER_THUMB_SELECTED"] = SkinContainer.PLAYLIST[SkinContainer.PLAYLIST_TYPES.PLAYLIST_SCROLL_HANDLE_SELECTED];
 
+        }
+
+
+        private void loadEqBackGround(string filename)
+        {
+            Image img = ExtractImageFromZip(filename, "eqmain.bmp");
+            if (img == null)
+                img = loadDefaultSkinData("eqmain.bmp");
+            //foreach (KeyValuePair<SkinContainer.EQ_TYPES, List<int>> data in eqdata)
+            {
+                KeyValuePair<SkinContainer.EQ_TYPES, List<int>> data = eqdata.First();
+                Bitmap bitmap = new Bitmap(data.Value.ElementAt(2), data.Value.ElementAt(3));
+                var graphics = Graphics.FromImage(bitmap);
+
+                graphics.DrawImage(img, new Rectangle(0, 0, data.Value.ElementAt(2), data.Value.ElementAt(3)), new Rectangle(data.Value.ElementAt(0), data.Value.ElementAt(1), data.Value.ElementAt(2), data.Value.ElementAt(3)), GraphicsUnit.Pixel);
+                SkinContainer.EQUALIZER.Add(data.Key, new ImageBrush(Imaging.CreateBitmapSourceFromHBitmap(bitmap.GetHbitmap(), IntPtr.Zero,
+                                                                            Int32Rect.Empty,
+                                                                            BitmapSizeOptions.FromEmptyOptions())));
+                bitmap.Dispose();
+            }
         }
 
         /// <summary>

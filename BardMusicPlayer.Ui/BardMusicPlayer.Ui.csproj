@@ -290,6 +290,9 @@
     <Compile Include="UI_Skinned\BardWindow\BardsWindow.xaml.cs">
       <DependentUpon>BardsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_Skinned\MainView\Skinned_MainView_Ex.xaml.cs">
+      <DependentUpon>Skinned_MainView_Ex.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_Skinned\Playlist\MediaBrowser.xaml.cs">
       <DependentUpon>MediaBrowser.xaml</DependentUpon>
     </Compile>
@@ -369,6 +372,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\PlayBarStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_Skinned\MainView\Skinned_MainView_Ex.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
