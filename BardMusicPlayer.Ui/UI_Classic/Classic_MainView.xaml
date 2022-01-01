@@ -19,7 +19,7 @@ Width="Auto" Height="Auto"
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="190*"/>
+                <ColumnDefinition Width="200*"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="300*"/>
             </Grid.ColumnDefinitions>
@@ -45,7 +45,7 @@ Width="Auto" Height="Auto"
                     <Button x:Name="Playlist_Remove_Button" Click="Playlist_Remove_Button_Click" Content="-"    ToolTip="Remove the loaded song from the playlist"    Height="20" Width="20" Grid.Column="4"/>
                     <Button x:Name="Playlist_Delete_Button" Click="Playlist_Delete_Button_Click" Content="X"    ToolTip="delete the current playlist"                 Height="20" Width="20" Grid.Column="5"/>
                 </Grid>
-                <DataGrid x:Name="PlaylistContainer" Margin="10,24,0,23" AutoGenerateColumns="False" PreviewMouseDoubleClick="PlaylistContainer_PreviewMouseDoubleClick">
+                <DataGrid x:Name="PlaylistContainer" Margin="10,24,0,23" AutoGenerateColumns="False" PreviewMouseDoubleClick="PlaylistContainer_PreviewMouseDoubleClick" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" IsReadOnly="true" Width="*" Binding="{Binding}" ></DataGridTextColumn>
                     </DataGrid.Columns>
