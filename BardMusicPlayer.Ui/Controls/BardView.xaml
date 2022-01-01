@@ -41,8 +41,9 @@
                     <TextBlock Grid.Column="3" Grid.Row="1" Margin="12,0,0,0" Text="{Binding TrackInstrument, Mode=OneTime, StringFormat=m\\:ss}" />
 
                     <TextBlock Grid.Column="5" Grid.Row="0" Text="Track" />
-                    <control:NumericUpDown Grid.Column="5" Grid.Row="1" x:Name="TrackControl"  PreviewMouseUp="NumericUpDown_MouseUp" Value="{Binding TrackNumber}"/>
-                    
+                    <control:NumericUpDown Grid.Column="5" Grid.Row="1"       x:Name="TrackControl"   PreviewMouseUp="NumericUpDown_MouseUp"        Value="{Binding TrackNumber}"/>
+                    <control:OctaveNumericUpDown Grid.Column="6" Grid.Row="1" x:Name="OctaveControl"  PreviewMouseUp="OctaveControl_PreviewMouseUp" Value="{Binding OctaveShift}"/>
+
                     <TextBlock Grid.Column="7" Grid.Row="0" Text="Host" HorizontalAlignment="Right"/>
                     <CheckBox  Grid.Column="7" Grid.Row="1" x:Name="HostChecker" HorizontalAlignment="Right" Checked="HostChecker_Checked" IsChecked="{Binding HostProcess, Mode=TwoWay}"/>
                 </Grid>

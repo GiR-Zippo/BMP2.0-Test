@@ -57,6 +57,7 @@ namespace BardMusicPlayer.Ui.Skinned
             BmpMaestro.Instance.OnSongMaxTime += Instance_PlaybackMaxTime;
             BmpMaestro.Instance.OnPlaybackTimeChanged += Instance_PlaybackTimeChanged;
             BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
+            BmpMaestro.Instance.OnOctaveShiftChanged += Instance_OctaveShiftChanged;
             BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
 
             //same for seer
@@ -111,6 +112,10 @@ namespace BardMusicPlayer.Ui.Skinned
         private void Instance_TrackNumberChanged(object sender, Maestro.Events.TrackNumberChangedEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.UpdateTrackNumberAndInstrument(e)));
+        }
+        private void Instance_OctaveShiftChanged(object sender, Maestro.Events.OctaveShiftChangedEvent e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.UpdateOctaveShift(e)));
         }
 
         private void Instance_PlaybackStopped(object sender, bool e)
@@ -171,6 +176,16 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Trackbar_Slider.Value = track;
             WriteSmallDigitField(e.TrackNumber.ToString());
             WriteInstrumentDigitField(PlaybackFunctions.GetInstrumentNameForHostPlayer());
+        }
+
+        /// <summary>
+        /// update the octaveshift slider and displayed value
+        /// </summary>
+        private void UpdateOctaveShift(Maestro.Events.OctaveShiftChangedEvent e)
+        {
+            if (!e.IsHost)
+                return;
+            this.Octavebar_Slider.Value = e.OctaveShift+4;
         }
 
         /// <summary>

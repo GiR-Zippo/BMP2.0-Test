@@ -25,6 +25,7 @@ namespace BardMusicPlayer.Ui.Controls
 
             BmpMaestro.Instance.OnPerformerChanged += OnPerfomerChanged;
             BmpMaestro.Instance.OnTrackNumberChanged += OnTrackNumberChanged;
+            BmpMaestro.Instance.OnOctaveShiftChanged += OnOctaveShiftChanged;
             BmpMaestro.Instance.OnSongLoaded += OnSongLoaded;
             BmpSeer.Instance.PlayerNameChanged += OnPlayerNameChanged;
             BmpSeer.Instance.InstrumentHeldChanged += OnInstrumentHeldChanged;
@@ -42,6 +43,11 @@ namespace BardMusicPlayer.Ui.Controls
         }
 
         private void OnTrackNumberChanged(object sender, TrackNumberChangedEvent e)
+        {
+            UpdateList();
+        }
+
+        private void OnOctaveShiftChanged(object sender, OctaveShiftChangedEvent e)
         {
             UpdateList();
         }
@@ -92,7 +98,7 @@ namespace BardMusicPlayer.Ui.Controls
         private void OnValueChanged(object sender, int s)
         {
             Performer game = (sender as NumericUpDown).DataContext as Performer;
-            BmpMaestro.Instance.SetTracknumber(game.game, s);
+            BmpMaestro.Instance.SetTracknumber(game, s);
         }
 
         private void HostChecker_Checked(object sender, RoutedEventArgs e)
@@ -103,6 +109,18 @@ namespace BardMusicPlayer.Ui.Controls
 
             var game = (sender as CheckBox).DataContext as Performer;
             BmpMaestro.Instance.SetHostBard(game);
+        }
+
+        private void OctaveControl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            OctaveNumericUpDown ctl = sender as OctaveNumericUpDown;
+            ctl.OnValueChanged += OnOctaveValueChanged;
+        }
+
+        private void OnOctaveValueChanged(object sender, int s)
+        {
+            Performer performer = (sender as OctaveNumericUpDown).DataContext as Performer;
+            BmpMaestro.Instance.SetOctaveshift(performer, s);
         }
     }
 }

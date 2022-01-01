@@ -15,6 +15,7 @@ namespace BardMusicPlayer.Maestro
         public EventHandler<bool> OnPlaybackStopped;
         public EventHandler<bool> OnPerformerChanged;
         public EventHandler<TrackNumberChangedEvent> OnTrackNumberChanged;
+        public EventHandler<OctaveShiftChangedEvent> OnOctaveShiftChanged;
         private ConcurrentQueue<MaestroEvent> _eventQueue;
         private bool _eventQueueOpen;
 
@@ -56,6 +57,11 @@ namespace BardMusicPlayer.Maestro
                                 if (OnTrackNumberChanged == null)
                                     break;
                                 OnTrackNumberChanged(this, trackNumberChanged);
+                                break;
+                            case OctaveShiftChangedEvent octaveShiftChanged:
+                                if (OnOctaveShiftChanged == null)
+                                    break;
+                                OnOctaveShiftChanged(this, octaveShiftChanged);
                                 break;
 
                         };

@@ -7,17 +7,17 @@ namespace BardMusicPlayer.Ui.Controls
     /// <summary>
     /// Interaktionslogik für NumericUpDown.xaml
     /// </summary>
-    public partial class NumericUpDown : UserControl
+    public partial class OctaveNumericUpDown : UserControl
     {
         public EventHandler<int> OnValueChanged;
 
-        public NumericUpDown()
+        public OctaveNumericUpDown()
         {
             InitializeComponent();
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(string), typeof(NumericUpDown), new PropertyMetadata(OnValueChangedCallBack));
+            DependencyProperty.Register("Value", typeof(string), typeof(OctaveNumericUpDown), new PropertyMetadata(OnValueChangedCallBack));
 
         public string Value
         {
@@ -27,7 +27,7 @@ namespace BardMusicPlayer.Ui.Controls
 
         private static void OnValueChangedCallBack(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            NumericUpDown c = sender as NumericUpDown;
+            OctaveNumericUpDown c = sender as OctaveNumericUpDown;
             if (c != null)
             {
                 c.OnValueChangedC(c.Value);
@@ -41,14 +41,14 @@ namespace BardMusicPlayer.Ui.Controls
 
 
         /* Track UP/Down */
-        private int _numValue = 1;
+        private int _numValue = 0;
         public int NumValue
         {
             get { return _numValue; }
             set
             {
                 _numValue = value;
-                this.Text.Text = "T" + NumValue.ToString();
+                this.Text.Text = "ø" + NumValue.ToString();
                 OnValueChanged?.Invoke(this, _numValue);
                 return;
             }
@@ -68,10 +68,8 @@ namespace BardMusicPlayer.Ui.Controls
             if (Text == null)
                 return;
 
-            if (int.TryParse(Text.Text.Replace("T", ""), out _numValue))
-            {
+            if (int.TryParse(Text.Text.Replace(@"ø", ""), out _numValue))
                 NumValue = _numValue;
-            }
         }
 
     }

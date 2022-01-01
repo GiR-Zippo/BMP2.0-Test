@@ -79,6 +79,16 @@ namespace BardMusicPlayer.Maestro
         }
 
         /// <summary>
+        /// sets the octave shift for performer
+        /// </summary>
+        /// <param name="octave"></param>
+        public void SetOctaveshift(Performer p, int octave)
+        {
+            if (_orchestrator != null)
+                _orchestrator.SetOctaveshift(p, octave);
+        }
+
+        /// <summary>
         /// sets the octave shift for host performer
         /// </summary>
         /// <param name="octave"></param>
@@ -131,11 +141,12 @@ namespace BardMusicPlayer.Maestro
         /// <summary>
         /// Change the tracknumber; 0 all tracks
         /// </summary>
+        /// <param name="performer">the bard</param>
         /// <param name="tracknumber"></param>
-        public void SetTracknumber(int tracknumber)
+        public void SetTracknumber(Performer p, int tracknumber)
         {
             if (_orchestrator != null)
-                _orchestrator.SetTracknumber(tracknumber);
+                _orchestrator.SetTracknumber(p, tracknumber);
         }
 
         /// <summary>

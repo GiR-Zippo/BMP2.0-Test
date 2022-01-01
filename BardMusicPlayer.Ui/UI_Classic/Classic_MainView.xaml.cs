@@ -40,6 +40,7 @@ namespace BardMusicPlayer.Ui.Classic
             BmpMaestro.Instance.OnSongLoaded += Instance_OnSongLoaded;
             BmpMaestro.Instance.OnPlaybackStopped += Instance_PlaybackStopped;
             BmpMaestro.Instance.OnTrackNumberChanged += Instance_TrackNumberChanged;
+            BmpMaestro.Instance.OnOctaveShiftChanged += Instance_OctaveShiftChanged;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
             LoadConfig();
@@ -69,6 +70,11 @@ namespace BardMusicPlayer.Ui.Classic
         private void Instance_TrackNumberChanged(object sender, Maestro.Events.TrackNumberChangedEvent e)
         {
             this.Dispatcher.BeginInvoke(new Action(() => this.TracknumberChanged(e)));
+        }
+
+        private void Instance_OctaveShiftChanged(object sender, Maestro.Events.OctaveShiftChangedEvent e)
+        {
+            this.Dispatcher.BeginInvoke(new Action(() => this.OctaveShiftChanged(e)));
         }
 
         private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
@@ -130,6 +136,12 @@ namespace BardMusicPlayer.Ui.Classic
                 NumValue = e.TrackNumber;
                 UpdateNoteCountForTrack();
             }
+        }
+
+        public void OctaveShiftChanged(Maestro.Events.OctaveShiftChangedEvent e)
+        {
+            if (e.IsHost)
+                OctaveNumValue = e.OctaveShift;
         }
 
         public void EnsembleStart()

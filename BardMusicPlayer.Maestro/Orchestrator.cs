@@ -105,9 +105,23 @@ namespace BardMusicPlayer.Maestro
                 if (perf.Value.HostProcess)
                 {
                     perf.Value.OctaveShift = octave;
+                    BmpMaestro.Instance.PublishEvent(new OctaveShiftChangedEvent(perf.Value.game, octave, perf.Value.HostProcess));
                     return;
                 }
             }
+        }
+
+        /// <summary>
+        /// sets the octaveshift for host performer (used for Ui)
+        /// </summary>
+        /// <param name="performer"></param>
+        /// <param name="octave"></param>
+        public void SetOctaveshift(Performer p, int octave)
+        {
+            if (p == null)
+                return;
+            p.OctaveShift = octave;
+            BmpMaestro.Instance.PublishEvent(new OctaveShiftChangedEvent(p.game, octave, p.HostProcess));
         }
 
         /// <summary>
@@ -141,18 +155,15 @@ namespace BardMusicPlayer.Maestro
         /// <summary>
         /// sets the track for specific performer
         /// </summary>
-        /// <param name="game"></param>
+        /// <param name="performer"></param>
         /// <param name="tracknumber"></param>
-        public void SetTracknumber(Performer p, int tracknumber)
+        public void SetTracknumber(Performer perf, int tracknumber)
         {
-            foreach (var perf in performer)
-            {
-                if (perf.Value.PId == p.PId)
-                {
-                    perf.Value.TrackNumber = tracknumber;
-                    BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.Value.game, tracknumber, perf.Value.HostProcess));
-                }
-            }
+            if (perf == null)
+                return;
+
+            perf.TrackNumber = tracknumber;
+            BmpMaestro.Instance.PublishEvent(new TrackNumberChangedEvent(perf.game, tracknumber, perf.HostProcess));
         }
 
         /// <summary>
