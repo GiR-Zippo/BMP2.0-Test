@@ -109,6 +109,7 @@ namespace BardMusicPlayer.Ui.Classic
         {
             //Statistics update
             UpdateStats(e);
+            Play_Button.Content = @"▶";
 
             MaxTracks = e.MaxTracks;
             if (NumValue <= MaxTracks)
@@ -197,8 +198,47 @@ namespace BardMusicPlayer.Ui.Classic
             if (track_txtNum == null)
                 return;
 
-            if (!int.TryParse(track_txtNum.Text.Replace("t", ""), out _numValue))
-                track_txtNum.Text = _numValue.ToString();
+            if (int.TryParse(track_txtNum.Text.Replace("t", ""), out _numValue))
+            {
+                if (_numValue < 0 || _numValue > MaxTracks)
+                    return;
+                track_txtNum.Text = "t" + _numValue.ToString();
+                BmpMaestro.Instance.SetTracknumberOnHost(_numValue);
+            }
+        }
+        /* Octave UP/Down */
+        private int _octavenumValue = 1;
+        public int OctaveNumValue
+        {
+            get { return _octavenumValue; }
+            set
+            {
+                _octavenumValue = value;
+                octave_txtNum.Text = @"ø" + value.ToString();
+            }
+        }
+        private void octave_cmdUp_Click(object sender, RoutedEventArgs e)
+        {
+            OctaveNumValue++;
+            BmpMaestro.Instance.SetOctaveshiftOnHost(OctaveNumValue);
+        }
+
+        private void octave_cmdDown_Click(object sender, RoutedEventArgs e)
+        {
+            OctaveNumValue--;
+            BmpMaestro.Instance.SetOctaveshiftOnHost(OctaveNumValue);
+        }
+
+        private void octave_txtNum_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (octave_txtNum == null)
+                return;
+
+            if (int.TryParse(octave_txtNum.Text.Replace(@"ø", ""), out _octavenumValue))
+            {
+                octave_txtNum.Text = @"ø" + _octavenumValue.ToString();
+                BmpMaestro.Instance.SetOctaveshiftOnHost(_octavenumValue);
+            }
         }
     }
 }
