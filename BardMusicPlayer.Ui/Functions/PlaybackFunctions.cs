@@ -40,6 +40,9 @@ namespace BardMusicPlayer.Ui.Functions
             if (openFileDialog.ShowDialog() != true)
                 return false;
 
+            if (!openFileDialog.CheckFileExists)
+                return false;
+
             PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
             
             CurrentSong = BmpSong.OpenMidiFile(openFileDialog.FileName).Result;

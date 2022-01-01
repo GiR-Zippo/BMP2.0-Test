@@ -84,7 +84,7 @@ namespace BardMusicPlayer.Ui.Skinned
             if (NormalPlay)
             {
                 int idx = PlaylistContainer.SelectedIndex;
-                if (idx- 1 == -1)
+                if (idx- 1 <= -1)
                     return;
                 PlaylistContainer.SelectedIndex = idx - 1;
             }

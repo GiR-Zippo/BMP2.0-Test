@@ -180,6 +180,8 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             if (_PlaylistView.LoopPlay)
                 _PlaylistView.PlayNextSong();
+            else
+                PlaybackFunctions.StopSong();
         }
 
         /// <summary>
