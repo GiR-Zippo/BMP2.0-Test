@@ -19,11 +19,15 @@
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0" />
-                        <ColumnDefinition Width="130" />
-                        <ColumnDefinition Width="150" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="30" />
+                        <ColumnDefinition Width="0" />      <!-- 0 -->
+                        <ColumnDefinition Width="130" />    <!-- 1 -->
+                        <ColumnDefinition Width="*" />      <!-- 2 Spacer-->
+                        <ColumnDefinition Width="150" />    <!-- 3 -->
+                        <ColumnDefinition Width="10" />     <!-- 4 spacer-->
+                        <ColumnDefinition Width="40" />     <!-- 5 -->
+                        <ColumnDefinition Width="*" />      <!-- 6 spacer-->
+                        <ColumnDefinition Width="30" />     <!-- 7 -->
+                        <ColumnDefinition Width="*" />      <!-- 8 spacer-->
                     </Grid.ColumnDefinitions>
 
                     <!--<materialDesign:PackIcon
@@ -34,13 +38,13 @@
                     <TextBlock Grid.Column="1" Grid.Row="0" Margin="12,0,0,0" Text="{Binding PlayerName}" />
                     <TextBlock Grid.Column="1" Grid.Row="1" Margin="12,0,0,0" Text="{Binding HomeWorld, Mode=OneTime, StringFormat=m\\:ss}" />
 
-                    <TextBlock Grid.Column="2" Grid.Row="1" Margin="12,0,0,0" Text="{Binding TrackInstrument, Mode=OneTime, StringFormat=m\\:ss}" />
+                    <TextBlock Grid.Column="3" Grid.Row="1" Margin="12,0,0,0" Text="{Binding TrackInstrument, Mode=OneTime, StringFormat=m\\:ss}" />
 
-                    <TextBlock Grid.Column="3" Grid.Row="0" Text="Track" />
-                    <control:NumericUpDown x:Name="TrackControl" Grid.Row="1" Grid.Column="3" PreviewMouseUp="NumericUpDown_MouseUp" Value="{Binding TrackNumber}"/>
+                    <TextBlock Grid.Column="5" Grid.Row="0" Text="Track" />
+                    <control:NumericUpDown Grid.Column="5" Grid.Row="1" x:Name="TrackControl"  PreviewMouseUp="NumericUpDown_MouseUp" Value="{Binding TrackNumber}"/>
                     
-                    <TextBlock Grid.Column="4" Grid.Row="0" Text="Host" HorizontalAlignment="Right"/>
-                    <CheckBox Grid.Column="4" Grid.Row="1" x:Name="HostChecker" HorizontalAlignment="Right" Checked="HostChecker_Checked" IsChecked="{Binding HostProcess, Mode=TwoWay}"/>
+                    <TextBlock Grid.Column="7" Grid.Row="0" Text="Host" HorizontalAlignment="Right"/>
+                    <CheckBox  Grid.Column="7" Grid.Row="1" x:Name="HostChecker" HorizontalAlignment="Right" Checked="HostChecker_Checked" IsChecked="{Binding HostProcess, Mode=TwoWay}"/>
                 </Grid>
             </DataTemplate>
         </ListView.ItemTemplate>

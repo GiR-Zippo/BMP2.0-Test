@@ -19,9 +19,9 @@ Width="Auto" Height="Auto"
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MaxWidth="310"/>
+                <ColumnDefinition Width="190*"/>
                 <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="300*"/>
             </Grid.ColumnDefinitions>
 
             <!-- Playlist -->
