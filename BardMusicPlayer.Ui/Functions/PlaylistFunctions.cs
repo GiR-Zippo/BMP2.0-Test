@@ -55,5 +55,17 @@ namespace BardMusicPlayer.Ui.Functions
                 data.Add(item.Title);
             return data;
         }
+
+        public static List<string> GetCurrentPlaylistItems(IPlaylist playlist, bool withupselector = false)
+        {
+            List<string> data = new List<string>();
+            if (playlist == null)
+                return data;
+            if (withupselector)
+                data.Add("..");
+            foreach (var item in playlist)
+                data.Add(item.Title);
+            return data;
+        }
     }
 }

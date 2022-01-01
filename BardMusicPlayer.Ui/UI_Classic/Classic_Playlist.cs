@@ -19,8 +19,8 @@ namespace BardMusicPlayer.Ui.Classic
     public partial class Classic_MainView : UserControl
     {
 
-        private bool ShowingPlaylists = false;
-        IPlaylist _currentPlaylist;
+        private bool _showingPlaylists = false; //are we displaying the playlist or the songs
+        private IPlaylist _currentPlaylist; //the current selected playlist
 
         /// <summary>
         /// Create a new playlist but don't save it
@@ -34,19 +34,8 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 _currentPlaylist = PlaylistFunctions.CreatePlaylist(inputbox.ResponseText);
                 PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist);
-                ShowingPlaylists = false;
+                _showingPlaylists = false;
             }
-        }
-
-        /// <summary>
-        /// Load a playlist
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Playlist_Load_Button_Click(object sender, RoutedEventArgs e)
-        {
-            ShowingPlaylists = true;
-            PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
 
         /// <summary>
@@ -56,6 +45,8 @@ namespace BardMusicPlayer.Ui.Classic
         /// <param name="e"></param>
         private void Playlist_Save_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (_currentPlaylist == null)
+                return;
             BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
         }
 
@@ -80,6 +71,9 @@ namespace BardMusicPlayer.Ui.Classic
         /// <param name="e"></param>
         private void Playlist_Remove_Button_Click(object sender, RoutedEventArgs e)
         {
+            if (_currentPlaylist == null)
+                return;
+
             string name = PlaylistContainer.SelectedItem as string;
             foreach (BmpSong s in _currentPlaylist)
             {
@@ -99,19 +93,34 @@ namespace BardMusicPlayer.Ui.Classic
         /// <param name="e"></param>
         private void Playlist_Delete_Button_Click(object sender, RoutedEventArgs e)
         {
-            ShowingPlaylists = true;
+            if (_currentPlaylist == null)
+                return;
+
+            _showingPlaylists = true;
             BmpCoffer.Instance.DeletePlaylist(_currentPlaylist);
             PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
         }
 
         private void PlaylistContainer_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (ShowingPlaylists)
+            if ((string)PlaylistContainer.SelectedItem == null)
+                return;
+
+            if (_showingPlaylists)
             {
                 _currentPlaylist = BmpCoffer.Instance.GetPlaylist((string)PlaylistContainer.SelectedItem);
-                ShowingPlaylists = false;
-                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist);
+                _showingPlaylists = false;
+                PlaylistContainer.ItemsSource = PlaylistFunctions.GetCurrentPlaylistItems(_currentPlaylist, true);
                 return;
+            }
+            else
+            {
+                if((string)PlaylistContainer.SelectedItem == (string)"..")
+                {
+                    _showingPlaylists = true;
+                    PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
+                    return;
+                }
             }
 
             PlaybackFunctions.LoadSongFromPlaylist(PlaylistFunctions.GetSongFromPlaylist(_currentPlaylist, (string)PlaylistContainer.SelectedItem));

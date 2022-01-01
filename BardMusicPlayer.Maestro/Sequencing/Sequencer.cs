@@ -471,6 +471,9 @@ namespace BardMusicPlayer.Maestro.Sequencing
 
         public void Load(BmpSong bmpSong, int trackNum = 1)
         {
+            if (bmpSong == null)
+                return;
+
             var index = 1;
             //create a midifile   
             var midiFile = new Melanchall.DryWetMidi.Core.MidiFile();

@@ -29,7 +29,9 @@ namespace BardMusicPlayer.Ui.Classic
         {
             InitializeComponent();
 
-            ShowingPlaylists = true;
+            //Always start with the playlists
+            _showingPlaylists = true;
+            //Fill the list
             PlaylistContainer.ItemsSource = BmpCoffer.Instance.GetPlaylistNames();
 
             this.SongName.Text = PlaybackFunctions.GetSongName();
