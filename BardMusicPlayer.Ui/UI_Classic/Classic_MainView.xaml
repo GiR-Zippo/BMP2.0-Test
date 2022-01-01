@@ -59,7 +59,7 @@ Width="Auto" Height="Auto"
                 </Grid.ColumnDefinitions>
                 <TabControl Grid.ColumnSpan="2">
                     <TabItem Header="[Chat] All">
-                        <TextBox x:Name="ChatBox" IsReadOnly="False" ScrollViewer.VerticalScrollBarVisibility="Auto"></TextBox>
+                        <TextBox x:Name="ChatBox" IsReadOnly="False" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.IsDeferredScrollingEnabled="True" />
                     </TabItem>
                     <TabItem Header="Performers">
                         <Grid>
