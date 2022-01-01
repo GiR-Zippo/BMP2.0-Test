@@ -154,6 +154,7 @@ namespace BardMusicPlayer.Ui.Classic
                 }
             }
             this.ChatBox.AppendText(line + "\r\n");
+            this.ChatBox.ScrollToEnd();
         }
         #endregion
 

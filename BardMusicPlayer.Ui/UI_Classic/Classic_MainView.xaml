@@ -12,11 +12,11 @@ Width="Auto" Height="Auto"
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="250"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="60"/>
                 <RowDefinition Height="80"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MaxWidth="310"/>
@@ -59,7 +59,7 @@ Width="Auto" Height="Auto"
                 </Grid.ColumnDefinitions>
                 <TabControl Grid.ColumnSpan="2">
                     <TabItem Header="[Chat] All">
-                        <TextBox x:Name="ChatBox" IsReadOnly="False"></TextBox>
+                        <TextBox x:Name="ChatBox" IsReadOnly="False" ScrollViewer.VerticalScrollBarVisibility="Auto"></TextBox>
                     </TabItem>
                     <TabItem Header="Performers">
                         <Grid>
