@@ -419,7 +419,8 @@ namespace BardMusicPlayer.Maestro
             {
                 Instance_InstrumentHeldChanged(e);
             };
-            BmpMaestro.Instance.PublishEvent(new SongLoadedEvent(sequencer.MaxTrack));
+            BmpMaestro.Instance.PublishEvent(
+                new SongLoadedEvent(sequencer.MaxTrack, sequencer));
 
             Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
             if (perf != null)

@@ -107,6 +107,9 @@ namespace BardMusicPlayer.Ui.Classic
 
         private void OnSongLoaded(Maestro.Events.SongLoadedEvent e)
         {
+            //Statistics update
+            UpdateStats(e);
+
             MaxTracks = e.MaxTracks;
             if (NumValue <= MaxTracks)
                 return;
@@ -122,7 +125,10 @@ namespace BardMusicPlayer.Ui.Classic
         public void TracknumberChanged(Maestro.Events.TrackNumberChangedEvent e)
         {
             if (e.IsHost)
+            {
                 NumValue = e.TrackNumber;
+                UpdateNoteCountForTrack();
+            }
         }
 
         public void EnsembleStart()

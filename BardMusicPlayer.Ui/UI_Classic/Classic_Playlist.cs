@@ -1,11 +1,6 @@
 ﻿using BardMusicPlayer.Coffer;
 using BardMusicPlayer.Transmogrify.Song;
 using BardMusicPlayer.Ui.Functions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,9 +13,8 @@ namespace BardMusicPlayer.Ui.Classic
     /// </summary>
     public partial class Classic_MainView : UserControl
     {
-
-        private bool _showingPlaylists = false; //are we displaying the playlist or the songs
-        private IPlaylist _currentPlaylist; //the current selected playlist
+        private bool _showingPlaylists = false;     //are we displaying the playlist or the songs
+        private IPlaylist _currentPlaylist;         //the current selected playlist
 
         /// <summary>
         /// Create a new playlist but don't save it
