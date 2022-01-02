@@ -367,7 +367,7 @@ namespace BardMusicPlayer.Seer.Reader.Backend.Sharlayan
             _lastScan.PreviousArrayIndex = readResult.PreviousArrayIndex;
             _lastScan.PreviousOffset = readResult.PreviousOffset;
             foreach (ChatLogItem item in readResult.ChatLogItems)
-                ReaderHandler.Game.PublishEvent(new ChatLog(EventSource.Sharlayan, item));
+                ReaderHandler.Game.PublishEvent(new ChatLog(EventSource.Sharlayan, ReaderHandler.Game, item));
         }
 
     }

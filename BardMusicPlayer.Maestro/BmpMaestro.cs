@@ -55,6 +55,10 @@ namespace BardMusicPlayer.Maestro
             return _orchestrator.GetHostBardTrack();
         }
 
+        public int GetHostPid()
+        {
+            return _orchestrator.HostPid;
+        }
         #endregion
 
         #region Setters

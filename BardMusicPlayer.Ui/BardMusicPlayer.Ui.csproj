@@ -291,6 +291,7 @@
     <Compile Include="Controls\TrackNumericUpDown.xaml.cs">
       <DependentUpon>TrackNumericUpDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Globals\BmpChatParser.cs" />
     <Compile Include="UI_Classic\Classic_Settings.cs" />
     <Compile Include="UI_Classic\Classic_Siren.cs" />
     <Compile Include="UI_Classic\Classic_Statistics.cs" />

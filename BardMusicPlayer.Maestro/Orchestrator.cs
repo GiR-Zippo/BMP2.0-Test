@@ -26,7 +26,7 @@ namespace BardMusicPlayer.Maestro
         private Sequencer sequencer { get; set; } = null;
         private CancellationTokenSource _updaterTokenSource;
         private bool LocalOchestraInitialized { get; set;} = false;
-
+        public int HostPid { get; set; } = 0;
         private List<KeyValuePair<int, Performer>> performer { get; set; } = null;
 
         /// <summary>
@@ -203,6 +203,7 @@ namespace BardMusicPlayer.Maestro
                 if (perf.Value.PId == game.Pid)
                 {
                     perf.Value.HostProcess = true;
+                    HostPid = game.Pid;
                 }
                 else
                     perf.Value.HostProcess = false;
@@ -220,6 +221,7 @@ namespace BardMusicPlayer.Maestro
                 if (perf.Value.PId == p.PId)
                 {
                     perf.Value.HostProcess = true;
+                    HostPid = p.PId;
                 }
                 else
                     perf.Value.HostProcess = false;
@@ -402,6 +404,8 @@ namespace BardMusicPlayer.Maestro
                     perf.TrackNumber = 1;
                     performer.Add(new KeyValuePair<int, Performer>(game.Pid, perf));    //Add the performer
                     BmpMaestro.Instance.PublishEvent(new PerformersChangedEvent());     //And trigger an event
+                    if(IsHost)
+                        HostPid = game.Pid;
                     return true;
                 }
                 await Task.Delay(200);

@@ -79,7 +79,7 @@ namespace BardMusicPlayer.Ui.Classic
 
         private void Instance_ChatLog(Seer.Events.ChatLog seerEvent)
         {
-            this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent.ChatLogCode, seerEvent.ChatLogLine)));
+            this.Dispatcher.BeginInvoke(new Action(() => this.AppendChatLog(seerEvent)));
         }
 
         private void Instance_EnsembleStarted(Seer.Events.EnsembleStarted seerEvent)
@@ -155,13 +155,13 @@ namespace BardMusicPlayer.Ui.Classic
             Play_Button.Content = @"⏸";
         }
 
-        public void AppendChatLog(string code, string line)
+        public void AppendChatLog(Seer.Events.ChatLog ev)
         {
-            if (code == "0039")
+            if (ev.ChatLogCode == "0039")
             {
-                if (line.Contains(@"Anzählen beginnt") ||
-                    line.Contains("The count-in will now commence.") ||
-                    line.Contains("orchestre est pr"))
+                if (ev.ChatLogLine.Contains(@"Anzählen beginnt") ||
+                    ev.ChatLogLine.Contains("The count-in will now commence.") ||
+                    ev.ChatLogLine.Contains("orchestre est pr"))
                 {
                     if (BmpPigeonhole.Instance.AutostartMethod != (int)Globals.Globals.Autostart_Types.VIA_CHAT)
                         return;
@@ -172,8 +172,11 @@ namespace BardMusicPlayer.Ui.Classic
                     Play_Button.Content = @"⏸";
                 }
             }
-            this.ChatBox.AppendText(line + "\r\n");
-            this.ChatBox.ScrollToEnd();
+            if (BmpMaestro.Instance.GetHostPid() == ev.ChatLogGame.Pid)
+            {
+                BmpChatParser.AppendText(ChatBox, ev);
+                this.ChatBox.ScrollToEnd();
+            }
         }
         #endregion
 
