@@ -288,8 +288,8 @@
     <Compile Include="Controls\OctaveNumericUpDown.xaml.cs">
       <DependentUpon>OctaveNumericUpDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NumericUpDown.xaml.cs">
-      <DependentUpon>NumericUpDown.xaml</DependentUpon>
+    <Compile Include="Controls\TrackNumericUpDown.xaml.cs">
+      <DependentUpon>TrackNumericUpDown.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI_Classic\Classic_Settings.cs" />
     <Compile Include="UI_Classic\Classic_Siren.cs" />
@@ -309,7 +309,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\NumericUpDown.xaml">
+    <Page Include="Controls\TrackNumericUpDown.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

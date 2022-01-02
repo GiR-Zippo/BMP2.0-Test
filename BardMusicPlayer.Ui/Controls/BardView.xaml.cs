@@ -89,26 +89,16 @@ namespace BardMusicPlayer.Ui.Controls
         }
 
         /* Track UP/Down */
-        private void NumericUpDown_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TrackNumericUpDown_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            NumericUpDown ctl = sender as NumericUpDown;
+            TrackNumericUpDown ctl = sender as TrackNumericUpDown;
             ctl.OnValueChanged += OnValueChanged;
         }
 
         private void OnValueChanged(object sender, int s)
         {
-            Performer game = (sender as NumericUpDown).DataContext as Performer;
+            Performer game = (sender as TrackNumericUpDown).DataContext as Performer;
             BmpMaestro.Instance.SetTracknumber(game, s);
-        }
-
-        private void HostChecker_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox ctl = sender as CheckBox;
-            if (!ctl.IsChecked ?? false)
-                return;
-
-            var game = (sender as CheckBox).DataContext as Performer;
-            BmpMaestro.Instance.SetHostBard(game);
         }
 
         private void OctaveControl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -121,6 +111,16 @@ namespace BardMusicPlayer.Ui.Controls
         {
             Performer performer = (sender as OctaveNumericUpDown).DataContext as Performer;
             BmpMaestro.Instance.SetOctaveshift(performer, s);
+        }
+
+        private void HostChecker_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox ctl = sender as CheckBox;
+            if (!ctl.IsChecked ?? false)
+                return;
+
+            var game = (sender as CheckBox).DataContext as Performer;
+            BmpMaestro.Instance.SetHostBard(game);
         }
     }
 }

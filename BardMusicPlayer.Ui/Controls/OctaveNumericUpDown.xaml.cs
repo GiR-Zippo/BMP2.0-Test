@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -68,8 +69,12 @@ namespace BardMusicPlayer.Ui.Controls
             if (Text == null)
                 return;
 
-            if (int.TryParse(Text.Text.Replace(@"ø", ""), out _numValue))
-                NumValue = _numValue;
+            int val = 0;
+            string str = Regex.Replace(Text.Text, @"[^\d|\.\-]", "");
+            if (int.TryParse(str, out val))
+            {
+                NumValue = val;
+            }
         }
 
     }

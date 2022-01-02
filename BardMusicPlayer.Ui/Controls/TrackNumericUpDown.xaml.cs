@@ -1,23 +1,24 @@
-﻿using System;
+﻿using BardMusicPlayer.Ui.Functions;
+using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace BardMusicPlayer.Ui.Controls
 {
     /// <summary>
-    /// Interaktionslogik für NumericUpDown.xaml
+    /// Interaktionslogik für TrackNumericUpDown.xaml
     /// </summary>
-    public partial class NumericUpDown : UserControl
+    public partial class TrackNumericUpDown : UserControl
     {
         public EventHandler<int> OnValueChanged;
-
-        public NumericUpDown()
+        public TrackNumericUpDown()
         {
             InitializeComponent();
         }
 
         public static readonly DependencyProperty ValueProperty =
-            DependencyProperty.Register("Value", typeof(string), typeof(NumericUpDown), new PropertyMetadata(OnValueChangedCallBack));
+            DependencyProperty.Register("Value", typeof(string), typeof(TrackNumericUpDown), new PropertyMetadata(OnValueChangedCallBack));
 
         public string Value
         {
@@ -27,7 +28,7 @@ namespace BardMusicPlayer.Ui.Controls
 
         private static void OnValueChangedCallBack(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
-            NumericUpDown c = sender as NumericUpDown;
+            TrackNumericUpDown c = sender as TrackNumericUpDown;
             if (c != null)
             {
                 c.OnValueChangedC(c.Value);
@@ -55,11 +56,17 @@ namespace BardMusicPlayer.Ui.Controls
         }
         private void NumUp_Click(object sender, RoutedEventArgs e)
         {
+            if (PlaybackFunctions.CurrentSong == null)
+                return;
+            if (NumValue + 1 > PlaybackFunctions.CurrentSong.TrackContainers.Count)
+                return;
             NumValue++;
         }
 
         private void NumDown_Click(object sender, RoutedEventArgs e)
         {
+            if (NumValue - 1 < 0)
+                return;
             NumValue--;
         }
 
@@ -68,9 +75,19 @@ namespace BardMusicPlayer.Ui.Controls
             if (Text == null)
                 return;
 
-            if (int.TryParse(Text.Text.Replace("T", ""), out _numValue))
+            int val = 0;
+            string str = Regex.Replace(Text.Text, "[^0-9]", "");
+            if (int.TryParse(str, out val))
             {
-                NumValue = _numValue;
+                if (PlaybackFunctions.CurrentSong == null)
+                    return;
+
+                if ((val < 0) || (NumValue + 1 > PlaybackFunctions.CurrentSong.TrackContainers.Count))
+                {
+                    NumValue = NumValue;
+                    return;
+                }
+                NumValue = val;
             }
         }
 

@@ -25,6 +25,8 @@ namespace BardMusicPlayer.Maestro
     {
         private Sequencer sequencer { get; set; } = null;
         private CancellationTokenSource _updaterTokenSource;
+        private bool LocalOchestraInitialized { get; set;} = false;
+
         private List<KeyValuePair<int, Performer>> performer { get; set; } = null;
 
         /// <summary>
@@ -64,7 +66,6 @@ namespace BardMusicPlayer.Maestro
         public int GetHostBardTrack()
         {
             Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
-            
             return perf == null ? 1 : perf.TrackNumber;
         }
 
@@ -74,6 +75,9 @@ namespace BardMusicPlayer.Maestro
         /// <param name="midifilename">full path and filename</param>
         public void LoadMidiFile(string midifilename)
         {
+            if (!BmpPigeonhole.Instance.LocalOrchestra)
+                LocalOchestraInitialized = false;
+
             sequencer.Load(midifilename);
 
             foreach (var perf in performer)
@@ -87,6 +91,9 @@ namespace BardMusicPlayer.Maestro
         /// <param name="song"></param>
         public void LoadBMPSong(BmpSong song)
         {
+            if (!BmpPigeonhole.Instance.LocalOrchestra)
+                LocalOchestraInitialized = false;
+
             sequencer.Load(song);
 
             foreach (var perf in performer)
@@ -425,13 +432,26 @@ namespace BardMusicPlayer.Maestro
         /// </summary>
         private void InitNewPerformance()
         {
+            //if we have a local orchestra, spread the tracknumbers across the performers
+            if ((!LocalOchestraInitialized) && BmpPigeonhole.Instance.LocalOrchestra)
+            {
+                int index = 1;
+                foreach (var p in performer)
+                {
+                    if (index == sequencer.MaxTrack)
+                        index = 1;
+                    p.Value.TrackNumber = index;
+                    index++;
+                }
+                LocalOchestraInitialized = true;
+            }
+
             BmpMaestro.Instance.PublishEvent(new MaxPlayTimeEvent(sequencer.MaxTimeAsTimeSpan, sequencer.MaxTick));
             BmpSeer.Instance.InstrumentHeldChanged += delegate (Seer.Events.InstrumentHeldChanged e) 
             {
                 Instance_InstrumentHeldChanged(e);
             };
-            BmpMaestro.Instance.PublishEvent(
-                new SongLoadedEvent(sequencer.MaxTrack, sequencer));
+            BmpMaestro.Instance.PublishEvent(new SongLoadedEvent(sequencer.MaxTrack, sequencer));
 
             Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
             if (perf != null)
