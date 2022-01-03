@@ -38,6 +38,7 @@ namespace BardMusicPlayer.Maestro
             sequencer = new Sequencer();
             BmpSeer.Instance.GameStarted += e => EnsureGameExists(e.Game);
             BmpSeer.Instance.GameStopped += OnInstanceOnGameStopped;
+            BmpSeer.Instance.EnsembleRequested += Instance_EnsembleRequested;
         }
 
         #region public
@@ -293,8 +294,10 @@ namespace BardMusicPlayer.Maestro
                 }
             }
 
-            foreach (var perf in performer)
+            Parallel.ForEach(performer, perf =>
+            {
                 perf.Value.Play(true);
+            });
         }
 
         /// <summary>
@@ -341,6 +344,24 @@ namespace BardMusicPlayer.Maestro
                 perf.Value.Stop();
         }
 
+        public void EquipInstruments()
+        {
+            Thread.Sleep(100);
+            Parallel.ForEach(performer, perf =>
+            {
+                perf.Value.OpenInstrument();
+            });
+        }
+
+        public void UnEquipInstruments()
+        {
+            Thread.Sleep(100);
+            Parallel.ForEach(performer, perf =>
+            {
+                perf.Value.CloseInstrument();
+            });
+        }
+
         /// <summary>
         /// Disposing
         /// </summary>
@@ -380,6 +401,23 @@ namespace BardMusicPlayer.Maestro
         private void OnInstanceOnGameStopped(Seer.Events.GameStopped g)
         {
             RemovePerformer(g.Pid);
+        }
+
+        /// <summary>
+        /// Called if a enseble request started
+        /// </summary>
+        /// <param name="seerEvent"></param>
+        private void Instance_EnsembleRequested(Seer.Events.EnsembleRequested seerEvent)
+        {
+            //If we don't have alocal ochestra enabled get outa here
+            if (!BmpPigeonhole.Instance.LocalOrchestra)
+                return;
+            Thread.Sleep(100);
+            //Accept it
+            Parallel.ForEach(performer, perf =>
+            {
+                perf.Value.EnsembleAccept();
+            });
         }
 
         /// <summary>
@@ -442,10 +480,11 @@ namespace BardMusicPlayer.Maestro
                 int index = 1;
                 foreach (var p in performer)
                 {
+                    p.Value.TrackNumber = index;
                     if (index == sequencer.MaxTrack)
                         index = 1;
-                    p.Value.TrackNumber = index;
-                    index++;
+                    else
+                        index++;
                 }
                 LocalOchestraInitialized = true;
             }

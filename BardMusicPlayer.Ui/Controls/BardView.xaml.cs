@@ -78,6 +78,17 @@ namespace BardMusicPlayer.Ui.Controls
             this.Dispatcher.BeginInvoke(new Action(() => this.BardsList.ItemsSource = Bards));
         }
 
+
+        private void OpenInstrumentButton_Click(object sender, RoutedEventArgs e)
+        {
+            BmpMaestro.Instance.EquipInstruments();
+        }
+
+        private void CloseInstrumentButton_Click(object sender, RoutedEventArgs e)
+        {
+            BmpMaestro.Instance.UnEquipInstruments();
+        }
+
         private void BardsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Console.WriteLine(this.BardsList.SelectedItem);

@@ -234,6 +234,18 @@ namespace BardMusicPlayer.Maestro
                 _orchestrator.Stop();
             }
         }
+
+        public void EquipInstruments()
+        {
+            if (_orchestrator != null)
+                _orchestrator.EquipInstruments();
+        }
+
+        public void UnEquipInstruments()
+        {
+            if (_orchestrator != null)
+                _orchestrator.UnEquipInstruments();
+        }
         #endregion
 
         /// <summary>
