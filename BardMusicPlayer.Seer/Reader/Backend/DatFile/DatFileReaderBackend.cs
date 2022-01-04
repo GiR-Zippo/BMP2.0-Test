@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright(c) 2021 MoogleTroupe, 2018-2020 parulina
+ * Copyright(c) 2021 MoogleTroupe, sammhill, 2018-2020 parulina
  * Licensed under the GPL v3 license. See https://github.com/BardMusicPlayer/BardMusicPlayer/blob/develop/LICENSE for full license information.
  */
 
@@ -19,21 +19,19 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
     internal class DatFileReaderBackend : IReaderBackend
     {
         public EventSource ReaderBackendType { get; }
-
         public ReaderHandler ReaderHandler { get; set; }
-
         public int SleepTimeInMs { get; set; }
-
         public DatFileReaderBackend(int sleepTimeInMs)
         {
             ReaderBackendType = EventSource.DatFile;
-            SleepTimeInMs     = sleepTimeInMs;
+            SleepTimeInMs = sleepTimeInMs;
         }
 
         private string _configId = "";
         private FileSystemWatcher _fileSystemWatcher;
         private KeybindDatFile _keybindDatFile;
         private HotbarDatFile _hotbarDatFile;
+        private CommonDatFile _commonDatFile;
         private readonly object _lock = new();
 
         public async Task Loop(CancellationToken token)
@@ -44,11 +42,11 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
 
                 lock (_lock)
                 {
-                    if (_keybindDatFile != null && _hotbarDatFile != null &&
-                        (_keybindDatFile.Fresh || _hotbarDatFile.Fresh))
+                    if (_keybindDatFile != null && _hotbarDatFile != null && _commonDatFile != null && (_keybindDatFile.Fresh || _hotbarDatFile.Fresh || _commonDatFile.Fresh))
                     {
                         _keybindDatFile.Fresh = false;
-                        _hotbarDatFile.Fresh  = false;
+                        _commonDatFile.Fresh = false;
+                        _hotbarDatFile.Fresh = false;
 
                         try
                         {
@@ -60,7 +58,6 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
                                     return;
 
                                 if (instrument.Equals(Instrument.None)) continue;
-
                                 instrumentKeys.Add(instrument, Keys.None);
 
                                 var keyMap = _hotbarDatFile.GetInstrumentKeyMap(instrument);
@@ -79,7 +76,6 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
                                     return;
 
                                 if (instrumentTone.Equals(InstrumentTone.None)) continue;
-
                                 instrumentToneKeys.Add(instrumentTone, Keys.None);
 
                                 var keyMap = _hotbarDatFile.GetInstrumentToneKeyMap(instrumentTone);
@@ -87,27 +83,16 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
                                 if (string.IsNullOrEmpty(keyMap)) continue;
 
                                 var keyBind = _keybindDatFile[keyMap];
-                                if (keyBind.GetKey() != Keys.None)
-                                    instrumentToneKeys[instrumentTone] = keyBind.GetKey();
+                                if (keyBind.GetKey() != Keys.None) instrumentToneKeys[instrumentTone] = keyBind.GetKey();
                             }
 
-                            var navigationMenuKeys = Enum.GetValues(typeof(NavigationMenuKey)).Cast<NavigationMenuKey>()
-                                .ToDictionary(navigationMenuKey => navigationMenuKey,
-                                    navigationMenuKey =>
-                                        _keybindDatFile.GetKeybindFromKeyString(navigationMenuKey.ToString()));
+                            var navigationMenuKeys = Enum.GetValues(typeof(NavigationMenuKey)).Cast<NavigationMenuKey>().ToDictionary(navigationMenuKey => navigationMenuKey, navigationMenuKey => _keybindDatFile.GetKeybindFromKeyString(navigationMenuKey.ToString()));
 
-                            var instrumentToneMenuKeys = Enum.GetValues(typeof(InstrumentToneMenuKey))
-                                .Cast<InstrumentToneMenuKey>().ToDictionary(
-                                    instrumentToneMenuKey => instrumentToneMenuKey,
-                                    instrumentToneMenuKey =>
-                                        _keybindDatFile.GetKeybindFromKeyString(instrumentToneMenuKey.ToString()));
+                            var instrumentToneMenuKeys = Enum.GetValues(typeof(InstrumentToneMenuKey)).Cast<InstrumentToneMenuKey>().ToDictionary(instrumentToneMenuKey => instrumentToneMenuKey, instrumentToneMenuKey => _keybindDatFile.GetKeybindFromKeyString(instrumentToneMenuKey.ToString()));
 
-                            var noteKeys = Enum.GetValues(typeof(NoteKey)).Cast<NoteKey>()
-                                .ToDictionary(noteKey => noteKey,
-                                    noteKey => _keybindDatFile.GetKeybindFromKeyString(noteKey.ToString()));
+                            var noteKeys = Enum.GetValues(typeof(NoteKey)).Cast<NoteKey>().ToDictionary(noteKey => noteKey, noteKey => _keybindDatFile.GetKeybindFromKeyString(noteKey.ToString()));
 
-                            ReaderHandler.Game.PublishEvent(new KeyMapChanged(EventSource.DatFile, instrumentKeys,
-                                instrumentToneKeys, navigationMenuKeys, instrumentToneMenuKeys, noteKeys));
+                            ReaderHandler.Game.PublishEvent(new KeyMapChanged(EventSource.DatFile, instrumentKeys, instrumentToneKeys, navigationMenuKeys, instrumentToneMenuKeys, noteKeys));
                         }
                         catch (Exception ex)
                         {
@@ -117,11 +102,9 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
                 }
 
                 if (ReaderHandler.Game.ConfigId.Equals(_configId)) continue;
-
                 _configId = ReaderHandler.Game.ConfigId;
                 CreateWatcher();
             }
-
             DisposeWatcher();
         }
 
@@ -132,13 +115,15 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
             try
             {
                 ParseKeybind(new DirectoryInfo(ReaderHandler.Game.ConfigPath + _configId).GetFiles()
-                    .Where(file => file.Name.ToLower().StartsWith("keybind"))
-                    .Where(file => file.Name.ToLower().EndsWith(".dat"))
+                    .Where(file => file.Name.ToLower().StartsWith("keybind")).Where(file => file.Name.ToLower().EndsWith(".dat"))
                     .OrderByDescending(file => file.LastWriteTimeUtc.ToUtcMilliTime()).First().FullName);
 
                 ParseHotbar(new DirectoryInfo(ReaderHandler.Game.ConfigPath + _configId).GetFiles()
-                    .Where(file => file.Name.ToLower().StartsWith("hotbar"))
-                    .Where(file => file.Name.ToLower().EndsWith(".dat"))
+                    .Where(file => file.Name.ToLower().StartsWith("hotbar")).Where(file => file.Name.ToLower().EndsWith(".dat"))
+                    .OrderByDescending(file => file.LastWriteTimeUtc.ToUtcMilliTime()).First().FullName);
+
+                ParseCommon(new DirectoryInfo(ReaderHandler.Game.ConfigPath + _configId).GetFiles()
+                    .Where(file => file.Name.ToLower().StartsWith("common")).Where(file => file.Name.ToLower().EndsWith(".dat"))
                     .OrderByDescending(file => file.LastWriteTimeUtc.ToUtcMilliTime()).First().FullName);
             }
             catch (Exception ex)
@@ -148,12 +133,12 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
 
             _fileSystemWatcher = new FileSystemWatcher(ReaderHandler.Game.ConfigPath + _configId, "*.dat")
             {
-                NotifyFilter          = NotifyFilters.LastWrite,
+                NotifyFilter = NotifyFilters.LastWrite,
                 IncludeSubdirectories = false,
-                EnableRaisingEvents   = true
+                EnableRaisingEvents = true
             };
 
-            _fileSystemWatcher.Error   += OnError;
+            _fileSystemWatcher.Error += OnError;
             _fileSystemWatcher.Changed += OnChanged;
         }
 
@@ -162,7 +147,7 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
             if (_fileSystemWatcher is null) return;
 
             _fileSystemWatcher.Changed -= OnChanged;
-            _fileSystemWatcher.Error   -= OnError;
+            _fileSystemWatcher.Error -= OnError;
             _fileSystemWatcher.Dispose();
         }
 
@@ -170,14 +155,11 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
         {
             if (eventArgs.ChangeType != WatcherChangeTypes.Changed) return;
 
-            if (eventArgs.Name.ToLower().StartsWith("hotbar") && eventArgs.Name.ToLower().EndsWith(".dat"))
-                ParseHotbar(eventArgs.FullPath);
-            else if (eventArgs.Name.ToLower().StartsWith("keybind") && eventArgs.Name.ToLower().EndsWith(".dat"))
-                ParseKeybind(eventArgs.FullPath);
+            if (eventArgs.Name.ToLower().StartsWith("hotbar") && eventArgs.Name.ToLower().EndsWith(".dat")) ParseHotbar(eventArgs.FullPath);
+            else if (eventArgs.Name.ToLower().StartsWith("keybind") && eventArgs.Name.ToLower().EndsWith(".dat")) ParseKeybind(eventArgs.FullPath);
         }
 
-        private void OnError(object sender, ErrorEventArgs ex) =>
-            ReaderHandler.Game.PublishEvent(new BackendExceptionEvent(EventSource.DatFile, ex.GetException()));
+        private void OnError(object sender, ErrorEventArgs ex) => ReaderHandler.Game.PublishEvent(new BackendExceptionEvent(EventSource.DatFile, ex.GetException()));
 
         private void ParseKeybind(string filePath)
         {
@@ -192,7 +174,9 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
                         _keybindDatFile = newDat;
                     }
                     else
+                    {
                         newDat?.Dispose();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -214,7 +198,9 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
                         _hotbarDatFile = newDat;
                     }
                     else
+                    {
                         newDat?.Dispose();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -223,13 +209,37 @@ namespace BardMusicPlayer.Seer.Reader.Backend.DatFile
             }
         }
 
-        ~DatFileReaderBackend() { Dispose(); }
+        private void ParseCommon(string filePath)
+        {
+            lock (_lock)
+            {
+                try
+                {
+                    var newDat = new CommonDatFile(filePath);
+                    if (newDat.Load())
+                    {
+                        _commonDatFile?.Dispose();
+                        _commonDatFile = newDat;
+                    }
+                    else
+                    {
+                        newDat?.Dispose();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ReaderHandler.Game.PublishEvent(new BackendExceptionEvent(EventSource.DatFile, ex));
+                }
+            }
+        }
 
+        ~DatFileReaderBackend() => Dispose();
         public void Dispose()
         {
             DisposeWatcher();
             _keybindDatFile?.Dispose();
             _hotbarDatFile?.Dispose();
+            _commonDatFile?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
