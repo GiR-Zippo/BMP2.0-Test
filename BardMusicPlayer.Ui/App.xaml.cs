@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using BardMusicPlayer.Coffer;
-//using BardMusicPlayer.Grunt;
+using BardMusicPlayer.Grunt;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Seer;
 using BardMusicPlayer.Maestro;
@@ -35,7 +35,7 @@ namespace BardMusicPlayer.Ui
             BmpCoffer.Initialize(Globals.Globals.DataPath + @"\MusicCatalog.db");
             BmpSeer.Instance.SetupFirewall("BardMusicPlayer");
             BmpSeer.Instance.Start();
-            //BmpGrunt.Instance.Start();
+            BmpGrunt.Instance.Start();
             BmpMaestro.Instance.Start();
             BmpSiren.Instance.Setup();
         }
@@ -49,7 +49,7 @@ namespace BardMusicPlayer.Ui
             BmpSiren.Instance.ShutDown();
 
             BmpMaestro.Instance.Stop();
-            //BmpGrunt.Instance.Stop();
+            BmpGrunt.Instance.Stop();
             BmpSeer.Instance.Stop();
             BmpSeer.Instance.DestroyFirewall("BardMusicPlayer");
             BmpCoffer.Instance.Dispose();

@@ -17,23 +17,17 @@ namespace BardMusicPlayer.Ui.Classic
     {
         private void Siren_Load_Click(object sender, RoutedEventArgs e)
         {
-#if SIREN
             _ = BmpSiren.Instance.Load(PlaybackFunctions.CurrentSong);
-#endif
         }
 
         private void Siren_Play_Click(object sender, RoutedEventArgs e)
         {
-#if SIREN
             BmpSiren.Instance.Play();
-#endif
         }
 
         private void Siren_Stop_Click(object sender, RoutedEventArgs e)
         {
-#if SIREN
             BmpSiren.Instance.Stop();
-#endif
         }
 
         private void Siren_Volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

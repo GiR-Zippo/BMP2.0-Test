@@ -1,4 +1,5 @@
-﻿using BardMusicPlayer.Maestro.FFXIV;
+﻿using BardMusicPlayer.Grunt;
+using BardMusicPlayer.Maestro.FFXIV;
 using BardMusicPlayer.Maestro.Sequencing;
 using BardMusicPlayer.Maestro.Utils;
 using BardMusicPlayer.Pigeonhole;
@@ -26,8 +27,6 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public EventHandler onUpdate;
 
-        private bool openDelay;
-
         public bool HostProcess { get; set; } = false;
 
         public int PId = 0;
@@ -46,8 +45,6 @@ namespace BardMusicPlayer.Maestro.Performance
                 return sequencer.GetTrackPreferredInstrument(TrackNumber -1).Name; // -1 cuz all tracks doesn't have an instrument
                 }
         }
-
-        private bool performanceUp { get; set; } = false;
 
         private Sequencer sequencer;
         public Sequencer Sequencer
@@ -157,11 +154,6 @@ namespace BardMusicPlayer.Maestro.Performance
 
                 if (game.InstrumentHeld.Equals(Instrument.None))
                     return;
-
-                if (openDelay)
-                {
-                    return;
-                }
             }
 
             if (hotkeys.GetKeybindFromNoteByte(note.note) is FFXIVKeybindDat.Keybind keybind)
@@ -262,7 +254,7 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public void Update(Sequencer bmpSeq)
         {
-            int tn = this.TrackNumber;
+            int tn = TrackNumber;
 
             if (!(bmpSeq is Sequencer))
             {
@@ -309,9 +301,6 @@ namespace BardMusicPlayer.Maestro.Performance
                     return;
             }
 
-            if (performanceUp)
-                return;
-
             // don't open instrument if we don't have anything loaded
             if (sequencer == null || sequencer.Sequence == null)
                 return;
@@ -320,31 +309,7 @@ namespace BardMusicPlayer.Maestro.Performance
             if (TrackNumber == 0 || TrackNumber >= sequencer.Sequence.Count)
                 return;
 
-            string keyMap = hotbar.GetInstrumentKeyMap(ChosenInstrument);
-            if (!string.IsNullOrEmpty(keyMap))
-            {
-                FFXIVKeybindDat.Keybind keybind = hotkeys[keyMap];
-                if (keybind is FFXIVKeybindDat.Keybind && keybind.GetKey() != Keys.None)
-                {
-                    hook.SendTimedSyncKeybind(keybind);
-                    openDelay = true;
-
-                    Timer openTimer = new Timer
-                    {
-                        Interval = 1000
-                    };
-                    openTimer.Elapsed += delegate (object o, ElapsedEventArgs e)
-                    {
-                        openTimer.Stop();
-                        openTimer = null;
-
-                        openDelay = false;
-                    };
-                    openTimer.Start();
-
-                    performanceUp = true;
-                }
-            }
+            _ = GameExtensions.EquipInstrument(game, TrackInstrument);
         }
 
         public void CloseInstrument()
@@ -355,44 +320,20 @@ namespace BardMusicPlayer.Maestro.Performance
                     return;
             }
 
-            if (!performanceUp)
-            {
-                return;
-            }
-
             hook.ClearLastPerformanceKeybinds();
 
-            FFXIVKeybindDat.Keybind keybind = hotkeys["ESC"];
-            Console.WriteLine(keybind.ToString());
-            if (keybind is FFXIVKeybindDat.Keybind && keybind.GetKey() != Keys.None)
-            {
-                hook.SendSyncKeybind(keybind);
-                performanceUp = false;
-            }
-        }
-
-        public void EnsembleCheck()
-        {
-            // 0x24CB8DCA // Extended piano
-            // 0x4536849B // Metronome
-            // 0xB5D3F991 // Ready check begin
-            hook.FocusWindow();
-            /* // Dummied out, dunno if i should click it for the user
-			Thread.Sleep(100);
-			if(hook.SendUiMouseClick(addon, 0x4536849B, 130, 140)) {
-				//this.EnsembleAccept();
-			}
-			*/
+            _ = GameExtensions.EquipInstrument(game, Instrument.None);
         }
 
         public void EnsembleAccept()
         {
-            FFXIVKeybindDat.Keybind keybind = hotkeys["OK"];
+            _ = GameExtensions.AcceptEnsemble(game);
+            /*FFXIVKeybindDat.Keybind keybind = hotkeys["OK"];
             if (keybind is FFXIVKeybindDat.Keybind && keybind.GetKey() != Keys.None)
             {
                 hook.SendSyncKeybind(keybind);
                 hook.SendSyncKeybind(keybind);
-            }
+            }*/
         }
         public void NoteKey(string noteKey)
         {
