@@ -294,7 +294,7 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public void OpenInstrument()
         {
-            // Exert the effort to check memory i guess
+            // if we are the host, we do this by our own
             if (HostProcess)
             {
                 if (!game.Equals(Instrument.None))
@@ -314,6 +314,7 @@ namespace BardMusicPlayer.Maestro.Performance
 
         public void CloseInstrument()
         {
+            // if we are the host, we do this by our own
             if (HostProcess)
             {
                 if (game.InstrumentHeld.Equals(Instrument.None))
