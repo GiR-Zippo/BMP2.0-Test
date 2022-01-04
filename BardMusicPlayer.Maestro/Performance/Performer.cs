@@ -116,21 +116,7 @@ namespace BardMusicPlayer.Maestro.Performance
                 sequencer.CloseInputDevice();
                 sequencer.Dispose();
             }
-            ReleaseKeys();
-        }
-
-        private void ReleaseKeys()
-        {
-            for (int i = 0; i < 36; i++)
-            {
-                if (hotkeys.GetKeybindFromNoteByte(i) is FFXIVKeybindDat.Keybind keybind)
-                {
-                    if (holdNotes)
-                    {
-                        hook.SendKeybindUp(keybind);
-                    }
-                }
-            }
+            hook.ClearLastPerformanceKeybinds();
         }
 
         private void InternalNote(Object o, Sanford.Multimedia.Midi.ChannelMessageEventArgs args)
@@ -270,6 +256,7 @@ namespace BardMusicPlayer.Maestro.Performance
             if (sequencer is Sequencer)
             {
                 sequencer.Stop();
+                hook.ClearLastPerformanceKeybinds();
             }
         }
 

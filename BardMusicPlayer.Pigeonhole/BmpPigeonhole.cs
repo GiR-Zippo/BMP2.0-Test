@@ -140,6 +140,11 @@ namespace BardMusicPlayer.Pigeonhole
         public virtual bool EnableSynthVoiceLimiter { get; set; } = true;
 
         /// <summary>
+        /// milliseconds till ready check confirmation.
+        /// </summary>
+        public virtual int EnsebleReadyDelay { get; set; } =3000;
+
+        /// <summary>
         /// milliseconds between game process scans / seer scanner startups.
         /// </summary>
         public virtual int SeerGameScanCooldown { get; set; } = 20;

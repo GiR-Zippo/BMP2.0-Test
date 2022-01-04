@@ -64,6 +64,10 @@ namespace BardMusicPlayer.Maestro
             return games;
         }
 
+        /// <summary>
+        /// Get the host bard track number
+        /// </summary>
+        /// <returns>tracknumber</returns>
         public int GetHostBardTrack()
         {
             Performer perf = performer.Where(perf => perf.Value.HostProcess).FirstOrDefault().Value;
@@ -344,15 +348,21 @@ namespace BardMusicPlayer.Maestro
                 perf.Value.Stop();
         }
 
+        /// <summary>
+        /// Equip the bard with it's instrument
+        /// </summary>
         public void EquipInstruments()
         {
-            Thread.Sleep(100);
+            Thread.Sleep(100);  //Wait
             Parallel.ForEach(performer, perf =>
             {
                 perf.Value.OpenInstrument();
             });
         }
 
+        /// <summary>
+        /// Remove the bards instrument
+        /// </summary>
         public void UnEquipInstruments()
         {
             Thread.Sleep(100);
@@ -412,12 +422,17 @@ namespace BardMusicPlayer.Maestro
             //If we don't have alocal ochestra enabled get outa here
             if (!BmpPigeonhole.Instance.LocalOrchestra)
                 return;
-            Thread.Sleep(100);
-            //Accept it
-            Parallel.ForEach(performer, perf =>
-            {
-                perf.Value.EnsembleAccept();
-            });
+
+            _ = EnsembleAcceptAsync(seerEvent);
+        }
+
+        private async Task<int> EnsembleAcceptAsync(Seer.Events.EnsembleRequested seerEvent)
+        {
+            await Task.Delay(BmpPigeonhole.Instance.EnsebleReadyDelay);
+            foreach (var i in performer)
+                if (i.Value.game.Pid == seerEvent.Game.Pid)
+                    i.Value.EnsembleAccept();
+            return 0;
         }
 
         /// <summary>

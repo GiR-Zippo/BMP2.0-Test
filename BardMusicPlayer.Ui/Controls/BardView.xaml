@@ -16,13 +16,16 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="10"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="1"/>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="40"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Content="Open Instruments" Click="OpenInstrumentButton_Click"/>
-            <Button Grid.Column="2" Content="Close Instruments" Click="CloseInstrumentButton_Click"/>
+            <Grid.Background>
+                <SolidColorBrush Color="White"/>
+            </Grid.Background>
+            <Button Grid.Column="1" Content="Open" ToolTip="Open Instruments" Click="OpenInstrumentButton_Click"/>
+            <Button Grid.Column="2" Content="Close" ToolTip="Close Instruments" Click="CloseInstrumentButton_Click"/>
         </Grid>
         <ListView x:Name="BardsList" Grid.Row="1" SelectedItem="{Binding SelectedBard}" SelectionChanged="BardsList_SelectionChanged" MouseDoubleClick="BardsList_MouseDoubleClick">
             <ListView.ItemTemplate>

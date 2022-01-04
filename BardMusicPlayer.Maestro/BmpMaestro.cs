@@ -50,11 +50,19 @@ namespace BardMusicPlayer.Maestro
             return _orchestrator.GetAllPerformers();
         }
 
+        /// <summary>
+        /// Get the host bard track number
+        /// </summary>
+        /// <returns>tracknumber</returns>
         public int GetHostBardTrack()
         {
             return _orchestrator.GetHostBardTrack();
         }
 
+        /// <summary>
+        /// Get host bard Pid
+        /// </summary>
+        /// <returns>Pid</returns>
         public int GetHostPid()
         {
             return _orchestrator.HostPid;
@@ -235,12 +243,18 @@ namespace BardMusicPlayer.Maestro
             }
         }
 
+        /// <summary>
+        /// Equip the bard with it's instrument
+        /// </summary>
         public void EquipInstruments()
         {
             if (_orchestrator != null)
                 _orchestrator.EquipInstruments();
         }
 
+        /// <summary>
+        /// Remove the bards instrument
+        /// </summary>
         public void UnEquipInstruments()
         {
             if (_orchestrator != null)
