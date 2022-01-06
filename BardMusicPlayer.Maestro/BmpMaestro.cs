@@ -213,8 +213,6 @@ namespace BardMusicPlayer.Maestro
         {
             if (_orchestrator != null)
             {
-                _NoteKeyDelay = BmpPigeonhole.Instance.NoteKeyDelay;
-                BmpPigeonhole.Instance.NoteKeyDelay = 1;
                 _orchestrator.Start();
             }
         }
@@ -226,7 +224,6 @@ namespace BardMusicPlayer.Maestro
         {
             if (_orchestrator != null)
             {
-                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
                 _orchestrator.Pause();
             }
         }
@@ -238,7 +235,6 @@ namespace BardMusicPlayer.Maestro
         {
             if (_orchestrator != null)
             {
-                BmpPigeonhole.Instance.NoteKeyDelay = _NoteKeyDelay;
                 _orchestrator.Stop();
             }
         }

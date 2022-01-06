@@ -291,6 +291,7 @@
     <Compile Include="Controls\TrackNumericUpDown.xaml.cs">
       <DependentUpon>TrackNumericUpDown.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Functions\ChoreoFunctions.cs" />
     <Compile Include="Globals\BmpChatParser.cs" />
     <Compile Include="UI_Classic\Classic_Settings.cs" />
     <Compile Include="UI_Classic\Classic_Siren.cs" />
@@ -436,6 +437,10 @@
     <Resource Include="Resources\Skin\mb.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BardMusicPlayer.Choreograph\BardMusicPlayer.Choreograph.csproj">
+      <Project>{664dfb64-33b6-4cca-a571-d422512ee074}</Project>
+      <Name>BardMusicPlayer.Choreograph</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BardMusicPlayer.Coffer\BardMusicPlayer.Coffer.csproj">
       <Project>{82a7597f-9957-4a47-a14e-504d3e0ecaf7}</Project>
       <Name>BardMusicPlayer.Coffer</Name>
@@ -521,6 +526,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="iconp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\ClassicPause.png" />
+    <Resource Include="Resources\Images\ClassicPlay.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

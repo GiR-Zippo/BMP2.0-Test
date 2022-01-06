@@ -126,6 +126,7 @@ namespace BardMusicPlayer.Ui.Classic
 
         public void PlaybackStopped()
         {
+            PlaybackFunctions.StopSong();
             Play_Button.Content = @"▶";
         }
 
@@ -150,6 +151,11 @@ namespace BardMusicPlayer.Ui.Classic
                 return;
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                 return;
+
+            //Are we the Choreo host
+            if (BmpPigeonhole.Instance.IsChoreoHost)
+                ChoreoFunctions.SetClientsGo();
+
             Thread.Sleep(2475);
             PlaybackFunctions.PlaySong();
             Play_Button.Content = @"⏸";
@@ -157,6 +163,12 @@ namespace BardMusicPlayer.Ui.Classic
 
         public void AppendChatLog(Seer.Events.ChatLog ev)
         {
+            if (BmpMaestro.Instance.GetHostPid() == ev.ChatLogGame.Pid)
+            {
+                BmpChatParser.AppendText(ChatBox, ev);
+                this.ChatBox.ScrollToEnd();
+            }
+
             if (ev.ChatLogCode == "0039")
             {
                 if (ev.ChatLogLine.Contains(@"Anzählen beginnt") ||
@@ -172,10 +184,15 @@ namespace BardMusicPlayer.Ui.Classic
                     Play_Button.Content = @"⏸";
                 }
             }
-            if (BmpMaestro.Instance.GetHostPid() == ev.ChatLogGame.Pid)
+
+            if (BmpPigeonhole.Instance.IsChoreoClient)
             {
-                BmpChatParser.AppendText(ChatBox, ev);
-                this.ChatBox.ScrollToEnd();
+                string abc = ev.ChatLogLine;
+                if (abc.Contains("<1234567890>GO!"))
+                {
+                    ChoreoFunctions.Start();
+                    return;
+                }
             }
         }
         #endregion
@@ -189,11 +206,20 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 _numValue = value;
                 track_txtNum.Text = "t" + value.ToString();
-                InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
+
+                if (!BmpPigeonhole.Instance.IsChoreoClient)
+                    InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
         private void track_cmdUp_Click(object sender, RoutedEventArgs e)
         {
+            //If we we in the choreo mode
+            if (BmpPigeonhole.Instance.IsChoreoClient)
+            {
+                NumValue++;
+                return;
+            }
+
             if (NumValue == MaxTracks)
                 return;
             NumValue++;
@@ -202,6 +228,15 @@ namespace BardMusicPlayer.Ui.Classic
 
         private void track_cmdDown_Click(object sender, RoutedEventArgs e)
         {
+            //If we we in the choreo mode
+            if (BmpPigeonhole.Instance.IsChoreoClient)
+            {
+                if (NumValue == 0)
+                    return;
+                NumValue--;
+                return;
+            }
+
             if (NumValue == 1)
                 return;
             NumValue--;

@@ -25,6 +25,25 @@ namespace BardMusicPlayer.Ui.Functions
         /// </summary>
         public static BmpSong CurrentSong { get; set; }
 
+        public static BmpSong OpenAndGetSong()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = "MIDI file|*.mid;*.midi|All files (*.*)|*.*",
+                Multiselect = true
+            };
+
+            if (openFileDialog.ShowDialog() != true)
+                return null;
+
+            if (!openFileDialog.CheckFileExists)
+                return null;
+
+            PlaybackState = PlaybackState_Enum.PLAYBACK_STATE_STOPPED;
+
+            return BmpSong.OpenMidiFile(openFileDialog.FileName).Result;
+        }
+
         /// <summary>
         /// Loads a midi file into the sequencer
         /// </summary>

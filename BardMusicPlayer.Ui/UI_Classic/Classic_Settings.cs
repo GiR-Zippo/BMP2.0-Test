@@ -30,6 +30,9 @@ namespace BardMusicPlayer.Ui.Classic
 
             this.SkinUiBox.IsChecked = !BmpPigeonhole.Instance.ClassicUi;
 
+            this.Settings_EffectsHost.IsChecked = BmpPigeonhole.Instance.IsChoreoHost;
+            this.Settings_EffectsClient.IsChecked = BmpPigeonhole.Instance.IsChoreoClient;
+
         }
 
         private void Autostart_source_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -70,5 +73,16 @@ namespace BardMusicPlayer.Ui.Classic
         {
             BmpPigeonhole.Instance.ClassicUi = !(SkinUiBox.IsChecked ?? true);
         }
+
+        private void Settings_EffectsHost_Checked(object sender, RoutedEventArgs e)
+        {
+            BmpPigeonhole.Instance.IsChoreoHost = Settings_EffectsHost.IsChecked ?? false;
+        }
+
+        private void Settings_EffectsClient_Checked(object sender, RoutedEventArgs e)
+        {
+            BmpPigeonhole.Instance.IsChoreoClient = Settings_EffectsClient.IsChecked ?? false;
+        }
+
     }
 }

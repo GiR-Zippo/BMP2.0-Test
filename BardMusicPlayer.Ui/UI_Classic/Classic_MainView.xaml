@@ -9,6 +9,14 @@
 Width="Auto" Height="Auto" 
     Background="WhiteSmoke">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/BardMusicPlayer;component/Resources/ImageButtonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -124,7 +132,19 @@ Width="Auto" Height="Auto"
                                     <CheckBox Margin="10,10,0,0" Grid.Row="1" x:Name="SaveChatlogBox" Content="Save chatlogs to logs folder"/>
                                     <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="VerboseBox" Content="Enable verbose mode"/>
                                     <CheckBox Margin="10,0,0,0"  Grid.Row="3" x:Name="SkinUiBox" Content="Use skinned Ui" Unchecked="SkinUiBox_Checked" Checked="SkinUiBox_Checked"/>
-
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" Header="Dancer / Effect section">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <CheckBox Margin="10,10,0,0" Grid.Row="1" x:Name="Settings_EffectsHost"   Content="Effects host"   ToolTip="This player is giving the go to the dancers" Checked="Settings_EffectsHost_Checked" Unchecked="Settings_EffectsHost_Checked"/>
+                                    <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="Settings_EffectsClient" Content="Effects client" ToolTip="This player is a dancer and no bard" Checked="Settings_EffectsClient_Checked" Unchecked="Settings_EffectsClient_Checked"/>
+                                    <Label Margin="10,0,0,0"     Grid.Row="3" Content="Only one bard can be the host!" HorizontalAlignment="Left"/>
                                 </Grid>
                             </GroupBox>
                         </Grid>
@@ -160,7 +180,7 @@ Width="Auto" Height="Auto"
                             <Label Grid.Row="5" Grid.Column="1" x:Name="Statistics_Note_Per_Second_Label" />
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Siren">
+                    <TabItem Header="Song Preview">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="10"/>
@@ -170,13 +190,19 @@ Width="Auto" Height="Auto"
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="50"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Grid.Row="1" Grid.Column="0" x:Name="Siren_Load" Content="Load the current song" Click="Siren_Load_Click" Height="20" Width="30" />
-                            <Button Grid.Row="2" Grid.Column="0" x:Name="Siren_Play" Content="Play" Click="Siren_Play_Click" Height="20" Width="30" />
-                            <Button Grid.Row="3" Grid.Column="0" x:Name="Siren_Stop" Content="Stop" Click="Siren_Stop_Click" Height="20" Width="30" />
-                            <Slider Grid.Row="1" Grid.Column="1" x:Name="Siren_Volume" Minimum="0" Maximum="3" Orientation="Vertical"  ValueChanged="Siren_Volume_ValueChanged"></Slider>
+                            <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Content="Song title:"/>
+                            <Label Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="4" x:Name="Siren_SongName" Content="No song loaded"/>
+                            <Button Grid.Row="2" Grid.Column="1" x:Name="Siren_Load" Content="Load" Click="Siren_Load_Click" Height="20" Width="30" />
+                            <Button Grid.Row="2" Grid.Column="2" x:Name="Siren_Play" Content="Play" Click="Siren_Play_Click" Height="20" Width="30" />
+                            <Button Grid.Row="2" Grid.Column="3" x:Name="Siren_Stop" Content="Stop" Click="Siren_Stop_Click" Height="20" Width="30" />
+                            <!-- <Slider Grid.Row="2" Grid.RowSpan="2" Grid.Column="4" x:Name="Siren_Volume" Minimum="0" Maximum="3" Orientation="Vertical"  ValueChanged="Siren_Volume_ValueChanged"></Slider> -->
                         </Grid>
                     </TabItem>
                 </TabControl>

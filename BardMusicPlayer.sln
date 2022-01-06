@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BardMusicPlayer.Ui", "BardM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanford.Multimedia.Midi", "Sanford.Multimedia.Midi\Source\Sanford.Multimedia.Midi.csproj", "{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BardMusicPlayer.Choreograph", "BardMusicPlayer.Choreograph\BardMusicPlayer.Choreograph.csproj", "{664DFB64-33B6-4CCA-A571-D422512EE074}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Coverage|Any CPU = Coverage|Any CPU
@@ -305,6 +307,30 @@ Global
 		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|x64.ActiveCfg = Release|Any CPU
 		{4269C72A-8D3A-4737-8F89-72EAA33EA9E1}.Release|x64.Build.0 = Release|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Coverage|Any CPU.ActiveCfg = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Coverage|Any CPU.Build.0 = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Coverage|x64.ActiveCfg = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Coverage|x64.Build.0 = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug_WithSiren|Any CPU.ActiveCfg = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug_WithSiren|Any CPU.Build.0 = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug_WithSiren|x64.ActiveCfg = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug_WithSiren|x64.Build.0 = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug|x64.ActiveCfg = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Debug|x64.Build.0 = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Publish|Any CPU.ActiveCfg = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Publish|Any CPU.Build.0 = Debug|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Publish|x64.ActiveCfg = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Publish|x64.Build.0 = Debug|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release_WithSiren|Any CPU.ActiveCfg = Release|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release_WithSiren|Any CPU.Build.0 = Release|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release_WithSiren|x64.ActiveCfg = Release|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release_WithSiren|x64.Build.0 = Release|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release|Any CPU.Build.0 = Release|Any CPU
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release|x64.ActiveCfg = Release|x64
+		{664DFB64-33B6-4CCA-A571-D422512EE074}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

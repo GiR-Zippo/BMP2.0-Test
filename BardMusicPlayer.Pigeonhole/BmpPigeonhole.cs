@@ -142,7 +142,7 @@ namespace BardMusicPlayer.Pigeonhole
         /// <summary>
         /// milliseconds till ready check confirmation.
         /// </summary>
-        public virtual int EnsebleReadyDelay { get; set; } =3000;
+        public virtual int EnsebleReadyDelay { get; set; } = 3000;
 
         /// <summary>
         /// milliseconds between game process scans / seer scanner startups.
@@ -168,5 +168,10 @@ namespace BardMusicPlayer.Pigeonhole
         /// Defaults to log level Info
         /// </summary>
         public virtual BmpLog.Verbosity DefaultLogLevel { get; set; } = BmpLog.Verbosity.Info;
+
+#region Choreograph
+        public virtual bool IsChoreoHost { get; set; } = false;
+        public virtual bool IsChoreoClient { get; set; } = false;
+#endregion
     }
 }

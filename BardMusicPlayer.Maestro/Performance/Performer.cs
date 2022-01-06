@@ -329,13 +329,8 @@ namespace BardMusicPlayer.Maestro.Performance
         public void EnsembleAccept()
         {
             _ = GameExtensions.AcceptEnsemble(game);
-            /*FFXIVKeybindDat.Keybind keybind = hotkeys["OK"];
-            if (keybind is FFXIVKeybindDat.Keybind && keybind.GetKey() != Keys.None)
-            {
-                hook.SendSyncKeybind(keybind);
-                hook.SendSyncKeybind(keybind);
-            }*/
         }
+
         public void NoteKey(string noteKey)
         {
             if (hotkeys.GetKeybindFromNoteKey(noteKey) is FFXIVKeybindDat.Keybind keybind)

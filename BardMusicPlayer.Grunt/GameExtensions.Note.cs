@@ -30,6 +30,7 @@ namespace BardMusicPlayer.Grunt
 #else
                 return false;
 #endif
+
             if (game.InstrumentHeld.Equals(Instrument.None) || game.ChatStatus || !game.IsBard) return false;
 
             note -= 48;
