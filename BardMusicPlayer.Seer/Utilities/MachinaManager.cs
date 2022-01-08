@@ -6,8 +6,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Machina;
 using Machina.FFXIV;
+using Machina.Infrastructure;
 
 namespace BardMusicPlayer.Seer.Utilities
 {
@@ -26,8 +26,7 @@ namespace BardMusicPlayer.Seer.Utilities
 
             _monitor = new FFXIVNetworkMonitor
             {
-                MonitorType     = TCPNetworkMonitor.NetworkMonitorType.RawSocket,
-                UseSocketFilter = true
+                MonitorType     = NetworkMonitorType.RawSocket
             };
             _monitor.MessageReceivedEventHandler += MessageReceivedEventHandler;
         }
