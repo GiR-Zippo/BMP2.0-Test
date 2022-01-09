@@ -6,7 +6,6 @@ using System.Windows.Media;
 using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Maestro;
 using BardMusicPlayer.Pigeonhole;
-using BardMusicPlayer.Choreograph;
 
 namespace BardMusicPlayer.Ui.Classic
 {
@@ -21,32 +20,15 @@ namespace BardMusicPlayer.Ui.Classic
         /* Playback */
         private void Play_Button_Click(object sender, RoutedEventArgs e)
         {
-            //If this client is a bard
-            if (!BmpPigeonhole.Instance.IsChoreoClient)
+            if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
             {
-                if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
-                {
-                    PlaybackFunctions.PauseSong();
-                    Play_Button.Content = @"▶";
-                }
-                else
-                {
-                    PlaybackFunctions.PlaySong();
-                    Play_Button.Content = @"⏸";
-                }
+                PlaybackFunctions.PauseSong();
+                Play_Button.Content = @"▶";
             }
             else
             {
-                if (ChoreoFunctions.ChoreoState == ChoreoFunctions.ChoreoState_Enum.CHOREO_STATE_PLAYING)
-                {
-                    BmpChoreograph.Instance.PausePerformance();
-                    Play_Button.Content = @"▶";
-                }
-                else
-                {
-                    BmpChoreograph.Instance.StartPerformance();
-                    Play_Button.Content = @"⏸";
-                }
+                PlaybackFunctions.PlaySong();
+                Play_Button.Content = @"⏸";
             }
         }
 
@@ -54,18 +36,10 @@ namespace BardMusicPlayer.Ui.Classic
         private void SongName_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             //if this is a bard
-            if (!BmpPigeonhole.Instance.IsChoreoClient)
+            if (PlaybackFunctions.LoadSong())
             {
-                if (PlaybackFunctions.LoadSong())
-                {
-                    SongName.Text = PlaybackFunctions.GetSongName();
-                    InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
-                }
-            }
-            else
-            {
-                ChoreoFunctions.LoadChoreo(NumValue);
-                SongName.Text = ChoreoFunctions.GetSongName();
+                SongName.Text = PlaybackFunctions.GetSongName();
+                InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
 
@@ -94,10 +68,7 @@ namespace BardMusicPlayer.Ui.Classic
 
         private void Rewind_Click(object sender, RoutedEventArgs e)
         {
-            if (!BmpPigeonhole.Instance.IsChoreoClient)
-                PlaybackFunctions.StopSong();
-            else
-                ChoreoFunctions.Stop();
+            PlaybackFunctions.StopSong();
             Play_Button.Content = @"▶";
         }
 

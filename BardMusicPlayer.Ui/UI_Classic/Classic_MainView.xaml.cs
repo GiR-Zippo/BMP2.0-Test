@@ -153,8 +153,8 @@ namespace BardMusicPlayer.Ui.Classic
                 return;
 
             //Are we the Choreo host
-            if (BmpPigeonhole.Instance.IsChoreoHost)
-                ChoreoFunctions.SetClientsGo();
+            //if (BmpPigeonhole.Instance.IsChoreoHost)
+            //    ChoreoFunctions.SetClientsGo();
 
             Thread.Sleep(2475);
             PlaybackFunctions.PlaySong();
@@ -184,16 +184,6 @@ namespace BardMusicPlayer.Ui.Classic
                     Play_Button.Content = @"⏸";
                 }
             }
-
-            if (BmpPigeonhole.Instance.IsChoreoClient)
-            {
-                string abc = ev.ChatLogLine;
-                if (abc.Contains("<1234567890>GO!"))
-                {
-                    ChoreoFunctions.Start();
-                    return;
-                }
-            }
         }
         #endregion
 
@@ -206,20 +196,10 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 _numValue = value;
                 track_txtNum.Text = "t" + value.ToString();
-
-                if (!BmpPigeonhole.Instance.IsChoreoClient)
-                    InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
         private void track_cmdUp_Click(object sender, RoutedEventArgs e)
         {
-            //If we we in the choreo mode
-            if (BmpPigeonhole.Instance.IsChoreoClient)
-            {
-                NumValue++;
-                return;
-            }
-
             if (NumValue == MaxTracks)
                 return;
             NumValue++;
@@ -228,15 +208,6 @@ namespace BardMusicPlayer.Ui.Classic
 
         private void track_cmdDown_Click(object sender, RoutedEventArgs e)
         {
-            //If we we in the choreo mode
-            if (BmpPigeonhole.Instance.IsChoreoClient)
-            {
-                if (NumValue == 0)
-                    return;
-                NumValue--;
-                return;
-            }
-
             if (NumValue == 1)
                 return;
             NumValue--;

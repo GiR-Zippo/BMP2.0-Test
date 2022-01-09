@@ -171,7 +171,6 @@ namespace BardMusicPlayer.Pigeonhole
 
 #region Choreograph
         public virtual bool IsChoreoHost { get; set; } = false;
-        public virtual bool IsChoreoClient { get; set; } = false;
 #endregion
     }
 }

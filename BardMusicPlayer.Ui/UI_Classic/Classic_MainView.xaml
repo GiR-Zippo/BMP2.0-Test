@@ -143,7 +143,6 @@ Width="Auto" Height="Auto"
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <CheckBox Margin="10,10,0,0" Grid.Row="1" x:Name="Settings_EffectsHost"   Content="Effects host"   ToolTip="This player is giving the go to the dancers" Checked="Settings_EffectsHost_Checked" Unchecked="Settings_EffectsHost_Checked"/>
-                                    <CheckBox Margin="10,0,0,0"  Grid.Row="2" x:Name="Settings_EffectsClient" Content="Effects client" ToolTip="This player is a dancer and no bard" Checked="Settings_EffectsClient_Checked" Unchecked="Settings_EffectsClient_Checked"/>
                                     <Label Margin="10,0,0,0"     Grid.Row="3" Content="Only one bard can be the host!" HorizontalAlignment="Left"/>
                                 </Grid>
                             </GroupBox>
