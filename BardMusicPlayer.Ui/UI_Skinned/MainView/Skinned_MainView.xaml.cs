@@ -208,8 +208,13 @@ namespace BardMusicPlayer.Ui.Skinned
                 return;
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                 return;
+
             Thread.Sleep(2475);
             PlaybackFunctions.PlaySong();
+
+            //Are we the Choreo host
+            if (BmpPigeonhole.Instance.IsChoreoHost)
+                _ = Grunt.GameExtensions.SendLyricLine(BmpMaestro.Instance.GetHostGame(), "<1234567890>GO!>");
         }
 
         /// <summary>

@@ -63,6 +63,15 @@ namespace BardMusicPlayer.Maestro
         /// Get host bard Pid
         /// </summary>
         /// <returns>Pid</returns>
+        public Game GetHostGame()
+        {
+            return _orchestrator.HostGame;
+        }
+
+        /// <summary>
+        /// Get host bard Pid
+        /// </summary>
+        /// <returns>Pid</returns>
         public int GetHostPid()
         {
             return _orchestrator.HostPid;

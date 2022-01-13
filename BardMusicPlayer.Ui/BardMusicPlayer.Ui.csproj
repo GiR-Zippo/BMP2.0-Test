@@ -444,10 +444,6 @@
       <Project>{00c375f8-5071-4fc6-86ec-bed3398f1bc6}</Project>
       <Name>BardMusicPlayer.Grunt</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BardMusicPlayer.Jamboree\BardMusicPlayer.Jamboree.csproj">
-      <Project>{7fe86db2-13da-4656-8776-6e7dfb9f9015}</Project>
-      <Name>BardMusicPlayer.Jamboree</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BardMusicPlayer.Maestro\BardMusicPlayer.Maestro.csproj">
       <Project>{00bac18c-1670-4cfc-8826-ad02347ba776}</Project>
       <Name>BardMusicPlayer.Maestro</Name>

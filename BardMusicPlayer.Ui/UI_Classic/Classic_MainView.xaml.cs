@@ -152,13 +152,13 @@ namespace BardMusicPlayer.Ui.Classic
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
                 return;
 
-            //Are we the Choreo host
-            //if (BmpPigeonhole.Instance.IsChoreoHost)
-            //    ChoreoFunctions.SetClientsGo();
-
             Thread.Sleep(2475);
             PlaybackFunctions.PlaySong();
             Play_Button.Content = @"⏸";
+
+            //Are we the Choreo host
+            if (BmpPigeonhole.Instance.IsChoreoHost)
+                _ = Grunt.GameExtensions.SendLyricLine(BmpMaestro.Instance.GetHostGame(), "<1234567890>GO!>");
         }
 
         public void AppendChatLog(Seer.Events.ChatLog ev)

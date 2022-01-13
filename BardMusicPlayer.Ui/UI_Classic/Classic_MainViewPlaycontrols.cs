@@ -35,7 +35,6 @@ namespace BardMusicPlayer.Ui.Classic
         /* Song Select */
         private void SongName_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            //if this is a bard
             if (PlaybackFunctions.LoadSong())
             {
                 SongName.Text = PlaybackFunctions.GetSongName();
@@ -71,7 +70,6 @@ namespace BardMusicPlayer.Ui.Classic
             PlaybackFunctions.StopSong();
             Play_Button.Content = @"▶";
         }
-
 
         private void Playbar_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
