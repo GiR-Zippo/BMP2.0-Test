@@ -32,7 +32,6 @@ namespace BardMusicPlayer.Ui.Skinned
             BmpSiren.Instance.SynthTimePositionChanged += Instance_SynthTimePositionChanged;
 
             _currentPlaylist = PlaylistFunctions.CreatePlaylist("Default");
-
             RefreshPlaylist();
         }
 
@@ -77,6 +76,11 @@ namespace BardMusicPlayer.Ui.Skinned
                 return;
             foreach (BmpSong d in _currentPlaylist)
                 PlaylistContainer.Items.Add(d.Title);
+            Style itemContainerStyle = new Style(typeof(ListBoxItem));
+            itemContainerStyle.Setters.Add(new Setter(ListBoxItem.AllowDropProperty, true));
+            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.PreviewMouseLeftButtonDownEvent, new MouseButtonEventHandler(PlaylistContainer_PreviewMouseLeftButtonDown)));
+            itemContainerStyle.Setters.Add(new EventSetter(ListBoxItem.DropEvent, new DragEventHandler(PlaylistContainer_Drop)));
+            PlaylistContainer.ItemContainerStyle = itemContainerStyle;
         }
 
         public void PlayPrevSong()
@@ -166,6 +170,52 @@ namespace BardMusicPlayer.Ui.Skinned
                 return;
             lvtem.Foreground = fcol;
             lvtem.Background = bcol;
+        }
+
+        private void PlaylistContainer_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListBoxItem)
+            {
+                ListBoxItem draggedItem = sender as ListBoxItem;
+                PlaylistContainer.SelectedItem = draggedItem;
+
+                DragDrop.DoDragDrop(draggedItem, draggedItem.DataContext, DragDropEffects.Move);
+                draggedItem.IsSelected = true;
+            }
+        }
+
+        void PlaylistContainer_Drop(object sender, DragEventArgs e)
+        {
+            string droppedData = e.Data.GetData(typeof(string)) as string;
+            string target = ((ListBoxItem)(sender)).DataContext as string;
+
+            int removedIdx = PlaylistContainer.Items.IndexOf(droppedData);
+            int targetIdx = PlaylistContainer.Items.IndexOf(target);
+
+            if (removedIdx < targetIdx)
+            {
+                PlaylistContainer.Items.Insert(targetIdx + 1, droppedData);
+                PlaylistContainer.Items.RemoveAt(removedIdx);
+
+                _currentPlaylist.Move(removedIdx, targetIdx);
+                BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
+
+            }
+            else if (removedIdx == targetIdx)
+            {
+                PlaylistContainer.SelectedIndex = targetIdx;
+            }
+            else
+            {
+                int remIdx = removedIdx + 1;
+                if (PlaylistContainer.Items.Count + 1 > remIdx)
+                {
+                    PlaylistContainer.Items.Insert(targetIdx, droppedData);
+                    PlaylistContainer.Items.RemoveAt(remIdx);
+                    _currentPlaylist.Move(removedIdx, targetIdx);
+                    BmpCoffer.Instance.SavePlaylist(_currentPlaylist);
+                }
+            }
         }
 
         private void AddFiles_Click(object sender, RoutedEventArgs e)

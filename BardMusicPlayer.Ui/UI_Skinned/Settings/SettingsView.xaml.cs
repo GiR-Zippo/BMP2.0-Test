@@ -27,6 +27,8 @@ namespace BardMusicPlayer.Ui.Skinned
 
             this.MIDI_Input_DeviceBox.SelectedIndex = BmpPigeonhole.Instance.MidiInputDev+1;
             ClassicSkin.IsChecked = BmpPigeonhole.Instance.ClassicUi;
+
+            this.Settings_EffectsHost.IsChecked = BmpPigeonhole.Instance.IsChoreoHost;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -81,5 +83,11 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             BmpPigeonhole.Instance.ClassicUi = ClassicSkin.IsChecked ?? true;
         }
+
+        private void Settings_EffectsHost_Checked(object sender, RoutedEventArgs e)
+        {
+            BmpPigeonhole.Instance.IsChoreoHost = Settings_EffectsHost.IsChecked ?? false;
+        }
+
     }
 }

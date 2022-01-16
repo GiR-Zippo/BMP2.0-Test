@@ -68,6 +68,7 @@
                     <ColumnDefinition Width="13"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="Close_Button" 
+                                        ToolTip="Hide the playlist"
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="13" Height="13" Content="" 
                                         Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down"  BorderThickness="0" />
 
@@ -193,12 +194,18 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <!--  Style="{StaticResource ImageButton}" Click="Close_Button_Click" PreviewMouseUp="Close_Button_Up" PreviewMouseDown="Close_Button_Down" -->
-                <Rectangle Grid.Row="1" Grid.Column="1" x:Name="PrevButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="PrevButton_PreviewMouseDown"/>
-                <Rectangle Grid.Row="1" Grid.Column="3" x:Name="Playbutton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="Playbutton_PreviewMouseDown" />
-                <Rectangle Grid.Row="1" Grid.Column="5" x:Name="PauseButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="10" Height="10" Fill="Transparent" PreviewMouseDown="PauseButton_PreviewMouseDown"/>
-                <Rectangle Grid.Row="1" Grid.Column="7" x:Name="StopButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="9" Height="10" Fill="Transparent" PreviewMouseDown="StopButton_PreviewMouseDown" />
-                <Rectangle Grid.Row="1" Grid.Column="9" x:Name="NextButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="NextButton_PreviewMouseDown"/>
-                <Rectangle Grid.Row="1" Grid.Column="11" x:Name="LoadButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="LoadButton_PreviewMouseDown" />
+                <Rectangle Grid.Row="1" Grid.Column="1" x:Name="PrevButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="PrevButton_PreviewMouseDown"
+                            ToolTip="Select prev song for listen"/>
+                <Rectangle Grid.Row="1" Grid.Column="3" x:Name="Playbutton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="Playbutton_PreviewMouseDown" 
+                            ToolTip="Preview the loaded song"/>
+                <Rectangle Grid.Row="1" Grid.Column="5" x:Name="PauseButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="10" Height="10" Fill="Transparent" PreviewMouseDown="PauseButton_PreviewMouseDown"
+                            ToolTip="Pause preview playback"/>
+                <Rectangle Grid.Row="1" Grid.Column="7" x:Name="StopButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="9" Height="10" Fill="Transparent" PreviewMouseDown="StopButton_PreviewMouseDown"
+                            ToolTip="Stop preview playback"/>
+                <Rectangle Grid.Row="1" Grid.Column="9" x:Name="NextButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="NextButton_PreviewMouseDown"
+                            ToolTip="Select next song for listen"/>
+                <Rectangle Grid.Row="1" Grid.Column="11" x:Name="LoadButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="8" Height="10" Fill="Transparent" PreviewMouseDown="LoadButton_PreviewMouseDown"
+                            ToolTip="Load the selected song for preview"/>
             </Grid>
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>

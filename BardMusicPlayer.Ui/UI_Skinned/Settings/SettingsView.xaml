@@ -71,6 +71,28 @@
                     </Grid>
                 </Grid>
             </TabItem>
+
+            <TabItem Header="Misc">
+                <Grid Background="#FFE5E5E5" Width="420">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="1" Grid.Row="1">
+                        <CheckBox Margin="10,10,0,0" x:Name="Settings_EffectsHost"   Content="Effects host"   ToolTip="This player is giving the go to the dancers" Checked="Settings_EffectsHost_Checked" Unchecked="Settings_EffectsHost_Checked"/>
+                    </Grid>
+                    <Grid Grid.Column="1" Grid.Row="2">
+                        <Label Margin="10,0,0,0" Content="Only one bard can be the host!" HorizontalAlignment="Left"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

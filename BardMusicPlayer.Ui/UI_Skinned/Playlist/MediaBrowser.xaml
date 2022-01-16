@@ -152,18 +152,23 @@
                 <ColumnDefinition Width="22"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource ImageButton}" x:Name="Prev_Button" 
+                                        ToolTip="Switch to prev playlist"
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
                                         Click="Prev_Button_Click" PreviewMouseUp="Prev_Button_Up" PreviewMouseDown="Prev_Button_Down"  BorderThickness="0" />
-            <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="Next_Button" 
+            <Button Grid.Row="1" Grid.Column="3" Style="{StaticResource ImageButton}" x:Name="Next_Button"
+                                        ToolTip="Switch to next playlist"
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
                                         Click="Next_Button_Click" PreviewMouseUp="Next_Button_Up" PreviewMouseDown="Next_Button_Down"  BorderThickness="0" />
-            <Button Grid.Row="1" Grid.Column="5" Style="{StaticResource ImageButton}" x:Name="New_Button" 
+            <Button Grid.Row="1" Grid.Column="5" Style="{StaticResource ImageButton}" x:Name="New_Button"
+                                        ToolTip="Create new playlist"
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
                                         Click="New_Button_Click" PreviewMouseUp="New_Button_Up" PreviewMouseDown="New_Button_Down"  BorderThickness="0" />
             <Button Grid.Row="1" Grid.Column="7" Style="{StaticResource ImageButton}" x:Name="Reload_Button" 
+                                        ToolTip="reload playlists"
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
                                         Click="Reload_Button_Click" PreviewMouseUp="Reload_Button_Up" PreviewMouseDown="Reload_Button_Down"  BorderThickness="0" />
-            <Button Grid.Row="1" Grid.Column="9" Style="{StaticResource ImageButton}" x:Name="Remove_Button" 
+            <Button Grid.Row="1" Grid.Column="9" Style="{StaticResource ImageButton}" x:Name="Remove_Button"
+                                        ToolTip="Remove playlist"
                                         HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Width="21" Height="21" Content="" 
                                         Click="Remove_Button_Click" PreviewMouseUp="Remove_Button_Up" PreviewMouseDown="Remove_Button_Down"  BorderThickness="0" />
             <TextBox Grid.Row="1" Grid.Column="11" x:Name="PlaylistName_Box" Height="18" Width="271" HorizontalAlignment="Left" Margin="0,-14,0,0"/>
