@@ -7,6 +7,8 @@ namespace BardMusicPlayer.Jamboree
 {
     public class PartyGame
     {
-        internal PartyGame() { }
+        internal PartyGame()
+        {
+        }
     }
 }

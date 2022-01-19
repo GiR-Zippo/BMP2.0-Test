@@ -14,6 +14,7 @@ using BardMusicPlayer.Seer;
 using BardMusicPlayer.Maestro;
 using System.Diagnostics;
 using BardMusicPlayer.Siren;
+using BardMusicPlayer.Jamboree;
 
 namespace BardMusicPlayer.Ui
 {
@@ -38,12 +39,13 @@ namespace BardMusicPlayer.Ui
             BmpGrunt.Instance.Start();
             BmpMaestro.Instance.Start();
             BmpSiren.Instance.Setup();
+            BmpJamboree.Instance.Start();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             //LogManager.Shutdown();
-
+            BmpJamboree.Instance.Stop();
             if (BmpSiren.Instance.IsReadyForPlayback)
                 BmpSiren.Instance.Stop();
             BmpSiren.Instance.ShutDown();

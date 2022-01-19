@@ -93,6 +93,29 @@
                 </Grid>
             </TabItem>
 
+            <TabItem Header="Network Party">
+                <Grid Background="#FFE5E5E5" Width="420">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="*"/>
+                        
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="1" Grid.Column="1" Content="Partytoken"/>
+                    <TextBox Grid.Row="1" Grid.Column="2" x:Name="PartyToken_Text"/>
+                    <Button Grid.Row="2" Grid.Column="1" Content="Create" Click="Create_Click" />
+                    <Button Grid.Row="2" Grid.Column="2" Content="Join" Click="Join_Click" Width="60" HorizontalAlignment="Left"/>
+                    <Button Grid.Row="2" Grid.Column="2" Content="Leave" Click="Leave_Click" Width="60" HorizontalAlignment="Left" Margin="60,0,0,0" FontSize="12"/>
+                    <Button Grid.Row="2" Grid.Column="2" Content="Force" Click="ForcePlay_Click" Width="60" HorizontalAlignment="Left" Margin="120,0,0,0" FontSize="12"/>
+                </Grid>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

@@ -12,15 +12,21 @@
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/BardMusicPlayer/BardMusicPlayer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Platforms>AnyCPU;x64</Platforms>
+	<Platforms>AnyCPU;x64</Platforms>
     <Configurations>Debug;Release;Debug_WithSiren;Release_WithSiren</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="libzt.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="LibZeroTier" Version="1.0.8" />
+    <PackageReference Include="ZeroTier.Sockets" Version="1.8.4" />
   </ItemGroup>
+
+    <ItemGroup>
+        <ContentWithTargetPath Include="bin\$(Platform)\$(Configuration)\$(TargetFramework)\libzt.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <TargetPath>libzt.dll</TargetPath>
+        </ContentWithTargetPath>
+    </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BardMusicPlayer.Quotidian\BardMusicPlayer.Quotidian.csproj" />

@@ -100,8 +100,6 @@
                          ScrollViewer.VerticalScrollBarVisibility="Visible"
                          ScrollViewer.CanContentScroll="True">
             </ListView>
-
-
         </Grid>
 
         <!-- Bottom -->

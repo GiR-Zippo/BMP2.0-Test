@@ -16,6 +16,7 @@ using BardMusicPlayer.Ui.Functions;
 using BardMusicPlayer.Maestro;
 using BardMusicPlayer.Pigeonhole;
 using BardMusicPlayer.Transmogrify.Song;
+using BardMusicPlayer.Jamboree;
 
 namespace BardMusicPlayer.Ui.Skinned
 {
@@ -214,7 +215,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
             //Are we the Choreo host
             if (BmpPigeonhole.Instance.IsChoreoHost)
-                _ = Grunt.GameExtensions.SendLyricLine(BmpMaestro.Instance.GetHostGame(), "<1234567890>GO!>");
+                BmpJamboree.Instance.SendPerformanceStart();
         }
 
         /// <summary>
