@@ -91,6 +91,13 @@ namespace BardMusicPlayer.Jamboree
             _pydna.SendPerformanceStart();
         }
 
+        public void SendPerformerJoin(string performer_name)
+        {
+            if (_pydna == null)
+                _pydna = new Pydna();
+            _pydna.SendPerformerJoin(performer_name);
+        }
+
     }
 
 

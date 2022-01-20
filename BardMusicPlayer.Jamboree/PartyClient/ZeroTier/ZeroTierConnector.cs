@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using ZeroTier;
 using ZeroTier.Core;
 
-namespace BardMusicPlayer.Jamboree.PartyClient
+namespace BardMusicPlayer.Jamboree.ZeroTier
 {
     public class ZeroTierConnector
     {

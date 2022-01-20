@@ -1,6 +1,5 @@
 ﻿using BardMusicPlayer.Jamboree.Events;
-using BardMusicPlayer.Jamboree.PartyClient;
-using BardMusicPlayer.Jamboree.PartyServer;
+using BardMusicPlayer.Jamboree.ZeroTier;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,14 +67,20 @@ namespace BardMusicPlayer.Jamboree
             zeroTierConnector.ZeroTierDisconnect();
         }
 
+#region NetworkSendFunctions
         public void SendPerformanceStart()
         {
             if (_servermode)
-            {
-                long milliseconds = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                server.SendToAll(PartyOpcodes.OpcodeEnum.SMSG_PERFORMANCE_START, milliseconds.ToString());
-            }
+                server.SendToAll(ZeroTierPacketBuilder.PerformanceStart());
         }
+
+        public void SendPerformerJoin(string performername)
+        {
+            if (!_servermode)
+                client.SendPacket(ZeroTierPacketBuilder.CMSG_JOIN_PARTY(performername));
+        }
+
+#endregion
 
     }
 }

@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ZeroTier.Sockets;
 
-namespace BardMusicPlayer.Jamboree.PartyServer
+namespace BardMusicPlayer.Jamboree.ZeroTier
 {
     public class ZeroTierPartyClient
     {
@@ -27,15 +27,21 @@ namespace BardMusicPlayer.Jamboree.PartyServer
             objWorkerServerDiscovery.RunWorkerAsync();
         }
 
-        public void SendPacket(PartyOpcodes.OpcodeEnum opcode, string data)
+        public void SendPacket(ZeroTierPartyOpcodes.OpcodeEnum opcode, string data)
         {
             if (!svcClient.SendMessage(opcode, data))
                 svcClient.Stop();
         }
 
+        public void SendPacket(byte[] pck)
+        {
+            if (!svcClient.SendMessage(pck))
+                svcClient.Stop();
+        }
+
         public void Close()
         {
-            svcClient.SendMessage(PartyOpcodes.OpcodeEnum.CMSG_TERM_SESSION, "");
+            svcClient.SendMessage(ZeroTierPartyOpcodes.OpcodeEnum.CMSG_TERM_SESSION, "");
             svcClient.Stop();
         }
         private void logWorkers_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -75,11 +81,11 @@ namespace BardMusicPlayer.Jamboree.PartyServer
                         if (sender.Poll(100, System.Net.Sockets.SelectMode.SelectRead))
                         {
                             int bytesRec = sender.Receive(bytes);
-                            PartyOpcodes.OpcodeEnum opcode = (PartyOpcodes.OpcodeEnum)bytes[0];
+                            ZeroTierPartyOpcodes.OpcodeEnum opcode = (ZeroTierPartyOpcodes.OpcodeEnum)bytes[0];
                             string data = Encoding.ASCII.GetString(bytes, 1, bytesRec);
                             switch (opcode)
                             {
-                                case PartyOpcodes.OpcodeEnum.SMSG_PERFORMANCE_START:
+                                case ZeroTierPartyOpcodes.OpcodeEnum.SMSG_PERFORMANCE_START:
                                     BmpJamboree.Instance.PublishEvent(new PerformanceStartEvent(Convert.ToInt64(data)));
                                     break;
                             };
@@ -106,7 +112,7 @@ namespace BardMusicPlayer.Jamboree.PartyServer
             }*/
         }
 
-        public bool SendMessage(PartyOpcodes.OpcodeEnum opcode, string data)
+        public bool SendMessage(ZeroTierPartyOpcodes.OpcodeEnum opcode, string data)
         {
             if (sender.Available == -1)
                 return false;
@@ -120,10 +126,17 @@ namespace BardMusicPlayer.Jamboree.PartyServer
             catch { }
             return true;
         }
-        public void SendMessage(string data)
+
+        public bool SendMessage(byte[] pck)
         {
-            byte[] msg = Encoding.ASCII.GetBytes("This is a test");
-            int bytesSent = sender.Send(msg);
+            if (sender.Available == -1)
+                return false;
+            try
+            {
+                int bytesSent = sender.Send(pck);
+            }
+            catch { }
+            return true;
         }
 
         public void Stop()
