@@ -40,7 +40,6 @@ namespace BardMusicPlayer.Jamboree
             string p = Encoding.UTF8.GetString(base64EncodedBytes);
             string networkId = p.Split('-')[0];
             string host = p.Split('-')[1];
-            Console.WriteLine(p.Split('-')[0]);
             string data = zeroTierConnector.ZeroTierConnect(networkId).Result;
             _servermode = false;
             data = data.Split('.')[0] + "." + data.Split('.')[1] + "." + data.Split('.')[2] + "." + host;

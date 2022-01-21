@@ -35,10 +35,10 @@ namespace BardMusicPlayer.Ui
 
             BmpCoffer.Initialize(Globals.Globals.DataPath + @"\MusicCatalog.db");
             BmpSeer.Instance.SetupFirewall("BardMusicPlayer");
-            /*BmpSeer.Instance.Start();
+            BmpSeer.Instance.Start();
             BmpGrunt.Instance.Start();
             BmpMaestro.Instance.Start();
-            BmpSiren.Instance.Setup();*/
+            BmpSiren.Instance.Setup();
             BmpJamboree.Instance.Start();
         }
 

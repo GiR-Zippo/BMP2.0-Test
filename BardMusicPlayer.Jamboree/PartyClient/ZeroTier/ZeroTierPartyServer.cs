@@ -68,8 +68,6 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         {
             // Data buffer for incoming data.
             byte[] bytes = new byte[1024];
-
-            Console.WriteLine(iPEndPoint.ToString());
             Socket listener = new Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
  
             listener.Bind(iPEndPoint);
