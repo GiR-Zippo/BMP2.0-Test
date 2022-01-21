@@ -36,10 +36,10 @@ namespace BardMusicPlayer.Ui.Skinned
             this.Settings_EffectsHost.IsChecked = BmpPigeonhole.Instance.IsChoreoHost;
 
             //Networkparty Tab
-            BmpJamboree.Instance.OnPartyJoined += Instance_PartyJoined;
+            BmpJamboree.Instance.OnPartyCreated += Instance_PartyCreated;
         }
 
-        private void Instance_PartyJoined(object sender, PartyJoinedEvent e)
+        private void Instance_PartyCreated(object sender, PartyCreatedEvent e)
         {
             string Token = e.Token;
             this.Dispatcher.BeginInvoke(new Action(() => this.PartyToken_Text.Text = Token));

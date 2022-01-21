@@ -53,14 +53,14 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         public IPEndPoint iPEndPoint;
         public int ServerPort = 0;
 
-        private BackgroundWorker worker;
+        private BackgroundWorker worker = null;
         private List<PartyGame> sessions = new List<PartyGame>();
         List<PartyGame> removed_sessions = new List<PartyGame>();
 
-        public SocketServer(ref BackgroundWorker worker, IPEndPoint localEndPoint)
+        public SocketServer(ref BackgroundWorker w, IPEndPoint localEndPoint)
         {
-            this.worker = worker;
-            this.iPEndPoint = localEndPoint;
+            worker = w;
+            iPEndPoint = localEndPoint;
             worker.ReportProgress(1, "Server");
         }
 
@@ -89,7 +89,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
                     });
                     if (!isInList)
                     {
-                        PartyGame session = new PartyGame(handler);
+                        PartyGame session = new PartyGame(handler, true);
                         sessions.Add(session);
                     }
                 }
@@ -115,8 +115,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             foreach (PartyGame s in sessions)
             {
                 // Release the socket.
-                s.Socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
-                s.Socket.Close();
+                s.CloseConnection();
             }
             listener.Close();
             return;

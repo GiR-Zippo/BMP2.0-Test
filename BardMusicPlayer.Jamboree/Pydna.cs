@@ -30,7 +30,7 @@ namespace BardMusicPlayer.Jamboree
 
             server = new ZeroTierPartyServer(new IPEndPoint(IPAddress.Parse(data), 12345));
 
-            BmpJamboree.Instance.PublishEvent(new PartyJoinedEvent(Convert.ToBase64String(plainTextBytes)));
+            BmpJamboree.Instance.PublishEvent(new PartyCreatedEvent(Convert.ToBase64String(plainTextBytes)));
         }
 
         public void JoinParty(string partycode)
@@ -45,7 +45,6 @@ namespace BardMusicPlayer.Jamboree
             _servermode = false;
             data = data.Split('.')[0] + "." + data.Split('.')[1] + "." + data.Split('.')[2] + "." + host;
             client = new ZeroTierPartyClient(new IPEndPoint(IPAddress.Parse(data), 12345));
-            BmpJamboree.Instance.PublishEvent(new PartyJoinedEvent("Connected"));
         }
 
         public void LeaveParty()
@@ -74,10 +73,17 @@ namespace BardMusicPlayer.Jamboree
                 server.SendToAll(ZeroTierPacketBuilder.PerformanceStart());
         }
 
-        public void SendPerformerJoin(string performername)
+        /// <summary>
+        /// Send we joined the party
+        /// | type 0 = bard
+        /// | type 1 = dancer
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="performer_name"></param>
+        public void SendPerformerJoin(byte type, string performername)
         {
             if (!_servermode)
-                client.SendPacket(ZeroTierPacketBuilder.CMSG_JOIN_PARTY(performername));
+                client.SendPacket(ZeroTierPacketBuilder.CMSG_JOIN_PARTY(type, performername));
         }
 
 #endregion

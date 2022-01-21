@@ -91,15 +91,18 @@ namespace BardMusicPlayer.Jamboree
             _pydna.SendPerformanceStart();
         }
 
-        public void SendPerformerJoin(string performer_name)
+        /// <summary>
+        /// Send we joined the party
+        /// | type 0 = bard
+        /// | type 1 = dancer
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="performer_name"></param>
+        public void SendPerformerJoin(byte type, string performer_name)
         {
             if (_pydna == null)
                 _pydna = new Pydna();
-            _pydna.SendPerformerJoin(performer_name);
+            _pydna.SendPerformerJoin(type, performer_name);
         }
-
     }
-
-
-    /* */
 }
