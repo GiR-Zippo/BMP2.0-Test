@@ -10,6 +10,7 @@ namespace BardMusicPlayer.Jamboree
     {
         public EventHandler<PartyCreatedEvent> OnPartyCreated;
         public EventHandler<PartyConnectionChangedEvent> OnPartyConnectionChanged;
+        public EventHandler<PartyChangedEvent> OnPartyChanged;
         public EventHandler<PerformanceStartEvent> OnPerformanceStart;
 
         private ConcurrentQueue<JamboreeEvent> _eventQueue;
@@ -37,6 +38,11 @@ namespace BardMusicPlayer.Jamboree
                                 if (OnPartyConnectionChanged == null)
                                     break;
                                 OnPartyConnectionChanged(this, connectionChanged);
+                                break;
+                            case PartyChangedEvent partyChanged:
+                                if (OnPartyChanged == null)
+                                    break;
+                                OnPartyChanged(this, partyChanged);
                                 break;
                             case PerformanceStartEvent performanceStart:
                                 if (OnPerformanceStart == null)

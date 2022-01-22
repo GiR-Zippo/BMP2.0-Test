@@ -14,7 +14,8 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             SMSG_PERFORMANCE_START = 0x01,
             CMSG_TERM_SESSION = 0x02,
             CMSG_JOIN_PARTY = 0x03,
-            SMSG_JOIN_PARTY = 0x04
+            SMSG_JOIN_PARTY = 0x04,
+            SMSG_PARTY_MEMBERS = 0x05
         }
     }
 }

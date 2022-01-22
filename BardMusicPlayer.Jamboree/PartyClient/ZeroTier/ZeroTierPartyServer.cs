@@ -1,8 +1,7 @@
-﻿using BardMusicPlayer.Jamboree.PartyClient;
+﻿using BardMusicPlayer.Jamboree.PartyManagement;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -26,11 +25,6 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             objWorkerServerDiscovery.RunWorkerAsync();
         }
 
-        public void Close()
-        {
-            svcServer.Stop();
-        }
-
         public void SendToAll(ZeroTierPartyOpcodes.OpcodeEnum opcode, string data)
         {
             svcServer.SendToAll(opcode, data);
@@ -39,6 +33,11 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         public void SendToAll(byte[] pck)
         {
             svcServer.SendToAll(pck);
+        }
+
+        public void Close()
+        {
+            svcServer.Stop();
         }
 
         private void logWorkers_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -57,22 +56,27 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         private List<PartyGame> sessions = new List<PartyGame>();
         List<PartyGame> removed_sessions = new List<PartyGame>();
 
+        private PartyClientInfo _clientInfo = new PartyClientInfo();
+
         public SocketServer(ref BackgroundWorker w, IPEndPoint localEndPoint)
         {
             worker = w;
             iPEndPoint = localEndPoint;
             worker.ReportProgress(1, "Server");
+            
+            //Temporary
+            _clientInfo.Performer_Type = 0;
+            _clientInfo.Performer_Name = "Hans Hans";
+            PartyManager.Instance.Add(_clientInfo);
         }
 
         public void Start(object sender, DoWorkEventArgs e)
         {
-            // Data buffer for incoming data.
-            byte[] bytes = new byte[1024];
             Socket listener = new Socket(System.Net.Sockets.AddressFamily.InterNetwork, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
  
             listener.Bind(iPEndPoint);
             listener.Listen(10);
-            
+
             while (this.disposing == false)
             {
                 if (listener.Poll(100, System.Net.Sockets.SelectMode.SelectRead))
@@ -87,6 +91,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
                     });
                     if (!isInList)
                     {
+                        //Aufm server erstellt, also ist server = true
                         PartyGame session = new PartyGame(handler, true);
                         sessions.Add(session);
                     }

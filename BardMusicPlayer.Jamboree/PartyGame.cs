@@ -4,8 +4,12 @@
  */
 
 using BardMusicPlayer.Jamboree.Events;
+using BardMusicPlayer.Jamboree.PartyManagement;
 using BardMusicPlayer.Jamboree.ZeroTier;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using ZeroTier.Sockets;
 
@@ -13,22 +17,18 @@ namespace BardMusicPlayer.Jamboree
 {
     public class PartyGame
     {
-        public Socket Socket { get{ return _socket; } }
-
-        /// <summary>
-        /// Is this session a (0) bard, (1) dancer
-        /// </summary>
-        public byte Performer_Type { get; set; } = 254;
-        public string Performer_Name { get; set; } = "Unknown";
-
-
         private Socket _socket = null;
-        private bool _server = false;
+        private bool _server = false; //created from server or client side
+        private PartyClientInfo _clientInfo = new PartyClientInfo();
+
+        public PartyClientInfo PartyClient { get { return _clientInfo; } }
+        public Socket Socket { get { return _socket; } }
 
         internal PartyGame(Socket socket, bool server)
         {
             _socket = socket;
             _server = server;
+            PartyManager.Instance.Add(_clientInfo);
         }
 
         public bool Update()
@@ -49,11 +49,10 @@ namespace BardMusicPlayer.Jamboree
                     }
                     else
                     {
-                        ZeroTierPartyOpcodes.OpcodeEnum opcode = (ZeroTierPartyOpcodes.OpcodeEnum)bytes[0];
                         if (_server)
-                            serverOpcodeHandling(opcode, bytes, bytesRec);
+                            serverOpcodeHandling(bytes, bytesRec);
                         else
-                            clientOpcodeHandling(opcode, bytes, bytesRec);
+                            clientOpcodeHandling(bytes, bytesRec);
                     }
                 }
                 catch (SocketException err)
@@ -79,29 +78,44 @@ namespace BardMusicPlayer.Jamboree
             return true;
         }
 
-        private void serverOpcodeHandling(ZeroTierPartyOpcodes.OpcodeEnum opcode, byte[] bytes, int bytesRec)
+        private void serverOpcodeHandling(byte[] bytes, int bytesRec)
         {
-            switch (opcode)
+            Packet packet = new Packet(bytes);
+            switch (packet.Opcode)
             {
                 case ZeroTierPartyOpcodes.OpcodeEnum.CMSG_JOIN_PARTY:
-                    Performer_Type = bytes[1];
-                    Performer_Name = Encoding.ASCII.GetString(bytes, 2, bytesRec);
+                    _clientInfo.Performer_Type = packet.ReadUInt8();
+                    _clientInfo.Performer_Name = packet.ReadCString();
+                    BmpJamboree.Instance.SendPerformerJoin(_clientInfo.Performer_Type, _clientInfo.Performer_Name);
+                    sendPartyMemberList();
                     break;
                 default:
                     break;
             };
         }
 
-        private void clientOpcodeHandling(ZeroTierPartyOpcodes.OpcodeEnum opcode, byte[] bytes, int bytesRec)
+        private void clientOpcodeHandling(byte[] bytes, int bytesRec)
         {
-            switch (opcode)
+            Packet packet = new Packet(bytes);
+            switch (packet.Opcode)
             {
                 case ZeroTierPartyOpcodes.OpcodeEnum.SMSG_PERFORMANCE_START:
-                    BmpJamboree.Instance.PublishEvent(new PerformanceStartEvent(Convert.ToInt64(Encoding.ASCII.GetString(bytes, 1, bytesRec))));
+                    BmpJamboree.Instance.PublishEvent(new PerformanceStartEvent(packet.ReadInt64()));
                     break;
                 case ZeroTierPartyOpcodes.OpcodeEnum.SMSG_JOIN_PARTY:
-                    Performer_Type = bytes[1];
-                    Performer_Name = Encoding.ASCII.GetString(bytes, 2, bytesRec);
+                    _clientInfo.Performer_Type = packet.ReadUInt8();
+                    _clientInfo.Performer_Name = packet.ReadCString();
+                    break;
+                case ZeroTierPartyOpcodes.OpcodeEnum.SMSG_PARTY_MEMBERS:
+                    int count = packet.ReadInt32();
+                    for (int index = 0; index != count; index ++)
+                    {
+                        PartyClientInfo clientInfo = new PartyClientInfo();
+                        clientInfo.Performer_Type = packet.ReadUInt8();
+                        clientInfo.Performer_Name = packet.ReadCString();
+                        PartyManager.Instance.Add(clientInfo);
+                    }
+                    BmpJamboree.Instance.PublishEvent(new PartyChangedEvent());
                     break;
                 default:
                     break;
@@ -112,6 +126,14 @@ namespace BardMusicPlayer.Jamboree
         {
             _socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
             _socket.Close();
+        }
+
+        private void sendPartyMemberList()
+        {
+            List<PartyClientInfo> members = PartyManager.Instance.GetPartyMembers();
+            if (members.Count == 0)
+                return;
+            SendPacket(ZeroTierPacketBuilder.SMSG_PARTY_MEMBERS(members));
         }
     }
 }

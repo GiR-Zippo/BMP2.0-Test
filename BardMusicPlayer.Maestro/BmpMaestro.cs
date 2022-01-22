@@ -17,7 +17,6 @@ namespace BardMusicPlayer.Maestro
         private static readonly Lazy<BmpMaestro> LazyInstance = new(() => new BmpMaestro());
 
         public Game SelectedBard { get; set; }
-        private int _NoteKeyDelay;
 
         private Orchestrator _orchestrator;
         /// <summary>

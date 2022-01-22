@@ -1,12 +1,8 @@
 ﻿using BardMusicPlayer.Jamboree.Events;
-using BardMusicPlayer.Jamboree.PartyClient;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using ZeroTier.Sockets;
 
@@ -26,6 +22,10 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             objWorkerServerDiscovery.ProgressChanged += new ProgressChangedEventHandler(logWorkers_ProgressChanged);
             objWorkerServerDiscovery.RunWorkerAsync();
         }
+        public void SetPlayerData(byte type, string name)
+        {
+            svcClient.SetPlayerData(type, name);
+        }
 
         public void SendPacket(ZeroTierPartyOpcodes.OpcodeEnum opcode, string data)
         {
@@ -44,6 +44,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             svcClient.SendMessage(ZeroTierPartyOpcodes.OpcodeEnum.CMSG_TERM_SESSION, "");
             svcClient.Stop();
         }
+
         private void logWorkers_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // Report thread messages to Console
@@ -111,6 +112,13 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         public void Stop()
         {
             this.disposing = true;
+        }
+
+        public void SetPlayerData(byte type, string name)
+        {
+            var t = session.PartyClient;
+            t.Performer_Type = type;
+            t.Performer_Name = name;
         }
     }
 }

@@ -104,11 +104,6 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
                 nodeOnline = true;
             }
             /*
-        if (e.Code == ZeroTier.Constants.EVENT_NODE_ONLINE) {
-            Console.WriteLine("Node is online");
-            Console.WriteLine(" - Address (NodeId): " + node.Id.ToString("x16"));
-        }
-
         if (e.Code == ZeroTier.Constants.EVENT_NETWORK_OK) {
             Console.WriteLine(" - Network ID: " + e.NetworkInfo.Id.ToString("x16"));
         }

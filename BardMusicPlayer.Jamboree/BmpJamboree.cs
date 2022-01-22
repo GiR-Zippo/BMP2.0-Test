@@ -3,7 +3,9 @@
  * Licensed under the GPL v3 license. See https://github.com/BardMusicPlayer/BardMusicPlayer/blob/develop/LICENSE for full license information.
  */
 
+using BardMusicPlayer.Jamboree.PartyManagement;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -104,5 +106,11 @@ namespace BardMusicPlayer.Jamboree
                 _pydna = new Pydna();
             _pydna.SendPerformerJoin(type, performer_name);
         }
+
+        public List<PartyClientInfo> GetPartyMembers()
+        {
+            return PartyManager.Instance.GetPartyMembers();
+        }
+
     }
 }

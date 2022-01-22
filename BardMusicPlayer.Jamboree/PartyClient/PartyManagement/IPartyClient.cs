@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BardMusicPlayer.Jamboree.PartyClient
+namespace BardMusicPlayer.Jamboree.PartyManagement
 {
     internal interface IPartyClient : IDisposable
     {

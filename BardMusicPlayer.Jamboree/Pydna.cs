@@ -29,7 +29,6 @@ namespace BardMusicPlayer.Jamboree
             var plainTextBytes = Encoding.UTF8.GetBytes(id);
 
             server = new ZeroTierPartyServer(new IPEndPoint(IPAddress.Parse(data), 12345));
-
             BmpJamboree.Instance.PublishEvent(new PartyCreatedEvent(Convert.ToBase64String(plainTextBytes)));
         }
 
@@ -82,10 +81,15 @@ namespace BardMusicPlayer.Jamboree
         public void SendPerformerJoin(byte type, string performername)
         {
             if (!_servermode)
+            {
+                client.SetPlayerData(type, performername);
                 client.SendPacket(ZeroTierPacketBuilder.CMSG_JOIN_PARTY(type, performername));
+            }
+            else
+                server.SendToAll(ZeroTierPacketBuilder.CMSG_JOIN_PARTY(type, performername));
         }
 
-#endregion
+        #endregion
 
     }
 }
