@@ -19,7 +19,7 @@ namespace BardMusicPlayer.Jamboree
         private ZeroTierPartyClient client = null;
         private ZeroTierConnector zeroTierConnector = null;
 
-        public void CreateParty(string networkId)
+        public void CreateParty(string networkId, byte type, string name)
         {
             zeroTierConnector = new ZeroTierConnector();
             string id = networkId+"-";
@@ -29,6 +29,7 @@ namespace BardMusicPlayer.Jamboree
             var plainTextBytes = Encoding.UTF8.GetBytes(id);
 
             server = new ZeroTierPartyServer(new IPEndPoint(IPAddress.Parse(data), 12345));
+            server.SetPlayerData(type, name);
             BmpJamboree.Instance.PublishEvent(new PartyCreatedEvent(Convert.ToBase64String(plainTextBytes)));
         }
 
@@ -87,6 +88,18 @@ namespace BardMusicPlayer.Jamboree
             }
             else
                 server.SendToAll(ZeroTierPacketBuilder.CMSG_JOIN_PARTY(type, performername));
+        }
+
+        public void SendClientPacket(byte [] packet)
+        {
+            if (!_servermode)
+                client.SendPacket(packet);
+        }
+
+        public void SendServerPacket(byte[] packet)
+        {
+            if (_servermode)
+                server.SendToAll(packet);
         }
 
         #endregion

@@ -115,7 +115,7 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             string token = PartyToken_Text.Text;
             PartyToken_Text.Text = "Please wait...";
-            BmpJamboree.Instance.CreateParty(token);
+            BmpJamboree.Instance.CreateParty(token, 0, "Test Player"); // BmpMaestro.Instance.GetHostGame().PlayerName);
         }
 
         private void Join_Click(object sender, RoutedEventArgs e)

@@ -15,7 +15,7 @@ using ZeroTier.Sockets;
 
 namespace BardMusicPlayer.Jamboree
 {
-    public class PartyGame
+    public class ZeroTierPartySocket
     {
         private Socket _socket = null;
         private bool _server = false; //created from server or client side
@@ -24,7 +24,7 @@ namespace BardMusicPlayer.Jamboree
         public PartyClientInfo PartyClient { get { return _clientInfo; } }
         public Socket Socket { get { return _socket; } }
 
-        internal PartyGame(Socket socket, bool server)
+        internal ZeroTierPartySocket(Socket socket, bool server)
         {
             _socket = socket;
             _server = server;
@@ -33,7 +33,7 @@ namespace BardMusicPlayer.Jamboree
 
         public bool Update()
         {
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[60000];
             if (_socket.Available == -1)
                 return false;
             if (_socket.Poll(100, System.Net.Sockets.SelectMode.SelectRead))
@@ -103,8 +103,7 @@ namespace BardMusicPlayer.Jamboree
                     BmpJamboree.Instance.PublishEvent(new PerformanceStartEvent(packet.ReadInt64()));
                     break;
                 case ZeroTierPartyOpcodes.OpcodeEnum.SMSG_JOIN_PARTY:
-                    _clientInfo.Performer_Type = packet.ReadUInt8();
-                    _clientInfo.Performer_Name = packet.ReadCString();
+
                     break;
                 case ZeroTierPartyOpcodes.OpcodeEnum.SMSG_PARTY_MEMBERS:
                     int count = packet.ReadInt32();
@@ -126,6 +125,7 @@ namespace BardMusicPlayer.Jamboree
         {
             _socket.Shutdown(System.Net.Sockets.SocketShutdown.Both);
             _socket.Close();
+            PartyManager.Instance.Remove(_clientInfo);
         }
 
         private void sendPartyMemberList()

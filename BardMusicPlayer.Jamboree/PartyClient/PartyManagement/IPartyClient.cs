@@ -69,14 +69,14 @@ namespace BardMusicPlayer.Jamboree.PartyManagement
         /// </summary>
         /// <param name="partyMember">string uuid</param>
         /// <returns>list of games</returns>
-        List<PartyGame> RequestPartyGames(string partyMember);
+        List<ZeroTierPartySocket> RequestPartyGames(string partyMember);
 
         /// <summary>
         /// Fired when the PartyGame list changes in a PartyMember
         /// </summary>
         /// <param name="partyMember"></param>
         /// <param name="partyGames"></param>
-        delegate void PartyGamesChangedHandler(string partyMember, List<PartyGame> partyGames);
+        delegate void PartyGamesChangedHandler(string partyMember, List<ZeroTierPartySocket> partyGames);
 
         /// <summary>
         /// Fired when the PartyGame list changes in a PartyMember

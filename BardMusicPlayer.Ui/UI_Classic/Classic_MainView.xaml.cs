@@ -136,6 +136,7 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 NumValue = e.TrackNumber;
                 UpdateNoteCountForTrack();
+                this.InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
 

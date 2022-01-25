@@ -526,6 +526,11 @@
     <Resource Include="Resources\Images\ClassicPause.png" />
     <Resource Include="Resources\Images\ClassicPlay.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\ClassicLoop.png" />
+    <Resource Include="Resources\Images\ClassicRefresh.png" />
+    <Resource Include="Resources\Images\ClassicShuffle.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

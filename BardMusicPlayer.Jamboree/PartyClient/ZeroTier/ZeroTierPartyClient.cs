@@ -10,39 +10,40 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
 {
     public class ZeroTierPartyClient
     {
-        private SocketClient svcClient { get; set; } = null;
+        private SocketClient svcWorker { get; set; } = null;
         public ZeroTierPartyClient(IPEndPoint iPEndPoint)
         {
             BackgroundWorker objWorkerServerDiscovery = new BackgroundWorker();
             objWorkerServerDiscovery.WorkerReportsProgress = true;
             objWorkerServerDiscovery.WorkerSupportsCancellation = true;
 
-            svcClient = new SocketClient(ref objWorkerServerDiscovery, iPEndPoint);
-            objWorkerServerDiscovery.DoWork += new DoWorkEventHandler(svcClient.Start);
+            svcWorker = new SocketClient(ref objWorkerServerDiscovery, iPEndPoint);
+            objWorkerServerDiscovery.DoWork += new DoWorkEventHandler(svcWorker.Start);
             objWorkerServerDiscovery.ProgressChanged += new ProgressChangedEventHandler(logWorkers_ProgressChanged);
             objWorkerServerDiscovery.RunWorkerAsync();
         }
+
         public void SetPlayerData(byte type, string name)
         {
-            svcClient.SetPlayerData(type, name);
+            svcWorker.SetPlayerData(type, name);
         }
 
         public void SendPacket(ZeroTierPartyOpcodes.OpcodeEnum opcode, string data)
         {
-            if (!svcClient.SendMessage(opcode, data))
-                svcClient.Stop();
+            if (!svcWorker.SendMessage(opcode, data))
+                svcWorker.Stop();
         }
 
         public void SendPacket(byte[] pck)
         {
-            if (!svcClient.SendMessage(pck))
-                svcClient.Stop();
+            if (!svcWorker.SendMessage(pck))
+                svcWorker.Stop();
         }
 
         public void Close()
         {
-            svcClient.SendMessage(ZeroTierPartyOpcodes.OpcodeEnum.CMSG_TERM_SESSION, "");
-            svcClient.Stop();
+            svcWorker.SendMessage(ZeroTierPartyOpcodes.OpcodeEnum.CMSG_TERM_SESSION, "");
+            svcWorker.Stop();
         }
 
         private void logWorkers_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -56,7 +57,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
     {
         public bool disposing = false;
         public IPEndPoint remoteServerEndPoint;
-        private PartyGame session = null;
+        private ZeroTierPartySocket session = null;
         private BackgroundWorker worker;
 
         public SocketClient(ref BackgroundWorker w, IPEndPoint localEndPoint)
@@ -77,7 +78,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             while(!sender.Connected)
             { Task.Delay(10); }
             //Create the session
-            session = new PartyGame(sender, false);
+            session = new ZeroTierPartySocket(sender, false);
             //Inform we are connected
             BmpJamboree.Instance.PublishEvent(new PartyConnectionChangedEvent(PartyConnectionChangedEvent.ResponseCode.OK, "Connected"));
 

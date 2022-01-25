@@ -72,11 +72,11 @@ namespace BardMusicPlayer.Jamboree
             Task.Run(() => _pydna.JoinParty(partycode));
         }
 
-        public void CreateParty(string networkId)
+        public void CreateParty(string networkId, byte type, string name)
         {
             if (_pydna == null)
                 _pydna = new Pydna();
-            Task.Run(() => _pydna.CreateParty(networkId));
+            Task.Run(() => _pydna.CreateParty(networkId, type, name));
         }
 
         public void LeaveParty()
@@ -105,6 +105,20 @@ namespace BardMusicPlayer.Jamboree
             if (_pydna == null)
                 _pydna = new Pydna();
             _pydna.SendPerformerJoin(type, performer_name);
+        }
+
+        public void SendClientPacket(byte[] packet)
+        {
+            if (_pydna == null)
+                return;
+            _pydna.SendClientPacket(packet);
+        }
+
+        public void SendServerPacket(byte [] packet)
+        {
+            if (_pydna == null)
+                return;
+            _pydna.SendServerPacket(packet);
         }
 
         public List<PartyClientInfo> GetPartyMembers()
