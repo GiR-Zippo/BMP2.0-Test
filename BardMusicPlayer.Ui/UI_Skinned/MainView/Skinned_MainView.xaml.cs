@@ -30,6 +30,9 @@ namespace BardMusicPlayer.Ui.Skinned
         private bool _Trackbar_dragStarted { get; set; } = false;
         private bool _Octavebar_dragStarted { get; set; } = false;
 
+        private TimeSpan _maxTime;
+        private bool _showLapTime { get; set; } = true;
+
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
         public Skinned_MainView_Ex _MainView_Ex;
@@ -153,6 +156,7 @@ namespace BardMusicPlayer.Ui.Skinned
         {
             DisplayPlayTime(e.timeSpan);
             Playbar_Slider.Dispatcher.BeginInvoke(new Action(() => Playbar_Slider.Maximum = e.tick));
+            _maxTime = e.timeSpan;
         }
 
         /// <summary>
@@ -301,6 +305,10 @@ namespace BardMusicPlayer.Ui.Skinned
 
         private void DisplayPlayTime(TimeSpan t)
         {
+            //Display the lap time or the remaining time
+            if (!_showLapTime)
+                t = _maxTime - t;
+
             string Seconds = t.ToString().Split(':')[2];
             this.Second_Last.Dispatcher.BeginInvoke(new Action(() => Second_Last.Fill = SkinContainer.NUMBERS[(SkinContainer.NUMBER_TYPES)((Seconds.Length == 1) ? Convert.ToInt32(Seconds) : Convert.ToInt32(Seconds.Substring(1, 1)))]));
             this.Second_First.Dispatcher.BeginInvoke(new Action(() => Second_First.Fill = SkinContainer.NUMBERS[(SkinContainer.NUMBER_TYPES)((Seconds.Length == 1) ? 0 : Convert.ToInt32(Seconds.Substring(0, 1)))]));
@@ -375,6 +383,12 @@ namespace BardMusicPlayer.Ui.Skinned
                 _PlaylistView.Top = (mainWindow.Top + mainWindow.Height);
                 _PlaylistView.Left = mainWindow.Left;
             }
+        }
+
+        //when clicked on the time, toggle between lap and remaining time
+        private void Time_Display_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            _showLapTime = !_showLapTime;
         }
     }
 }

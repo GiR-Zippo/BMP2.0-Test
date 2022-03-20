@@ -138,4 +138,3 @@ namespace BardMusicPlayer.Ui.Skinned
         }
     }
 }
-

@@ -91,7 +91,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- The Time -->
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1" PreviewMouseLeftButtonDown="Time_Display_Clicked">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="18"/>
                     <ColumnDefinition Width="18"/>
