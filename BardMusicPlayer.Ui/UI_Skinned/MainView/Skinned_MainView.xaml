@@ -8,7 +8,7 @@
              MinWidth="412"
              Width="412"
              MaxWidth="412"
-             d:DesignHeight="200" d:DesignWidth="412">
+             d:DesignHeight="200" d:DesignWidth="412" Loaded="Window_Loaded">
     <UserControl.Background>
         <ImageBrush />
     </UserControl.Background>

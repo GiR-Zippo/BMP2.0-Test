@@ -81,7 +81,10 @@ namespace BardMusicPlayer.Ui.Skinned
 
             int track = BmpMaestro.Instance.GetHostBardTrack();
             WriteSmallDigitField(track.ToString());
+        }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
             SetWindowPositions();
         }
 
@@ -385,7 +388,11 @@ namespace BardMusicPlayer.Ui.Skinned
             }
         }
 
-        //when clicked on the time, toggle between lap and remaining time
+        /// <summary>
+        /// when clicked on the time digits, toggle between lap and remaining time
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Time_Display_Clicked(object sender, MouseButtonEventArgs e)
         {
             _showLapTime = !_showLapTime;
