@@ -58,10 +58,10 @@ namespace BardMusicPlayer.Seer.Reader.Backend.Machina
                         switch (message.Length)
                         {
                             case 56:
-                                _packet.Size56(timeStamp, otherActorId, myActorId, message);
+                                _packet.Size56(timeStamp, otherActorId, myActorId, message);        //Handles Ensemble Request, Ensemble Reject, and Instrument Equip/De-Equip.
                                 break;
                             case 88:
-                                _packet.Size88(timeStamp, otherActorId, myActorId, message);
+                                _packet.Size88(timeStamp, otherActorId, myActorId, message);        //Handles EnsembleStart
                                 break;
                             case 656:
                                 _packet.Size656(timeStamp, otherActorId, myActorId, message);
