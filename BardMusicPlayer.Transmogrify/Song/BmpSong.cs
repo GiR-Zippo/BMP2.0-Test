@@ -124,12 +124,8 @@ namespace BardMusicPlayer.Transmogrify.Song
                     TimedEventsCollection events = timedEventsManager.Events;
                     List<TimedEvent> prefixList = events.Where(e => e.Event is ChannelPrefixEvent).ToList();
                     foreach (TimedEvent tevent in prefixList)
-                        if (tevent != null)
-                        {
-                            var e = tevent.Event as ChannelPrefixEvent;
-                            if (e.Channel > 0xF)
-                                events.Remove(tevent);
-                        }
+                        if((tevent.Event as ChannelPrefixEvent).Channel > 0xF)
+                            events.Remove(tevent);
                 }
             }
 
