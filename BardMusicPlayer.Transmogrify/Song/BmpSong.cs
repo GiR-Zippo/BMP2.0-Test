@@ -116,6 +116,23 @@ namespace BardMusicPlayer.Transmogrify.Song
                 TrackContainers = new Dictionary<long, TrackContainer>()
             };
 
+            //some midifiles have a ChannelPrefixEvent with a channel greater than 0xF. remove 'em.
+            foreach (var chunk in midiFile.GetTrackChunks())
+            {
+                using (TimedEventsManager timedEventsManager = chunk.ManageTimedEvents())
+                {
+                    TimedEventsCollection events = timedEventsManager.Events;
+                    List<TimedEvent> prefixList = events.Where(e => e.Event is ChannelPrefixEvent).ToList();
+                    foreach (TimedEvent tevent in prefixList)
+                        if (tevent != null)
+                        {
+                            var e = tevent.Event as ChannelPrefixEvent;
+                            if (e.Channel > 0xF)
+                                events.Remove(tevent);
+                        }
+                }
+            }
+
             var trackChunkArray = midiFile.GetTrackChunks().ToArray();
 
             //Set note tracks at first
