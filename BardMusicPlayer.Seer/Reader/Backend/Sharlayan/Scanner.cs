@@ -106,6 +106,9 @@ namespace BardMusicPlayer.Seer.Reader.Backend.Sharlayan
 
         private static int FindSuperSignature(IReadOnlyList<byte> buffer, IReadOnlyList<byte> pattern)
         {
+            if (pattern == null)
+                return -1;
+
             if (pattern.Count > buffer.Count)
                 return -1;
 
