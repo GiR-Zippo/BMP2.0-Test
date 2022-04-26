@@ -502,7 +502,6 @@ namespace BardMusicPlayer.Maestro.Sequencing
                     index++;
             }
 
-
             //and set the tempo map
             midiFile.ReplaceTempoMap(bmpSong.SourceTempoMap);
             var stream = new MemoryStream();
