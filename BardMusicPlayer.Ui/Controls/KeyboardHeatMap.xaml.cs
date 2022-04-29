@@ -6,12 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
@@ -38,8 +34,6 @@ namespace BardMusicPlayer.Ui.Controls
     {
         //note frequencies
         private int mOctave = 4;    // default octave (octaves can be from 1 to 7)
-        private static int MIN_OCTAVE = 1;
-        private static int MAX_OCTAVE = 7;
 
         Dictionary<int, NoteRectInfo> noteInfo = new Dictionary<int, NoteRectInfo>
         {
