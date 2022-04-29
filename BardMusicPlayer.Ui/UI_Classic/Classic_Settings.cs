@@ -18,6 +18,8 @@ namespace BardMusicPlayer.Ui.Classic
     {
         private void LoadConfig()
         {
+            this.AutoPlay_CheckBox.IsChecked = BmpPigeonhole.Instance.PlaylistAutoPlay;
+
             this.Autostart_source.SelectedIndex = BmpPigeonhole.Instance.AutostartMethod;
 
             this.LocalOrchestraBox.IsChecked = BmpPigeonhole.Instance.LocalOrchestra;

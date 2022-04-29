@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="BardMusicPlayer.Ui.Controls.KeyboardHeatMap"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Name="NumbericUpDown"
+             mc:Ignorable="d" Height="25" Width="40">
+
+    <Grid Name="tgrd" Loaded="grd_Loaded" SizeChanged="grd_SizeChanged">
+        <Grid Name="grd"/>
+        <Grid Name="blk_grd"/>
+    </Grid>
+
+</UserControl>

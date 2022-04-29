@@ -17,18 +17,27 @@ namespace BardMusicPlayer.Ui.Classic
         private bool _alltracks = false;
         private bool _Playbar_dragStarted = false;
 
+        /* Playbuttonstate */
+        private void Play_Button_State(bool playing = false)
+        {
+            if (!playing)
+                Play_Button.Content = @"▶";
+            else
+                Play_Button.Content = @"⏸";
+        }
+
         /* Playback */
         private void Play_Button_Click(object sender, RoutedEventArgs e)
         {
             if (PlaybackFunctions.PlaybackState == PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
             {
                 PlaybackFunctions.PauseSong();
-                Play_Button.Content = @"▶";
+                Play_Button_State(false);
             }
             else
             {
                 PlaybackFunctions.PlaySong();
-                Play_Button.Content = @"⏸";
+                Play_Button_State(true);
             }
         }
 

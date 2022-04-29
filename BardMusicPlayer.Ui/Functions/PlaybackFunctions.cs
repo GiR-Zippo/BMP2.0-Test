@@ -23,7 +23,7 @@ namespace BardMusicPlayer.Ui.Functions
         /// <summary>
         /// The currently loaded song
         /// </summary>
-        public static BmpSong CurrentSong { get; set; }
+        public static BmpSong CurrentSong { get; set; } = null;
 
         public static BmpSong OpenAndGetSong()
         {

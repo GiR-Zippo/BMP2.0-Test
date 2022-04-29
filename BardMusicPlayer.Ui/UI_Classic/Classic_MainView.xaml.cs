@@ -43,7 +43,13 @@ namespace BardMusicPlayer.Ui.Classic
             BmpMaestro.Instance.OnOctaveShiftChanged += Instance_OctaveShiftChanged;
             BmpSeer.Instance.ChatLog += Instance_ChatLog;
             BmpSeer.Instance.EnsembleStarted += Instance_EnsembleStarted;
+
             LoadConfig();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            KeyHeat.InitUi();
         }
 
         #region EventHandler
@@ -115,19 +121,31 @@ namespace BardMusicPlayer.Ui.Classic
         {
             //Statistics update
             UpdateStats(e);
-            Play_Button.Content = @"▶";
+            //update heatmap
+            KeyHeat.initUI(PlaybackFunctions.CurrentSong, NumValue);
+
+            if (PlaybackFunctions.PlaybackState != PlaybackFunctions.PlaybackState_Enum.PLAYBACK_STATE_PLAYING)
+                Play_Button_State(false);
 
             MaxTracks = e.MaxTracks;
             if (NumValue <= MaxTracks)
                 return;
             NumValue = MaxTracks;
+
             BmpMaestro.Instance.SetTracknumberOnHost(MaxTracks);
         }
 
         public void PlaybackStopped()
         {
             PlaybackFunctions.StopSong();
-            Play_Button.Content = @"▶";
+            Play_Button_State(false);
+
+            if (BmpPigeonhole.Instance.PlaylistAutoPlay)
+            {
+                playNextSong();
+                PlaybackFunctions.PlaySong();
+                Play_Button_State(true);
+            }
         }
 
         public void TracknumberChanged(Maestro.Events.TrackNumberChangedEvent e)
@@ -136,7 +154,6 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 NumValue = e.TrackNumber;
                 UpdateNoteCountForTrack();
-                this.InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
 
@@ -155,11 +172,7 @@ namespace BardMusicPlayer.Ui.Classic
 
             Thread.Sleep(2475);
             PlaybackFunctions.PlaySong();
-            Play_Button.Content = @"⏸";
-
-            //Are we the Choreo host
-            if (BmpPigeonhole.Instance.IsChoreoHost)
-                _ = Grunt.GameExtensions.SendLyricLine(BmpMaestro.Instance.GetHostGame(), "<1234567890>GO!>");
+            Play_Button_State(true);
         }
 
         public void AppendChatLog(Seer.Events.ChatLog ev)
@@ -182,7 +195,7 @@ namespace BardMusicPlayer.Ui.Classic
                         return;
                     Thread.Sleep(3000);
                     PlaybackFunctions.PlaySong();
-                    Play_Button.Content = @"⏸";
+                    Play_Button_State(true);
                 }
             }
         }
@@ -197,6 +210,10 @@ namespace BardMusicPlayer.Ui.Classic
             {
                 _numValue = value;
                 track_txtNum.Text = "t" + value.ToString();
+
+                //update heatmap
+                KeyHeat.initUI(PlaybackFunctions.CurrentSong, NumValue);
+                this.InstrumentInfo.Content = PlaybackFunctions.GetInstrumentNameForHostPlayer();
             }
         }
         private void track_cmdUp_Click(object sender, RoutedEventArgs e)
@@ -262,5 +279,6 @@ namespace BardMusicPlayer.Ui.Classic
                 BmpMaestro.Instance.SetOctaveshiftOnHost(_octavenumValue);
             }
         }
+
     }
 }
