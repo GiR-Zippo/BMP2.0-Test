@@ -9,6 +9,7 @@ namespace BardMusicPlayer.Jamboree
     public partial class BmpJamboree
     {
         public EventHandler<PartyCreatedEvent> OnPartyCreated;
+        public EventHandler<PartyLogEvent> OnPartyLog;
         public EventHandler<PartyConnectionChangedEvent> OnPartyConnectionChanged;
         public EventHandler<PartyChangedEvent> OnPartyChanged;
         public EventHandler<PerformanceStartEvent> OnPerformanceStart;
@@ -33,6 +34,11 @@ namespace BardMusicPlayer.Jamboree
                                 if (OnPartyCreated == null)
                                     break;
                                 OnPartyCreated(this, partyCreated);
+                                break;
+                            case PartyLogEvent partyLog:
+                                if (OnPartyLog == null)
+                                    break;
+                                OnPartyLog(this, partyLog);
                                 break;
                             case PartyConnectionChangedEvent connectionChanged:
                                 if (OnPartyConnectionChanged == null)
