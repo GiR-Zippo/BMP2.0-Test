@@ -122,10 +122,15 @@ namespace BardMusicPlayer.Seer
 
         public void Dispose()
         {
-            BmpSeer.Instance.PublishEvent(new GameStopped(Pid));
+            if ((_eventQueueHighPriority != null) && (_eventQueueHighPriority != null) && (_eventDedupeHistory != null))
+                BmpSeer.Instance.PublishEvent(new GameStopped(Pid));
 
             _eventQueueOpen = false;
-            try { _eventTokenSource.Cancel(); }
+            try
+            { 
+                if (_eventTokenSource != null)
+                    _eventTokenSource.Cancel();
+            }
             catch (Exception ex)
             {
                 BmpSeer.Instance.PublishEvent(new GameExceptionEvent(this, Pid, ex));
@@ -160,15 +165,21 @@ namespace BardMusicPlayer.Seer
 
             try
             {
-                while (_eventQueueHighPriority.TryDequeue(out _))
+                if (_eventQueueHighPriority != null)
                 {
+                    while (_eventQueueHighPriority.TryDequeue(out _))
+                    {
+                    }
                 }
 
-                while (_eventQueueLowPriority.TryDequeue(out _))
+                if (_eventQueueHighPriority != null)
                 {
+                    while (_eventQueueLowPriority.TryDequeue(out _))
+                    {
+                    }
                 }
-
-                _eventDedupeHistory.Clear();
+                if (_eventDedupeHistory != null)
+                    _eventDedupeHistory.Clear();
             }
             catch (Exception ex)
             {

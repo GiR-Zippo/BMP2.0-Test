@@ -73,6 +73,11 @@ namespace BardMusicPlayer.Seer
         public string HomeWorld { get; private set; } = "Unknown";
 
         /// <summary>
+        /// Shows if the player is logged in.
+        /// </summary>
+        public bool IsLoggedIn { get; private set; } = false;
+
+        /// <summary>
         /// Shows the instrument held. Updated by Sharlayan and Machina.
         /// </summary>
         public Instrument InstrumentHeld { get; private set; } = Instrument.None;
