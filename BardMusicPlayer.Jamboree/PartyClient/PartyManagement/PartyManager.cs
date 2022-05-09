@@ -8,21 +8,14 @@ namespace BardMusicPlayer.Jamboree.PartyManagement
 {
     class PartyManager
     {
-        public List<PartyClientInfo> GetPartyMembers() { return _partyGames; }
+        public List<PartyClientInfo> GetPartyMembers() { return _partyClients; }
+        private List<PartyClientInfo> _partyClients = new List<PartyClientInfo>();
 
-        private List<PartyClientInfo> _partyGames = new List<PartyClientInfo>();
 #region Instance Constructor/Destructor
         private static readonly Lazy<PartyManager> LazyInstance = new(() => new PartyManager());
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool Started { get; private set; }
-
-
         private PartyManager()
         {
-            _partyGames.Clear();
+            _partyClients.Clear();
         }
 
         public static PartyManager Instance => LazyInstance.Value;
@@ -33,19 +26,22 @@ namespace BardMusicPlayer.Jamboree.PartyManagement
         {
             GC.SuppressFinalize(this);
         }
+#endregion
 
         public void Add(PartyClientInfo client)
         {
-            foreach(PartyClientInfo info in _partyGames)
+            foreach(PartyClientInfo info in _partyClients)
                 if (info.Performer_Name == client.Performer_Name)
                     return;
-            _partyGames.Add(client);
+            _partyClients.Add(client);
         }
 
         public void Remove(PartyClientInfo client)
         {
-            _partyGames.Remove(client);
+            _partyClients.Remove(client);
         }
-#endregion
+
+
+
     }
 }

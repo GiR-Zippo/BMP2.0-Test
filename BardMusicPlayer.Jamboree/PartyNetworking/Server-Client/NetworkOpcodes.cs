@@ -1,13 +1,10 @@
 ﻿using BardMusicPlayer.Jamboree.PartyManagement;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BardMusicPlayer.Jamboree.ZeroTier
+namespace BardMusicPlayer.Jamboree.PartyNetworking
 {
-    public static class ZeroTierPartyOpcodes
+    public static class NetworkOpcodes
     {
         public enum OpcodeEnum : byte
         {
@@ -25,7 +22,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
     {
         public static byte[] PerformanceStart()
         {
-            Packet buffer = new Packet(ZeroTierPartyOpcodes.OpcodeEnum.SMSG_PERFORMANCE_START);
+            NetworkPacket buffer = new NetworkPacket(NetworkOpcodes.OpcodeEnum.SMSG_PERFORMANCE_START);
             buffer.WriteInt64(DateTimeOffset.Now.ToUnixTimeMilliseconds());
             return buffer.GetData();
         }
@@ -40,7 +37,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         /// <returns>data as byte[]</returns>
         public static byte[] CMSG_JOIN_PARTY(byte type, string performer_name)
         {
-            Packet buffer = new Packet(ZeroTierPartyOpcodes.OpcodeEnum.CMSG_JOIN_PARTY);
+            NetworkPacket buffer = new NetworkPacket(NetworkOpcodes.OpcodeEnum.CMSG_JOIN_PARTY);
             buffer.WriteUInt8(type);
             buffer.WriteCString(performer_name);
             return buffer.GetData();
@@ -52,7 +49,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         /// <param name="clients"></param>
         public static byte[] SMSG_PARTY_MEMBERS(List<PartyClientInfo> clients)
         {
-            Packet buffer = new Packet(ZeroTierPartyOpcodes.OpcodeEnum.SMSG_PARTY_MEMBERS);
+            NetworkPacket buffer = new NetworkPacket(NetworkOpcodes.OpcodeEnum.SMSG_PARTY_MEMBERS);
             buffer.WriteInt32(clients.Count);
             foreach (var member in clients)
             {
@@ -64,7 +61,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
 
         public static byte[] SMSG_LEAVE_PARTY(byte type, string performer_name)
         {
-            Packet buffer = new Packet(ZeroTierPartyOpcodes.OpcodeEnum.SMSG_LEAVE_PARTY);
+            NetworkPacket buffer = new NetworkPacket(NetworkOpcodes.OpcodeEnum.SMSG_LEAVE_PARTY);
             buffer.WriteUInt8(type);
             buffer.WriteCString(performer_name);
             return buffer.GetData();

@@ -316,6 +316,9 @@
     <Compile Include="UI_Skinned\MainView\Skinned_MainView_Ex.xaml.cs">
       <DependentUpon>Skinned_MainView_Ex.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI_Skinned\NetworkPlayWindow\NetworkPlayWindow.xaml.cs">
+      <DependentUpon>NetworkPlayWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI_Skinned\Playlist\MediaBrowser.xaml.cs">
       <DependentUpon>MediaBrowser.xaml</DependentUpon>
     </Compile>
@@ -407,6 +410,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI_Skinned\MainView\Skinned_MainView_Ex.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI_Skinned\NetworkPlayWindow\NetworkPlayWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -550,6 +557,7 @@
     <Resource Include="Resources\Images\ClassicRefresh.png" />
     <Resource Include="Resources\Images\ClassicShuffle.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

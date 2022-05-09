@@ -65,18 +65,11 @@ namespace BardMusicPlayer.Jamboree
         }
 #endregion
 
-        public void JoinParty(string partycode)
+        public void JoinParty(string networkId, byte type, string name)
         {
             if(_pydna == null)
                 _pydna = new Pydna();
-            Task.Run(() => _pydna.JoinParty(partycode));
-        }
-
-        public void CreateParty(string networkId, byte type, string name)
-        {
-            if (_pydna == null)
-                _pydna = new Pydna();
-            Task.Run(() => _pydna.CreateParty(networkId, type, name));
+            Task.Run(() => _pydna.JoinParty(networkId, type, name));
         }
 
         public void LeaveParty()

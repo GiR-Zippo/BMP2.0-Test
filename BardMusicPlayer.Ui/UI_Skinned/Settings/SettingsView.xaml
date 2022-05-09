@@ -8,15 +8,17 @@
         d:DesignHeight="300" d:DesignWidth="420"
         Title="Settings" Height="300" Width="420" WindowStyle="ToolWindow">
 
-    <Grid HorizontalAlignment="Left">
+    <Grid HorizontalAlignment="Left" 
+          Width="{Binding ActualWidth, RelativeSource = {RelativeSource AncestorType = {x:Type Window}}}" 
+          Height="{Binding ActualHeight, RelativeSource ={RelativeSource AncestorType = {x:Type Window}}}">
         <TabControl TabStripPlacement="Left" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <TabItem Header="Design">
-                <Grid Background="#FFE5E5E5" Width="420">
+                <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="10"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="5"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10"/>
@@ -28,7 +30,7 @@
             </TabItem>
 
             <TabItem Header="Playback">
-                <Grid Background="#FFE5E5E5" Width="420">
+                <Grid Background="#FFE5E5E5">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -49,7 +51,7 @@
             </TabItem>
 
             <TabItem Header="SyncSettings">
-                <Grid Background="#FFE5E5E5" Width="420">
+                <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="Auto"/>
@@ -73,7 +75,7 @@
             </TabItem>
 
             <TabItem Header="Misc">
-                <Grid Background="#FFE5E5E5" Width="420">
+                <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="Auto"/>
@@ -84,39 +86,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Column="1" Grid.Row="1">
-                        <CheckBox Margin="10,10,0,0" x:Name="Settings_EffectsHost"   Content="Effects host"   ToolTip="This player is giving the go to the dancers" Checked="Settings_EffectsHost_Checked" Unchecked="Settings_EffectsHost_Checked"/>
-                    </Grid>
-                    <Grid Grid.Column="1" Grid.Row="2">
-                        <Label Margin="10,0,0,0" Content="Only one bard can be the host!" HorizontalAlignment="Left"/>
-                    </Grid>
                 </Grid>
             </TabItem>
-
-            <TabItem Header="Network Party">
-                <Grid Background="#FFE5E5E5" Width="420">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="*"/>
-                        
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="25"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="1" Grid.Column="1" Content="Partytoken"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" x:Name="PartyToken_Text"/>
-                    <Button Grid.Row="2" Grid.Column="1" Content="Create" Click="Create_Click" />
-                    <Button Grid.Row="2" Grid.Column="2" Content="Join" Click="Join_Click" Width="60" HorizontalAlignment="Left"/>
-                    <Button Grid.Row="2" Grid.Column="2" Content="Leave" Click="Leave_Click" Width="60" HorizontalAlignment="Left" Margin="60,0,0,0" FontSize="12"/>
-                    <Button Grid.Row="2" Grid.Column="2" Content="Force" Click="ForcePlay_Click" Width="60" HorizontalAlignment="Left" Margin="120,0,0,0" FontSize="12"/>
-                </Grid>
-            </TabItem>
-
         </TabControl>
-
     </Grid>
 </Window>

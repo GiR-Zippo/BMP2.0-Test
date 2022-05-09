@@ -24,11 +24,6 @@
     <NoWarn>1701;1702; MSB3246</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="LibZeroTier" Version="1.0.8" />
-    <PackageReference Include="ZeroTier.Sockets" Version="1.8.4" />
-  </ItemGroup>
-
     <ItemGroup>
         <ContentWithTargetPath Include="bin\$(Platform)\$(Configuration)\$(TargetFramework)\libzt.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -36,9 +31,18 @@
         </ContentWithTargetPath>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LibZeroTier" Version="1.0.8" />
+      <PackageReference Include="ZeroTier.Sockets" Version="1.8.4" />
+    </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\BardMusicPlayer.Quotidian\BardMusicPlayer.Quotidian.csproj" />
     <ProjectReference Include="..\BardMusicPlayer.Pigeonhole\BardMusicPlayer.Pigeonhole.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="PartyClient\ZeroTier\" />
   </ItemGroup>
 
 </Project>

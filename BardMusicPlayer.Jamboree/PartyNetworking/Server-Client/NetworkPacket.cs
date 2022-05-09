@@ -20,30 +20,30 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 
-namespace BardMusicPlayer.Jamboree.ZeroTier
+namespace BardMusicPlayer.Jamboree.PartyNetworking
 {
-    public class Packet : IDisposable
+    public class NetworkPacket : IDisposable
     {
-        private ZeroTierPartyOpcodes.OpcodeEnum _opcode = ZeroTierPartyOpcodes.OpcodeEnum.NULL_OPCODE;
+        private NetworkOpcodes.OpcodeEnum _opcode = NetworkOpcodes.OpcodeEnum.NULL_OPCODE;
 
-        public Packet()
+        public NetworkPacket()
         {
             writeStream = new BinaryWriter(new MemoryStream());
         }
 
-        public Packet(ZeroTierPartyOpcodes.OpcodeEnum opcode)
+        public NetworkPacket(NetworkOpcodes.OpcodeEnum opcode)
         {
             writeStream = new BinaryWriter(new MemoryStream());
             writeStream.Write((byte)opcode);
         }
 
-        public Packet(byte[] data)
+        public NetworkPacket(byte[] data)
         {
             readStream = new BinaryReader(new MemoryStream(data));
-            _opcode = (ZeroTierPartyOpcodes.OpcodeEnum)readStream.ReadByte();
+            _opcode = (NetworkOpcodes.OpcodeEnum)readStream.ReadByte();
         }
 
-        public ZeroTierPartyOpcodes.OpcodeEnum Opcode
+        public NetworkOpcodes.OpcodeEnum Opcode
         {
             get { return _opcode; }
         }
@@ -58,9 +58,9 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         }
 
         #region Read Methods
-        public ZeroTierPartyOpcodes.OpcodeEnum ReadOpcode()
+        public NetworkOpcodes.OpcodeEnum ReadOpcode()
         {
-            return (ZeroTierPartyOpcodes.OpcodeEnum)readStream.ReadByte();
+            return (NetworkOpcodes.OpcodeEnum)readStream.ReadByte();
         }
 
         public sbyte ReadInt8()
@@ -215,7 +215,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
         #endregion
 
         #region Write Methods
-        public void WriteOpcode(ZeroTierPartyOpcodes.OpcodeEnum opcode)
+        public void WriteOpcode(NetworkOpcodes.OpcodeEnum opcode)
         {
             writeStream.Write((byte)opcode);
         }
@@ -317,7 +317,7 @@ namespace BardMusicPlayer.Jamboree.ZeroTier
             writeStream.Write(data, 0, (int)count);
         }
 
-        public void WriteBytes(Packet buffer)
+        public void WriteBytes(NetworkPacket buffer)
         {
             WriteBytes(buffer.GetData());
         }

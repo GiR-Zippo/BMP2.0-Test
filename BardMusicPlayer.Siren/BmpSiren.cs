@@ -25,6 +25,7 @@ namespace BardMusicPlayer.Siren
         private IAlphaSynth _player;
         private Dictionary<int, Dictionary<long, string>> _lyrics;
         private double _lyricIndex;
+        private MMDevice _mdev = null;
 
         private static readonly Lazy<BmpSiren> LazyInstance = new(() => new BmpSiren());
         public static BmpSiren Instance => LazyInstance.Value;
@@ -53,6 +54,7 @@ namespace BardMusicPlayer.Siren
         public void Setup(MMDevice device, float defaultVolume = 0.8f, byte bufferCount = 3, byte latency = 100)
         {
             ShutDown();
+            _mdev = device;
             _player = new ManagedThreadAlphaSynthWorkerApi(new NAudioSynthOutput(device, bufferCount, latency), AlphaTab.Util.LogLevel.None, BeginInvoke);
             foreach (var resource in Resources.ResourceManager.GetResourceSet(CultureInfo.CurrentUICulture, true, true))
                 _player.LoadSoundFont((byte[])((DictionaryEntry)resource).Value, true);
@@ -161,6 +163,14 @@ namespace BardMusicPlayer.Siren
             return this;
         }
 
+        /// <summary>
+        /// Sets the volume
+        /// </summary>
+        /// <param name="x"></param>
+        public void SetVolume(float x)
+        {
+            _mdev.AudioSessionManager.AudioSessionControl.SimpleAudioVolume.Volume = x / 100;
+        }
         /// <summary>
         /// Event fired when there is a lyric line.
         /// </summary>

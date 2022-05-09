@@ -8,13 +8,18 @@ using System.Threading.Tasks;
 using ZeroTier;
 using ZeroTier.Core;
 
-namespace BardMusicPlayer.Jamboree.ZeroTier
+namespace ZeroTier
 {
     public class ZeroTierConnector
     {
         public Node node = null;
         private volatile bool nodeOnline = false;
 
+        /// <summary>
+        /// start zerotier
+        /// </summary>
+        /// <param name="network"></param>
+        /// <returns>Ip address</returns>
         public Task<string> ZeroTierConnect(string network)
         {
             node = new Node();

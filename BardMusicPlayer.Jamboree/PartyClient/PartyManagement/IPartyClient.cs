@@ -3,6 +3,7 @@
  * Licensed under the GPL v3 license. See https://github.com/BardMusicPlayer/BardMusicPlayer/blob/develop/LICENSE for full license information.
  */
 
+using BardMusicPlayer.Jamboree.PartyNetworking;
 using System;
 using System.Collections.Generic;
 
@@ -69,14 +70,14 @@ namespace BardMusicPlayer.Jamboree.PartyManagement
         /// </summary>
         /// <param name="partyMember">string uuid</param>
         /// <returns>list of games</returns>
-        List<ZeroTierPartySocket> RequestPartyGames(string partyMember);
+        List<NetworkSocket> RequestPartyGames(string partyMember);
 
         /// <summary>
         /// Fired when the PartyGame list changes in a PartyMember
         /// </summary>
         /// <param name="partyMember"></param>
         /// <param name="partyGames"></param>
-        delegate void PartyGamesChangedHandler(string partyMember, List<ZeroTierPartySocket> partyGames);
+        delegate void PartyGamesChangedHandler(string partyMember, List<NetworkSocket> partyGames);
 
         /// <summary>
         /// Fired when the PartyGame list changes in a PartyMember

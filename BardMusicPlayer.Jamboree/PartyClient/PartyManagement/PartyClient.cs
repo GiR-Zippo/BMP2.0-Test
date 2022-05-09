@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BardMusicPlayer.Jamboree.PartyNetworking;
+using System.Collections.Generic;
 
 namespace BardMusicPlayer.Jamboree.PartyManagement
 {
@@ -9,5 +10,16 @@ namespace BardMusicPlayer.Jamboree.PartyManagement
         /// </summary>
         public byte Performer_Type { get; set; } = 254;
         public string Performer_Name { get; set; } = "Unknown";
+
+
+        private Queue<NetworkPacket> _inPackets = new Queue<NetworkPacket>();
+
+        public PartyClientInfo()
+        {}
+
+        public void AddPacket(NetworkPacket packet)
+        {
+            _inPackets.Enqueue(packet);
+        }
     }
 }

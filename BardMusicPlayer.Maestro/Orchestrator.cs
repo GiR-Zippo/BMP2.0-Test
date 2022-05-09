@@ -302,10 +302,8 @@ namespace BardMusicPlayer.Maestro
                 }
             }
 
-            Parallel.ForEach(performer, perf =>
-            {
+            foreach (var perf in performer)
                 perf.Value.Play(true);
-            });
         }
 
         /// <summary>

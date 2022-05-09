@@ -35,6 +35,7 @@ namespace BardMusicPlayer.Ui.Skinned
 
         public Skinned_PlaylistView _PlaylistView;
         public BardsWindow _BardListView;
+        public NetworkPlayWindow _Networkplaywindow;
         public Skinned_MainView_Ex _MainView_Ex;
 
         private CancellationTokenSource Scroller = new CancellationTokenSource();
@@ -48,6 +49,11 @@ namespace BardMusicPlayer.Ui.Skinned
             //open the bards window
             _BardListView = new BardsWindow();
             _BardListView.Show();
+            this._BardListView.Visibility = Visibility.Hidden;
+
+            _Networkplaywindow = new NetworkPlayWindow();
+            _Networkplaywindow.Show();
+            this._Networkplaywindow.Visibility = Visibility.Hidden;
 
             //open the playlist and bind the event
             _PlaylistView = new Skinned_PlaylistView();
@@ -324,6 +330,11 @@ namespace BardMusicPlayer.Ui.Skinned
         private void ShowBardsWindow_Click(object sender, RoutedEventArgs e)
         {
             this._BardListView.Visibility = Visibility.Visible;
+        }
+
+        private void ShowNetworkWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this._Networkplaywindow.Visibility = Visibility.Visible;
         }
 
         private void ShowPlaylistWindow_Click(object sender, RoutedEventArgs e)

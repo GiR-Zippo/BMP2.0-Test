@@ -93,7 +93,7 @@
                 </Rectangle.Fill>
             </Rectangle>
 
-            <ListView Grid.Column="1" x:Name="PlaylistContainer" Width="385" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left" BorderThickness="0" ItemsSource="{Binding Path=Title}"
+            <ListView Grid.Column="1" x:Name="PlaylistContainer" Width="380" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left" BorderThickness="0" ItemsSource="{Binding Path=Title}"
                     PreviewMouseDoubleClick="PlaylistContainer_PreviewMouseDoubleClick"
                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                     SelectionChanged="PlaylistContainer_SelectionChanged"

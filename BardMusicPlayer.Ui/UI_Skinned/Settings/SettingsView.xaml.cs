@@ -33,16 +33,7 @@ namespace BardMusicPlayer.Ui.Skinned
             Autostart_source.SelectedIndex = BmpPigeonhole.Instance.AutostartMethod;
 
             //Effects
-            this.Settings_EffectsHost.IsChecked = BmpPigeonhole.Instance.IsChoreoHost;
-
-            //Networkparty Tab
-            BmpJamboree.Instance.OnPartyCreated += Instance_PartyCreated;
-        }
-
-        private void Instance_PartyCreated(object sender, PartyCreatedEvent e)
-        {
-            string Token = e.Token;
-            this.Dispatcher.BeginInvoke(new Action(() => this.PartyToken_Text.Text = Token));
+            //this.Settings_EffectsHost.IsChecked = BmpPigeonhole.Instance.IsChoreoHost;
         }
 
         #region DesignTab controls
@@ -104,32 +95,5 @@ namespace BardMusicPlayer.Ui.Skinned
             ((Skinned_MainView)System.Windows.Application.Current.MainWindow.DataContext).LoadSkin(openFileDialog.FileName);
             BmpPigeonhole.Instance.LastSkin = openFileDialog.FileName;
         }
-
-        private void Settings_EffectsHost_Checked(object sender, RoutedEventArgs e)
-        {
-            BmpPigeonhole.Instance.IsChoreoHost = Settings_EffectsHost.IsChecked ?? false;
-        }
-
-        #region NetworkPartyTab Controls
-        private void Create_Click(object sender, RoutedEventArgs e)
-        {
-            string token = PartyToken_Text.Text;
-            PartyToken_Text.Text = "Please wait...";
-            BmpJamboree.Instance.CreateParty(token, 0, "Test Player"); // BmpMaestro.Instance.GetHostGame().PlayerName);
-        }
-
-        private void Join_Click(object sender, RoutedEventArgs e)
-        {
-            BmpJamboree.Instance.JoinParty(this.PartyToken_Text.Text);
-        }
-        private void Leave_Click(object sender, RoutedEventArgs e)
-        {
-            BmpJamboree.Instance.LeaveParty();
-        }
-        private void ForcePlay_Click(object sender, RoutedEventArgs e)
-        {
-            BmpJamboree.Instance.SendPerformanceStart();
-        }
-        #endregion
     }
 }
